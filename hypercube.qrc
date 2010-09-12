@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/" >
+        <file>icons/dialog-close.png</file>
+        <file>icons/document-open.png</file>
+        <file>icons/document-save-all.png</file>
+        <file>icons/document-save-as.png</file>
+        <file>icons/document-save.png</file>
+        <file>icons/emblem-symbolic-link.png</file>
+        <file>icons/games-solve.png</file>
+        <file>icons/hypercube.png</file>
+        <file>icons/view-refresh.png</file>
+    </qresource>
+</RCC>
