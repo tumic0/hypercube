@@ -27,3 +27,4 @@ SOURCES += IO/matrix.cpp \
     IO/svg.cpp \
     CLI/cli.cpp \
     CLI/main.cpp
+INCLUDEPATH += ./

@@ -42,3 +42,4 @@ SOURCES += IO/matrix.cpp \
 DEFINES += SA_LOG_SUPPORT
 RESOURCES += hypercube.qrc
 RC_FILE = hypercube.rc
+INCLUDEPATH += ./
