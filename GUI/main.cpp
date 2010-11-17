@@ -1,6 +1,6 @@
 #include <QApplication>
 #include "GUI/gui.h"
-#include "common/config.h"
+#include "CORE/config.h"
 
 int main(int argc, char *argv[])
 {

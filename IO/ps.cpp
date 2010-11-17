@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <fstream>
 #include "ps.h"
-#include "common/config.h"
+#include "CORE/config.h"
 
 
 /*!

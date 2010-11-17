@@ -3,7 +3,7 @@
 #include "GUI/numericedit.h"
 #include "GUI/graphtab.h"
 #include "IO/io.h"
-#include "common/config.h"
+#include "CORE/config.h"
 
 
 /*!

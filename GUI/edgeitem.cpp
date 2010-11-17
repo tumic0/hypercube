@@ -1,7 +1,7 @@
 #include <QPainter>
 #include "edgeitem.h"
 #include "vertexitem.h"
-#include "common/config.h"
+#include "CORE/config.h"
 
 
 /*!

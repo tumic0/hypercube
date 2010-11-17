@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "IO/svg.h"
-#include "common/config.h"
+#include "CORE/config.h"
 
 
 using namespace std;

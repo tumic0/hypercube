@@ -3,9 +3,9 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include "common/graph.h"
-#include "common/sa.h"
-#include "common/config.h"
+#include "CORE/graph.h"
+#include "CORE/sa.h"
+#include "CORE/config.h"
 #include "IO/io.h"
 #include "cli.h"
 

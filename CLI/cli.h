@@ -2,8 +2,8 @@
 #define CLI_H_
 
 #include <string>
-#include "common/color.h"
-#include "common/coordinates.h"
+#include "CORE/color.h"
+#include "CORE/coordinates.h"
 
 class Graph;
 class SA;

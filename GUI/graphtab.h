@@ -2,8 +2,8 @@
 #define GRAPHTAB_H_
 
 #include "graphview.h"
-#include "common/graph.h"
-#include "common/sa.h"
+#include "CORE/graph.h"
+#include "CORE/sa.h"
 #include "IO/io.h"
 
 

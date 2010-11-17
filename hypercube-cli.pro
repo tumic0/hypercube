@@ -1,30 +1,32 @@
 CONFIG -= qt
 CONFIG += console
 TARGET = hypercube-cli
-HEADERS += common/misc.h \
-    common/margin.h \
-    common/config.h \
-    common/color.h \
-    common/coordinates.h \
-    common/edge.h \
-    common/graph.h \
-    common/sa.h \
-    common/sa_log.h \
-    common/vertex.h \
+HEADERS += CORE/misc.h \
+    CORE/margin.h \
+    CORE/config.h \
+    CORE/color.h \
+    CORE/coordinates.h \
+    CORE/edge.h \
+    CORE/graph.h \
+    CORE/sa.h \
+    CORE/sa_log.h \
+    CORE/vertex.h \
     IO/io.h \
     IO/ps.h \
     IO/svg.h \
     IO/matrix.h \
+    IO/list.h \
     CLI/cli.h
-SOURCES += IO/matrix.cpp \
-    common/edge.cpp \
-    common/vertex.cpp \
-    common/color.cpp \
-    common/graph.cpp \
-    common/sa.cpp \
+SOURCES += CORE/edge.cpp \
+    CORE/vertex.cpp \
+    CORE/color.cpp \
+    CORE/graph.cpp \
+    CORE/sa.cpp \
     IO/io.cpp \
     IO/ps.cpp \
     IO/svg.cpp \
+    IO/matrix.cpp \
+    IO/list.cpp \
     CLI/cli.cpp \
     CLI/main.cpp
 INCLUDEPATH += ./

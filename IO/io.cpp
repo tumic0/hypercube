@@ -1,6 +1,7 @@
 #include <cstring>
 #include "io.h"
 #include "matrix.h"
+#include "list.h"
 #include "svg.h"
 #include "ps.h"
 
@@ -34,6 +35,7 @@ OutputProvider* outputProviders[] = {
 };
 
 InputProvider* inputProviders[] = {
+	new ListGraphInput(),
 	new MatrixGraphInput(),
 	NULL
 };
