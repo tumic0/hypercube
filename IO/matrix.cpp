@@ -19,7 +19,7 @@ IO::Error MatrixGraphInput::readGraph(Graph *graph, const char *fileName)
 	wstringstream ss;
 
 
-	wifstream fs(fileName);
+	ifstream fs(fileName);
 	if (!fs)
 		return OpenError;
 
