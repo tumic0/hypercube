@@ -33,5 +33,11 @@ SOURCES += IO/list.cpp \
     GUI/gui.cpp
 DEFINES += SA_LOG_SUPPORT
 RESOURCES += hypercube.qrc
-RC_FILE = hypercube.rc
 INCLUDEPATH += ./
+
+win32 {
+	RC_FILE = hypercube.rc
+}
+macx {
+	ICON = icons/hypercube.icns
+}
