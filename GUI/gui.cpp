@@ -381,8 +381,7 @@ void GUI::about()
 	  + QString("<p>") + tr("Hypercube is distributed under the terms of the "
 		"GNU General Public License version 3. For more info about Hypercube "
 		"visit the project homepage at")
-	  + QString(" <a href=\"http://gitorious.org/hypercube\">"
-	    "http://gitorious.org/hypercube</a></p>"));
+	  + QString(" <a href=\""APP_HOMEPAGE"\">"APP_HOMEPAGE"</a>.</p>"));
 }
 
 void GUI::openFile()

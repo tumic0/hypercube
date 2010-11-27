@@ -40,6 +40,7 @@ static void header(Graph *graph, wofstream &fs)
 	/* DSC header */
 	fs << "%!PS-Adobe-3.0 EPSF-3.0" << endl
 	   << "%%BoundingBox: 0 0 " << dim.x() << " " << dim.y() << endl
+	   << "%%Creator: Hypercube" << endl
 	   << "%%EndComments" << endl << endl;
 
 	/* Macros definitions */

@@ -1,7 +1,8 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-#define APP_VERSION				"0.1"
+#define APP_HOMEPAGE			"http://tumic.wz.cz/hypercube"
+#define APP_VERSION				"0.2"
 #define APP_ICON				":/icons/hypercube.png"
 
 #define FONT_FAMILY				"Helvetica"
