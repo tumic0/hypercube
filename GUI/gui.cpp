@@ -444,6 +444,10 @@ void GUI::saveAs()
 			provider++;
 		}
 
+		QString suffix = QString('.') + QString((*provider)->type());
+		if (!fileName.endsWith(suffix))
+			fileName.append(suffix);
+
 		IO::Error error = TAB()->writeGraph(fileName, *provider);
 		if (error)
 			QMessageBox::critical(this, tr("Error"),
