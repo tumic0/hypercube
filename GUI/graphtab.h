@@ -26,6 +26,7 @@ public:
 	void project(Graph *graph);
 
 	Graph *graph();
+	GraphView *view() {return _view;}
 
 	QPoint dimensions() const {return _dimensions;}
 	void setDimensions(const QPoint &dimensions);
@@ -64,8 +65,9 @@ public:
 	bool logInfo() {return _sa->logInfo();}
 	void setLogInfo(bool value) {_sa->setLogInfo(value);}
 
-private:
+	QString& fileName() {return _inputFileName;}
 
+private:
 	void loadGraph();
 	void storeGraph();
 	void setGraphProperties();

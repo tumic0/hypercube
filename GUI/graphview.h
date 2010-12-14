@@ -37,6 +37,10 @@ public:
 	void setEdgeZValue(int value);
 
 	void scale(qreal scaleFactor);
+	qreal zoom() {return transform().m11();}
+
+signals:
+	void zoomed(qreal z);
 
 private:
 	void wheelEvent(QWheelEvent *event);

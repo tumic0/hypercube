@@ -55,6 +55,7 @@ private:
 	void createActions();
 	void createMenus();
 	void createToolBars();
+	void createStatusBar();
 
 	void createViews();
 	void createProperties();
@@ -115,7 +116,13 @@ private:
 	IntEdit *_numSteps;
 	QCheckBox *_debug;
 
+	QLabel *_fileName;
+	QLabel *_zoom;
+
 	GraphTab* _masterTab;
+
+private slots:
+	void zoom(qreal zoom);
 };
 
 #endif // GUI_H_

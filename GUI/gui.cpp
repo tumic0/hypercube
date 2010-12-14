@@ -21,6 +21,8 @@
 	widget->action; \
 	widget->blockSignals(false)
 
+#define ZOOM_STRING(zoom) QString("%1%").arg((int)((zoom) * 100))
+
 
 static QString saveFilter(OutputProvider *provider);
 static QString errorDescription(IO::Error error);
@@ -36,6 +38,7 @@ GUI::GUI()
 	createToolBars();
 	createViews();
 	createProperties();
+	createStatusBar();
 
 	QHBoxLayout *layout = new QHBoxLayout;
 	layout->addWidget(_properties);
@@ -355,11 +358,24 @@ void GUI::createViews()
 	  this, SLOT(tabChanged(int)));
 }
 
+void GUI::createStatusBar()
+{
+	_fileName = new QLabel();
+	_zoom = new QLabel();
+	_zoom->setAlignment(Qt::AlignHCenter);
+
+	statusBar()->addPermanentWidget(_fileName, 9);
+	statusBar()->addPermanentWidget(_zoom, 1);
+	statusBar()->setSizeGripEnabled(false);
+}
 
 void GUI::tabChanged(int current)
 {
-	if (current == -1)
+	if (current == -1) {
+		_fileName->setText(QString::null);
+		_zoom->setText(QString::null);
 		return;
+	}
 
 	GraphTab *tab = (GraphTab*) _viewTab->widget(current);
 
@@ -371,6 +387,9 @@ void GUI::tabChanged(int current)
 
 	_graphActionGroup->setEnabled(tab->enabled());
 	_graphProperties->setEnabled(tab->enabled());
+
+	_zoom->setText(ZOOM_STRING(tab->view()->zoom()));
+	_fileName->setText(tab->fileName());
 }
 
 void GUI::about()
@@ -406,6 +425,8 @@ void GUI::openFile()
 
 		QFileInfo fi(fileName);
 		int index = _viewTab->addTab(tab, fi.fileName());
+
+		connect(tab->view(), SIGNAL(zoomed(qreal)), SLOT(zoom(qreal)));
 
 		_viewTab->setCurrentIndex(index);
 
@@ -693,6 +714,11 @@ void GUI::getGraphProperties(GraphTab *tab)
 	BLOCK(_edgeFontSize, setValue(tab->edgeFontSize()));
 	BLOCK(_vertexIDs, setChecked(tab->vertexIDs()));
 	BLOCK(_edgeValues, setChecked(tab->edgeValues()));
+}
+
+void GUI::zoom(qreal zoom)
+{
+	_zoom->setText(ZOOM_STRING(zoom));
 }
 
 
