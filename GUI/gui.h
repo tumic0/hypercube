@@ -67,6 +67,10 @@ private:
 	void setSAProperties(GraphTab *tab);
 	void setGraphProperties(GraphTab *tab);
 
+	void closeEvent(QCloseEvent *event);
+	void readSettings();
+	void writeSettings();
+
 
 	QMenu *_fileMenu;
 	QMenu *_aboutMenu;

@@ -49,6 +49,8 @@ GUI::GUI()
 	setCentralWidget(widget);
 
 	_masterTab = NULL;
+
+	readSettings();
 }
 
 void GUI::createActions()
@@ -157,7 +159,8 @@ void GUI::createProperties()
 	_properties->addItem(_graphProperties, tr("Graph settings"));
 	_properties->addItem(_SAProperties, tr("SA settings"));
 
-	_properties->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Ignored));
+	_properties->setSizePolicy(QSizePolicy(QSizePolicy::Maximum,
+	  QSizePolicy::Minimum));
 	_properties->setMinimumWidth(qMax(_graphProperties->sizeHint().width(),
 	  _SAProperties->sizeHint().width()));
 }
@@ -719,6 +722,32 @@ void GUI::getGraphProperties(GraphTab *tab)
 void GUI::zoom(qreal zoom)
 {
 	_zoom->setText(ZOOM_STRING(zoom));
+}
+
+void GUI::writeSettings()
+{
+	QSettings settings("Hypercube", "Hypercube");
+
+	settings.beginGroup("MainWindow");
+	settings.setValue("size", size());
+	settings.setValue("pos", pos());
+	settings.endGroup();
+}
+
+void GUI::readSettings()
+{
+	QSettings settings("Hypercube", "Hypercube");
+
+	settings.beginGroup("MainWindow");
+	resize(settings.value("size", QSize(800, 600)).toSize());
+	move(settings.value("pos", QPoint(100, 100)).toPoint());
+	settings.endGroup();
+}
+
+void GUI::closeEvent(QCloseEvent *event)
+{
+	writeSettings();
+	event->accept();
 }
 
 
