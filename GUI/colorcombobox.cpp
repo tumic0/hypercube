@@ -18,7 +18,7 @@
 	The \a color argument is the color of the newly selected item.
 
 	The signal is not emitted when the current color is changed
-	programmatically by calling setCurrentColor().
+	programmatically by calling setColor().
 */
 
 
@@ -81,7 +81,8 @@ QColor ColorComboBox::color() const
 /*!
 	Sets the widget's item with color \a color to be the current item.
 
-	If there is no item with color \a color in the widget, no action is taken.
+	If there is no item with color \a color in the widget, the color is
+	created.
 */
 void ColorComboBox::setColor(const QColor &color)
 {
@@ -89,6 +90,10 @@ void ColorComboBox::setColor(const QColor &color)
 
 	if ((index = findData(color)) >= 0)
 		setCurrentIndex(index);
+	else {
+		addColor(color, color.name());
+		setCurrentIndex(colorCount() - 1);
+	}
 }
 
 /*!

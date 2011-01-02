@@ -170,11 +170,8 @@ void GUI::createSAProperties()
 	QGroupBox *graphBox = new QGroupBox(tr("Graph layout"));
 
 	_nodeDistribution = new FloatEdit(10);
-	_nodeDistribution->setValue(NODE_DISTRIBUTION);
 	_edgeLength = new FloatEdit(10);
-	_edgeLength->setValue(EDGE_LENGTH);
 	_edgeCrossings = new FloatEdit(10);
-	_edgeCrossings->setValue(EDGE_CROSSINGS);
 
 	connect(_nodeDistribution, SIGNAL(valueChanged(float)),
 	  this, SLOT(setNodeDistribution(float)));
@@ -193,13 +190,9 @@ void GUI::createSAProperties()
 	QGroupBox *SABox = new QGroupBox(tr("SA parameters"));
 
 	_initTemp = new FloatEdit(10);
-	_initTemp->setValue(INIT_TEMP);
 	_finalTemp = new FloatEdit(10);
-	_finalTemp->setValue(FINAL_TEMP);
 	_coolFactor = new FloatEdit(10);
-	_coolFactor->setValue(COOL_FACTOR);
 	_numSteps = new IntEdit(10);
-	_numSteps->setValue(NUM_STEPS);
 
 	connect(_initTemp, SIGNAL(valueChanged(float)),
 	  this, SLOT(setInitTemp(float)));
@@ -241,7 +234,6 @@ void GUI::createGraphProperties()
 	// Graph properties control widgets
 	_edgeValues = new QCheckBox(tr("Edge values"), this);
 	_vertexIDs = new QCheckBox(tr("Vertex IDs"), this);
-	_vertexIDs->setCheckState(Qt::Checked);
 
 	connect(_edgeValues, SIGNAL(stateChanged(int)),
 	  this, SLOT(showEdgeValues(int)));
@@ -252,8 +244,6 @@ void GUI::createGraphProperties()
 	_graphHeight = new QSpinBox();
 	_graphWidth->setMaximum(10000);
 	_graphHeight->setMaximum(10000);
-	_graphWidth->setValue(GRAPH_WIDTH);
-	_graphHeight->setValue(GRAPH_HEIGHT);
 
 	connect(_graphWidth, SIGNAL(valueChanged(int)),
 	  this, SLOT(setGraphWidth(int)));
@@ -290,15 +280,8 @@ void GUI::createGraphProperties()
 	_edgeColor = new ColorComboBox();
 	_vertexColor = new ColorComboBox();
 
-	_vertexSize->setValue(VERTEX_SIZE);
-	_edgeSize->setValue(EDGE_SIZE);
-	_edgeSize->setMaximum(_vertexSize->value());
-	_edgeFontSize->setValue(EDGE_FONT_SIZE);
 	_edgeFontSize->setMinimum(MIN_FONT_SIZE);
-	_vertexFontSize->setValue(VERTEX_FONT_SIZE);
 	_vertexFontSize->setMinimum(MIN_FONT_SIZE);
-	_edgeColor->setColor(QColor(EDGE_COLOR));
-	_vertexColor->setColor(QColor(VERTEX_COLOR));
 
 	connect(_edgeSize, SIGNAL(valueChanged(int)),
 	  this, SLOT(setEdgeSize(int)));
@@ -732,6 +715,29 @@ void GUI::writeSettings()
 	settings.setValue("size", size());
 	settings.setValue("pos", pos());
 	settings.endGroup();
+
+	settings.beginGroup("Graph");
+	settings.setValue("width", _graphWidth->value());
+	settings.setValue("height", _graphHeight->value());
+	settings.setValue("edgeValues", _edgeValues->checkState());
+	settings.setValue("vertexIDs", _vertexIDs->checkState());
+	settings.setValue("edgeSize", _edgeSize->value());
+	settings.setValue("vertexSize", _vertexSize->value());
+	settings.setValue("edgeFontSize", _edgeFontSize->value());
+	settings.setValue("vertexFontSize", _vertexFontSize->value());
+	settings.setValue("edgeColor", _edgeColor->color());
+	settings.setValue("vertexColor", _vertexColor->color());
+	settings.endGroup();
+
+	settings.beginGroup("SA");
+	settings.setValue("nodeDistribution", _nodeDistribution->value());
+	settings.setValue("edgeLength", _edgeLength->value());
+	settings.setValue("edgeCrossings", _edgeCrossings->value());
+	settings.setValue("initTemp", _initTemp->value());
+	settings.setValue("finalTemp", _finalTemp->value());
+	settings.setValue("coolFactor", _coolFactor->value());
+	settings.setValue("numSteps", _numSteps->value());
+	settings.endGroup();
 }
 
 void GUI::readSettings()
@@ -741,6 +747,39 @@ void GUI::readSettings()
 	settings.beginGroup("MainWindow");
 	resize(settings.value("size", QSize(800, 600)).toSize());
 	move(settings.value("pos", QPoint(100, 100)).toPoint());
+	settings.endGroup();
+
+	settings.beginGroup("Graph");
+	_graphWidth->setValue(settings.value("width", GRAPH_WIDTH).toInt());
+	_graphHeight->setValue(settings.value("height", GRAPH_HEIGHT).toInt());
+	_vertexIDs->setCheckState((Qt::CheckState)settings.value("vertexIDs",
+	  Qt::Checked).toInt());
+	_edgeValues->setCheckState((Qt::CheckState)settings.value("edgeValues",
+	  Qt::Unchecked).toInt());
+	_vertexSize->setValue(settings.value("vertexSize", VERTEX_SIZE).toInt());
+	_edgeSize->setValue(settings.value("edgeSize", EDGE_SIZE).toInt());
+	_edgeSize->setMaximum(_vertexSize->value());
+	_edgeFontSize->setValue(settings.value("edgeFontSize",
+	  EDGE_FONT_SIZE).toInt());
+	_vertexFontSize->setValue(settings.value("vertexFontSize",
+	  VERTEX_FONT_SIZE).toInt());
+	_edgeColor->setColor(settings.value("edgeColor",
+	  QColor(EDGE_COLOR)).value<QColor>());
+	_vertexColor->setColor(settings.value("vertexColor",
+	  QColor(VERTEX_COLOR)).value<QColor>());
+	settings.endGroup();
+
+	settings.beginGroup("SA");
+	_nodeDistribution->setValue(settings.value("nodeDistribution",
+	  NODE_DISTRIBUTION).toFloat());
+	_edgeLength->setValue(settings.value("edgeLength",
+	  EDGE_LENGTH).toFloat());
+	_edgeCrossings->setValue(settings.value("edgeCrossings",
+	  EDGE_CROSSINGS).toFloat());
+	_initTemp->setValue(settings.value("initTemp", INIT_TEMP).toFloat());
+	_finalTemp->setValue(settings.value("finalTemp", FINAL_TEMP).toFloat());
+	_coolFactor->setValue(settings.value("coolFactor", COOL_FACTOR).toFloat());
+	_numSteps->setValue(settings.value("numSteps", NUM_STEPS).toInt());
 	settings.endGroup();
 }
 
