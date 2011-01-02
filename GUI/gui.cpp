@@ -211,7 +211,7 @@ void GUI::createSAProperties()
 	SABox->setLayout(SAlayout);
 
 	QGroupBox *debugBox = new QGroupBox(tr("Debug"));
-	_debug = new QCheckBox("Create debug output", this);
+	_debug = new QCheckBox(tr("Create debug output"), this);
 	QVBoxLayout *debugLayout = new QVBoxLayout;
 	debugLayout->addWidget(_debug, 0, Qt::AlignTop);
 	debugBox->setLayout(debugLayout);
