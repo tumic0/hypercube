@@ -22,7 +22,7 @@ public:
 	void setSize(qreal size);
 	QString text() const {return _text->text();}
 	void setText(const QString &text) {_text->setText(text);}
-	int fontSize() {return _text->font().pixelSize();}
+	int fontSize() {return _fontSize;}
 	void setFontSize(int size);
 
 private:
@@ -35,9 +35,9 @@ private:
 
 	QGraphicsSimpleTextItem* _text;
 
-	int _value;
 	qreal _size;
 	QColor _color;
+	int _fontSize;
 };
 
 #endif /* EDGEITEM_H_ */

@@ -22,7 +22,7 @@ public:
 	void setSize(qreal size);
 	QString text() const {return _text->text();}
 	void setText(const QString &text) {_text->setText(text);}
-	int fontSize() {return _text->font().pixelSize();}
+	int fontSize() {return _fontSize;}
 	void setFontSize(int size);
 
 	QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -36,6 +36,7 @@ private:
 	QList<EdgeItem *> _edgeList;
 	qreal _size;
 	QColor _color;
+	int _fontSize;
 };
 
 #endif /* VERTEXITEM_H_ */

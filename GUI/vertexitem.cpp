@@ -18,6 +18,7 @@ VertexItem::VertexItem()
 {
 	_color = QColor();
 	_size = 0;
+	_fontSize = 0;
 
 	_text = new QGraphicsSimpleTextItem(QString::null, this);
 	_text->setFont(QFont(FONT_FAMILY));
@@ -67,6 +68,8 @@ void VertexItem::setColor(const QColor &color)
 
 void VertexItem::setFontSize(int size)
 {
+	_fontSize = size;
+
 	if (size <= 0) {
 		_text->setVisible(false);
 	} else {

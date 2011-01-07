@@ -18,6 +18,7 @@ EdgeItem::EdgeItem(VertexItem *src, VertexItem *dst)
 {
 	_color = QColor();
 	_size = 0;
+	_fontSize = 0;
 
 	_text = new QGraphicsSimpleTextItem(QString::null, this);
 	_text->setFont(QFont(FONT_FAMILY));
@@ -71,6 +72,8 @@ void EdgeItem::setColor(const QColor &color)
 
 void EdgeItem::setFontSize(int size)
 {
+	_fontSize = size;
+
 	if (size <= 0) {
 		_text->setVisible(false);
 	} else {
