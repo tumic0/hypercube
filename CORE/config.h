@@ -3,20 +3,9 @@
 
 #define APP_HOMEPAGE			"http://tumic.wz.cz/hypercube"
 #define APP_VERSION				"0.4"
-#define APP_ICON				":/icons/hypercube.png"
 
 #define FONT_FAMILY				"Helvetica"
 #define AVG_CHAR_WIDTH			0.66f
-
-#define OPEN_FILE_ICON			":/icons/document-open.png"
-#define SAVE_FILE_ICON			":/icons/document-save.png"
-#define SAVE_AS_ICON			":/icons/document-save-as.png"
-#define SAVE_ALL_ICON			":/icons/document-save-all.png"
-#define CLOSE_FILE_ICON			":/icons/dialog-close.png"
-#define TRANSFORM_GRAPH_ICON	":/icons/games-solve.png"
-#define RELOAD_GRAPH_ICON		":/icons/view-refresh.png"
-#define BIND_GRAPH_ICON			":/icons/document-encrypt.png"
-#define PROJECT_GRAPH_ICON		":/icons/emblem-symbolic-link.png"
 
 #ifdef SA_LOG_SUPPORT
 #define SA_PROGRESS_LOG			"progress.log"

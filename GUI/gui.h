@@ -34,7 +34,9 @@ private slots:
 	void setFinalTemp(float value);
 	void setCoolFactor(float value);
 	void setNumSteps(int value);
+#ifdef SA_LOG_SUPPORT
 	void setSALogInfo(int state);
+#endif
 
 	void setGraphWidth(int width);
 	void setGraphHeight(int height);

@@ -62,8 +62,10 @@ public:
 	void setCoolFactor(float value) {_sa->setCoolFactor(value);}
 	int numSteps() {return _sa->numSteps();}
 	void setNumSteps(int value) {_sa->setNumSteps(value);}
+#ifdef SA_LOG_SUPPORT
 	bool logInfo() {return _sa->logInfo();}
 	void setLogInfo(bool value) {_sa->setLogInfo(value);}
+#endif
 
 	QString& fileName() {return _inputFileName;}
 

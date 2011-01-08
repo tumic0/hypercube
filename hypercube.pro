@@ -1,7 +1,8 @@
 TARGET = hypercube
 QT += core \
     gui
-HEADERS += IO/list.h \
+HEADERS += GUI/icons.h \
+    IO/list.h \
     IO/matrix.h \
     GUI/vertexitem.h \
     GUI/edgeitem.h \

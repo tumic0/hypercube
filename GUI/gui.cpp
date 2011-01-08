@@ -4,6 +4,7 @@
 #include "GUI/graphtab.h"
 #include "IO/io.h"
 #include "CORE/config.h"
+#include "GUI/icons.h"
 
 
 /*!
@@ -210,6 +211,7 @@ void GUI::createSAProperties()
 	SAlayout->addRow(tr("Steps:"), _numSteps);
 	SABox->setLayout(SAlayout);
 
+#ifdef SA_LOG_SUPPORT
 	QGroupBox *debugBox = new QGroupBox(tr("Debug"));
 	_debug = new QCheckBox(tr("Create debug output"), this);
 	QVBoxLayout *debugLayout = new QVBoxLayout;
@@ -218,12 +220,15 @@ void GUI::createSAProperties()
 
 	connect(_debug, SIGNAL(stateChanged(int)),
 	  this, SLOT(setSALogInfo(int)));
+#endif
 
 
 	QVBoxLayout *layout = new QVBoxLayout;
 	layout->addWidget(graphBox);
 	layout->addWidget(SABox);
+#ifdef SA_LOG_SUPPORT
 	layout->addWidget(debugBox);
+#endif
 
 	_SAProperties = new QWidget;
 	_SAProperties->setLayout(layout);
@@ -580,12 +585,13 @@ void GUI::setNumSteps(int value)
 		TAB()->setNumSteps(value);
 }
 
+#ifdef SA_LOG_SUPPORT
 void GUI::setSALogInfo(int state)
 {
 	if (TAB())
 		TAB()->setLogInfo((state == Qt::Checked) ? true : false);
 }
-
+#endif
 
 void GUI::setGraphWidth(int width)
 {
@@ -657,7 +663,9 @@ void GUI::setSAProperties(GraphTab *tab)
 	tab->setFinalTemp(_finalTemp->value());
 	tab->setCoolFactor(_coolFactor->value());
 	tab->setNumSteps(_numSteps->value());
+#ifdef SA_LOG_SUPPORT
 	tab->setLogInfo((_debug->checkState() == Qt::Checked) ? true : false);
+#endif
 }
 
 void GUI::setGraphProperties(GraphTab *tab)
@@ -684,7 +692,9 @@ void GUI::getSAProperties(GraphTab *tab)
 	_finalTemp->setValue(tab->finalTemp());
 	_coolFactor->setValue(tab->coolFactor());
 	_numSteps->setValue(tab->numSteps());
+#ifdef SA_LOG_SUPPORT
 	BLOCK(_debug, setChecked(tab->logInfo()));
+#endif
 }
 
 void GUI::getGraphProperties(GraphTab *tab)
