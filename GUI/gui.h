@@ -52,6 +52,7 @@ private slots:
 	void showVertexIDs(int state);
 
 	void tabChanged(int current);
+	void zoom(qreal zoom);
 
 private:
 	void createActions();
@@ -126,9 +127,6 @@ private:
 	QLabel *_zoom;
 
 	GraphTab* _masterTab;
-
-private slots:
-	void zoom(qreal zoom);
 };
 
 #endif // GUI_H_
