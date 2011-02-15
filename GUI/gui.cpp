@@ -236,9 +236,8 @@ void GUI::createSAProperties()
 
 void GUI::createGraphProperties()
 {
-	// Graph properties control widgets
-	_edgeValues = new QCheckBox(tr("Edge values"), this);
-	_vertexIDs = new QCheckBox(tr("Vertex IDs"), this);
+	_edgeValues = new QCheckBox(tr("Show edge values"), this);
+	_vertexIDs = new QCheckBox(tr("Show vertex IDs"), this);
 
 	connect(_edgeValues, SIGNAL(stateChanged(int)),
 	  this, SLOT(showEdgeValues(int)));
@@ -255,29 +254,26 @@ void GUI::createGraphProperties()
 	connect(_graphHeight, SIGNAL(valueChanged(int)),
 	  this, SLOT(setGraphHeight(int)));
 
-	// Graph properties box layout
-	QGroupBox *propertiesBox = new QGroupBox(tr("Graph properties"));
+	QGroupBox *graphBox = new QGroupBox(tr("Graph"));
+
+	QVBoxLayout *show = new QVBoxLayout;
+	show->addWidget(_vertexIDs);
+	show->addWidget(_edgeValues);
 
 	QFormLayout *dimensions = new QFormLayout;
 	dimensions->addRow(tr("Width:"), _graphWidth);
 	dimensions->addRow(tr("Height:"), _graphHeight);
 
-	QLabel *dimensionsLabel = new QLabel(QString("<i>") + tr("Graph size")
-	  + QString("</i>"));
-	QLabel *elementsLabel = new QLabel(QString("<i>") + tr("Display")
-	  + QString("</i>"));
+	QVBoxLayout *graphLayout = new QVBoxLayout;
+	graphLayout->setAlignment(Qt::AlignTop);
 
-	QVBoxLayout *propertiesLayout = new QVBoxLayout;
-	propertiesLayout->addWidget(dimensionsLabel);
-	propertiesLayout->addLayout(dimensions);
-	propertiesLayout->addWidget(elementsLabel);
-	propertiesLayout->addWidget(_vertexIDs);
-	propertiesLayout->addWidget(_edgeValues);
-	propertiesLayout->addStretch(1);
-	propertiesBox->setLayout(propertiesLayout);
+	graphLayout->addLayout(dimensions);
+	graphLayout->addSpacing(10);
+	graphLayout->addLayout(show);
+
+	graphBox->setLayout(graphLayout);
 
 
-	// Appearance control widgets
 	_vertexSize = new QSpinBox();
 	_edgeSize = new QSpinBox();
 	_edgeFontSize = new QSpinBox();
@@ -303,39 +299,28 @@ void GUI::createGraphProperties()
 	  this, SLOT(setVertexColor(const QColor&)));
 
 
-	// Appearance box layout
-	QGroupBox *appearanceBox = new QGroupBox(tr("Graph appearance"));
+	QGroupBox *vertexBox = new QGroupBox(tr("Vertexes"));
+	QGroupBox *edgeBox = new QGroupBox(tr("Edges"));
 
-	QFormLayout *edge = new QFormLayout;
-	QFormLayout *vertex = new QFormLayout;
+	QFormLayout *edgeLayout = new QFormLayout;
+	QFormLayout *vertexLayout = new QFormLayout;
 
-	edge->addRow(tr("Size:"), _edgeSize);
-	edge->addRow(tr("Font size:"), _edgeFontSize);
-	edge->addRow(tr("Color:"), _edgeColor);
+	edgeLayout->addRow(tr("Size:"), _edgeSize);
+	edgeLayout->addRow(tr("Font size:"), _edgeFontSize);
+	edgeLayout->addRow(tr("Color:"), _edgeColor);
+	edgeBox->setLayout(edgeLayout);
 
-	vertex->addRow(tr("Size:"), _vertexSize);
-	vertex->addRow(tr("Font size:"), _vertexFontSize);
-	vertex->addRow(tr("Color:"), _vertexColor);
-
-	QLabel *edgeLabel = new QLabel(QString("<i>") + tr("Edges")
-	  + QString("</i>"));
-	QLabel *vertexLabel = new QLabel(QString("<i>") + tr("Vertexes")
-	  + QString("</i>"));
-
-	QVBoxLayout *appearanceLayout = new QVBoxLayout();
-	appearanceLayout->addWidget(vertexLabel);
-	appearanceLayout->addLayout(vertex);
-	appearanceLayout->addWidget(edgeLabel);
-	appearanceLayout->addLayout(edge);
-	appearanceLayout->addStretch(1);
-	appearanceBox->setLayout(appearanceLayout);
+	vertexLayout->addRow(tr("Size:"), _vertexSize);
+	vertexLayout->addRow(tr("Font size:"), _vertexFontSize);
+	vertexLayout->addRow(tr("Color:"), _vertexColor);
+	vertexBox->setLayout(vertexLayout);
 
 
-	// Graph settings tab layout
 	QVBoxLayout *layout = new QVBoxLayout;
 
-	layout->addWidget(propertiesBox);
-	layout->addWidget(appearanceBox);
+	layout->addWidget(graphBox);
+	layout->addWidget(vertexBox);
+	layout->addWidget(edgeBox);
 
 	_graphProperties = new QWidget;
 	_graphProperties->setLayout(layout);
@@ -653,6 +638,7 @@ void GUI::showVertexIDs(int state)
 	if (TAB())
 		TAB()->showVertexIDs((state == Qt::Checked) ? true : false);
 }
+
 
 void GUI::setSAProperties(GraphTab *tab)
 {
