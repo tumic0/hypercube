@@ -238,11 +238,14 @@ void GUI::createGraphProperties()
 {
 	_edgeValues = new QCheckBox(tr("Show edge values"), this);
 	_vertexIDs = new QCheckBox(tr("Show vertex IDs"), this);
+	_coloredEdges = new QCheckBox(tr("Colored edges"), this);
 
 	connect(_edgeValues, SIGNAL(stateChanged(int)),
 	  this, SLOT(showEdgeValues(int)));
 	connect(_vertexIDs, SIGNAL(stateChanged(int)),
 	  this, SLOT(showVertexIDs(int)));
+	connect(_coloredEdges, SIGNAL(stateChanged(int)),
+	  this, SLOT(colorizeEdges(int)));
 
 	_graphWidth = new QSpinBox();
 	_graphHeight = new QSpinBox();
@@ -259,6 +262,7 @@ void GUI::createGraphProperties()
 	QVBoxLayout *show = new QVBoxLayout;
 	show->addWidget(_vertexIDs);
 	show->addWidget(_edgeValues);
+	show->addWidget(_coloredEdges);
 
 	QFormLayout *dimensions = new QFormLayout;
 	dimensions->addRow(tr("Width:"), _graphWidth);
@@ -639,6 +643,12 @@ void GUI::showVertexIDs(int state)
 		TAB()->showVertexIDs((state == Qt::Checked) ? true : false);
 }
 
+void GUI::colorizeEdges(int state)
+{
+	if (TAB())
+		TAB()->colorizeEdges((state == Qt::Checked) ? true : false);
+	_edgeColor->setEnabled((state == Qt::Checked) ? false : true);
+}
 
 void GUI::setSAProperties(GraphTab *tab)
 {
@@ -667,6 +677,8 @@ void GUI::setGraphProperties(GraphTab *tab)
 	  ? true : false);
 	tab->showEdgeValues((_edgeValues->checkState() == Qt::Checked)
 	  ? true : false);
+	tab->colorizeEdges((_coloredEdges->checkState() == Qt::Checked)
+	  ? true : false);
 }
 
 void GUI::getSAProperties(GraphTab *tab)
@@ -688,7 +700,6 @@ void GUI::getGraphProperties(GraphTab *tab)
 	BLOCK(_graphWidth, setValue(tab->dimensions().x()));
 	BLOCK(_graphHeight, setValue(tab->dimensions().y()));
 	BLOCK(_edgeSize, setValue(tab->edgeSize()));
-	_edgeSize->setMaximum(tab->vertexSize());
 	BLOCK(_vertexSize, setValue(tab->vertexSize()));
 	BLOCK(_edgeColor, setColor(tab->edgeColor()));
 	BLOCK(_vertexColor, setColor(tab->vertexColor()));
@@ -696,6 +707,10 @@ void GUI::getGraphProperties(GraphTab *tab)
 	BLOCK(_edgeFontSize, setValue(tab->edgeFontSize()));
 	BLOCK(_vertexIDs, setChecked(tab->vertexIDs()));
 	BLOCK(_edgeValues, setChecked(tab->edgeValues()));
+	BLOCK(_coloredEdges, setChecked(tab->coloredEdges()));
+
+	_edgeSize->setMaximum(tab->vertexSize());
+	_edgeColor->setEnabled(!tab->coloredEdges());
 }
 
 void GUI::zoom(qreal zoom)
@@ -717,6 +732,7 @@ void GUI::writeSettings()
 	settings.setValue("height", _graphHeight->value());
 	settings.setValue("edgeValues", _edgeValues->checkState());
 	settings.setValue("vertexIDs", _vertexIDs->checkState());
+	settings.setValue("coloredEdges", _coloredEdges->checkState());
 	settings.setValue("edgeSize", _edgeSize->value());
 	settings.setValue("vertexSize", _vertexSize->value());
 	settings.setValue("edgeFontSize", _edgeFontSize->value());
@@ -751,6 +767,8 @@ void GUI::readSettings()
 	_vertexIDs->setCheckState((Qt::CheckState)settings.value("vertexIDs",
 	  Qt::Checked).toInt());
 	_edgeValues->setCheckState((Qt::CheckState)settings.value("edgeValues",
+	  Qt::Unchecked).toInt());
+	_coloredEdges->setCheckState((Qt::CheckState)settings.value("coloredEdges",
 	  Qt::Unchecked).toInt());
 	_vertexSize->setValue(settings.value("vertexSize", VERTEX_SIZE).toInt());
 	_edgeSize->setValue(settings.value("edgeSize", EDGE_SIZE).toInt());

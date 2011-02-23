@@ -1,6 +1,7 @@
 #ifndef GRAPH_H_
 #define GRAPH_H_
 
+#include <map>
 #include <string>
 #include "coordinates.h"
 #include "color.h"
@@ -37,6 +38,7 @@ public:
 	void clear();
 	void center(void);
 	void randomize(void);
+	void colorize(void);
 	void bindTo(Graph *source);
 	void project(Graph *source);
 
@@ -95,6 +97,7 @@ private:
 	void updateDistance(int v1, int v2);
 	void updateMargins(int v);
 
+	Color nextColor();
 
 	int _size;
 	int _allocSize;
@@ -103,6 +106,9 @@ private:
 
 	Vertex *_vertexes;
 	MatrixItem **_matrix;
+
+	std::map<std::wstring, Color> _colors;
+	float _hueState;
 };
 
 #endif /* GRAPH_H_ */

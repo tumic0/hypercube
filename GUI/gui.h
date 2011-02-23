@@ -50,6 +50,7 @@ private slots:
 
 	void showEdgeValues(int state);
 	void showVertexIDs(int state);
+	void colorizeEdges(int state);
 
 	void tabChanged(int current);
 	void zoom(qreal zoom);
@@ -111,6 +112,7 @@ private:
 	QSpinBox *_vertexFontSize;
 	QCheckBox *_edgeValues;
 	QCheckBox *_vertexIDs;
+	QCheckBox *_coloredEdges;
 	ColorComboBox *_edgeColor;
 	ColorComboBox *_vertexColor;
 

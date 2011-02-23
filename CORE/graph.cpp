@@ -2,6 +2,7 @@
 #include "graph.h"
 #include "misc.h"
 
+using namespace std;
 
 #define INIT_SIZE		20
 #define EXP_FACTOR		2
@@ -12,6 +13,7 @@
 static inline bool lineSegmentCrossing(Coordinates l1p1, Coordinates l1p2,
   Coordinates l2p1, Coordinates l2p2);
 static inline int euclideanDistanceSqr(Coordinates p1, Coordinates p2);
+static unsigned hsv2rgb(float h, float s, float v);
 
 
 /*!
@@ -30,6 +32,8 @@ Graph::Graph()
 
 	_vertexes = NULL;
 	_matrix = NULL;
+
+	_hueState = 0.1f;
 }
 
 Graph::~Graph()
@@ -109,6 +113,29 @@ void Graph::randomize(void)
 		    % (dimensions().x() - margin(i).rb().x() - margin(i).lt().x()),
 		  margin(i).lt().y() + rand()
 		    % (dimensions().y() - margin(i).rb().y() - margin(i).lt().y())));
+}
+
+void Graph::colorize(void)
+{
+	Color color;
+	map<wstring, Color>::iterator it;
+
+	for (int i = 0; i < _size; i++) {
+		for (int j = 0; j < i; j++) {
+			if (edge(i, j)) {
+				it = _colors.find(edgeText(i, j));
+
+				if (it == _colors.end()) {
+					color = Color(nextColor());
+					_colors.insert(pair<wstring, Color>(edgeText(i, j), color));
+				} else {
+					color = (*it).second;
+				}
+
+				setEdgeColor(i, j, color);
+			}
+		}
+	}
 }
 
 void Graph::bindTo(Graph *source)
@@ -377,6 +404,13 @@ void Graph::setEdgeFontSize(int size)
 				setEdgeFontSize(i, j, size);
 }
 
+Color Graph::nextColor()
+{
+	_hueState += 0.618033988749895;
+	_hueState -= (int) _hueState;
+	return Color(hsv2rgb(_hueState, 0.99, 0.99));
+}
+
 
 bool lineSegmentCrossing(Coordinates l1p1, Coordinates l1p2,
   Coordinates l2p1, Coordinates l2p2)
@@ -418,4 +452,41 @@ int euclideanDistanceSqr(Coordinates p1, Coordinates p2)
 {
 	return abs(((p1.x() - p2.x()) * (p1.x() - p2.x()))
 	  + ((p1.y() - p2.y()) * (p1.y() - p2.y())));
+}
+
+unsigned hsv2rgb(float h, float s, float v)
+{
+	unsigned hi;
+	float r, g, b, p, q, t, f;
+
+	hi = (unsigned)(h * 6.0f);
+	f = h * 6.0f - hi;
+	p = v * (1.0f - s);
+	q = v * (1.0f - f * s);
+	t = v * (1.0f - (1.0f - f) * s);
+
+	switch (hi) {
+		case 0:
+			r = v; g = t; b = p;
+			break;
+		case 1:
+			r = q; g = v; b = p;
+			break;
+		case 2:
+			r = p; g = v; b = t;
+			break;
+		case 3:
+			r = p; g = q; b = v;
+			break;
+		case 4:
+			r = t; g = p; b = v;
+			break;
+		case 5:
+			r = v; g = p; b = q;
+			break;
+	}
+
+	return ((unsigned)(r * 256) << 16)
+	  + ((unsigned)(g * 256) << 8)
+	  + (unsigned)(b * 256);
 }

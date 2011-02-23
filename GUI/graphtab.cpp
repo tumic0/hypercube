@@ -183,6 +183,17 @@ void GraphTab::showEdgeValues(bool show)
 	_view->setEdgeFontSize(show ? _edgeFontSize : 0);
 }
 
+void GraphTab::colorizeEdges(bool colorize)
+{
+	_coloredEdges = colorize;
+	if (colorize) {
+		storeGraph();
+		_graph->colorize();
+		loadGraph();
+	} else
+		_view->setEdgeColor(_edgeColor);
+}
+
 void GraphTab::setEdgeZValue(int value)
 {
 	_view->setEdgeZValue(value);
@@ -272,7 +283,10 @@ void GraphTab::setGraphProperties()
 {
 	_graph->setVertexColor(_vertexColor.rgb());
 	_graph->setVertexSize(_vertexSize);
-	_graph->setEdgeColor(_edgeColor.rgb());
+	if (_coloredEdges)
+		_graph->colorize();
+	else
+		_graph->setEdgeColor(_edgeColor.rgb());
 	_graph->setEdgeSize(_edgeSize);
 	_graph->setVertexFontSize(_showVertexIDs ? _vertexFontSize : 0);
 	_graph->setEdgeFontSize(_showEdgeValues ? _edgeFontSize : 0);

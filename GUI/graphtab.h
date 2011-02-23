@@ -44,8 +44,10 @@ public:
 	void setEdgeFontSize(int size);
 	bool vertexIDs() {return _showVertexIDs;}
 	bool edgeValues() {return _showEdgeValues;}
+	bool coloredEdges() {return _coloredEdges;}
 	void showVertexIDs(bool show);
 	void showEdgeValues(bool show);
+	void colorizeEdges(bool colorize);
 	void setEdgeZValue(int value);
 
 	float nodeDistribution() {return _sa->nodeDistribution();}
@@ -94,6 +96,7 @@ private:
 	int _edgeFontSize;
 	bool _showVertexIDs;
 	bool _showEdgeValues;
+	bool _coloredEdges;
 };
 
 #endif /* GRAPHTAB_H_ */
