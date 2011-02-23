@@ -9,6 +9,8 @@ using namespace std;
 #define LINEAR_FACTOR	100
 #define EXP_THRESHOLD	LINEAR_FACTOR
 
+#define INIT_HUE		0.1f
+
 
 static inline bool lineSegmentCrossing(Coordinates l1p1, Coordinates l1p2,
   Coordinates l2p1, Coordinates l2p2);
@@ -33,7 +35,7 @@ Graph::Graph()
 	_vertexes = NULL;
 	_matrix = NULL;
 
-	_hueState = 0.1f;
+	_hueState = INIT_HUE;
 }
 
 Graph::~Graph()
@@ -63,6 +65,8 @@ void Graph::clear()
 
 	_size = 0;
 	_dimensions = Coordinates(0, 0);
+	_colors.clear();
+	_hueState = INIT_HUE;
 }
 
 int Graph::addVertex()
