@@ -49,6 +49,8 @@ private:
 	float _finalTemp;
 	float _coolFactor;
 	int _numSteps;
+
+	bool _coloredEdges;
 };
 
 #endif // CLI_H_

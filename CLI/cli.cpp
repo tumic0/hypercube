@@ -38,6 +38,8 @@ CLI::CLI(int argc, char *argv[])
 	_finalTemp = FINAL_TEMP;
 	_coolFactor = COOL_FACTOR;
 	_numSteps = NUM_STEPS;
+
+	_coloredEdges = false;
 }
 
 int CLI::exec()
@@ -130,13 +132,14 @@ void CLI::usage()
 	cout << " -s <dimensions>  set image size to <dimensions>" << endl;
 	cout << " -f <format>      set output format to <format>" << endl;
 	cout << " -o <file>        set the output file to <file>" << endl;
-	cout << endl;
 	cout << " -vc <color>      set vertex color to <color>" << endl;
 	cout << " -ec <color>      set edge color to <color>" << endl;
 	cout << " -vs <size>       set vertex size to <size>" << endl;
 	cout << " -es <size>       set edge size to <size>" << endl;
 	cout << " -vf <size>       set vertex font size to <size>" << endl;
 	cout << " -ef <size>       set edge font size to <size>" << endl;
+	cout << " -c               asign a unique color to every uniqe edge value"
+	  << endl;
 	cout << endl;
 	cout << "option arguments:" << endl;
 	cout << " <dimesnsions>    width,height" << endl;
@@ -164,6 +167,12 @@ int CLI::argument(int i)
 		return 2; \
 	}
 
+#define SWITCH(arg, var) \
+	if (string(_argv[i]) == string(arg)) { \
+		var = true; \
+		return 1; \
+	}
+
 	ARG("-f", _format);
 	ARG("-o", _outputFileName);
 
@@ -182,6 +191,8 @@ int CLI::argument(int i)
 	ARG("-ft", _finalTemp);
 	ARG("-cf", _coolFactor);
 	ARG("-ns", _numSteps);
+
+	SWITCH("-c", _coloredEdges);
 
 	return 0;
 }
@@ -225,7 +236,10 @@ void CLI::setGraphProperties()
 
 	_graph->setVertexColor(_vertexColor);
 	_graph->setVertexSize(_vertexSize);
-	_graph->setEdgeColor(_edgeColor);
+	if (_coloredEdges)
+		_graph->colorize();
+	else
+		_graph->setEdgeColor(_edgeColor);
 	_graph->setEdgeSize(_edgeSize);
 	_graph->setVertexFontSize(_vertexFontSize);
 	_graph->setEdgeFontSize(_edgeFontSize);
