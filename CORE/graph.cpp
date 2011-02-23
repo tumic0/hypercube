@@ -457,7 +457,7 @@ int euclideanDistanceSqr(Coordinates p1, Coordinates p2)
 unsigned hsv2rgb(float h, float s, float v)
 {
 	unsigned hi;
-	float r, g, b, p, q, t, f;
+	float r = 0, g = 0, b = 0, p, q, t, f;
 
 	hi = (unsigned)(h * 6.0f);
 	f = h * 6.0f - hi;
