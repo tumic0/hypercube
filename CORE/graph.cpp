@@ -146,20 +146,38 @@ void Graph::bindTo(Graph *source)
 {
 	setDimensions(source->dimensions());
 
-	for (int i = 0; i < MIN(_size, source->size()); i++)
-		moveVertex(i, source->vertexCoordinates(i));
+	for (int i = 0; i < _size; i++)
+		for (int j = 0; j < source->size(); j++)
+			if (source->vertexText(j) == _vertexes[i].text())
+				moveVertex(i, source->vertexCoordinates(j));
 }
 
 void Graph::project(Graph *source)
 {
-	for (int i = 0; i < MIN(_size, source->size()); i++) {
+	int found;
+
+	for (int i = 0; i < _size; i++) {
 		for (int j = 0; j < i; j++) {
-			if (edge(i, j) && source->edge(i, j)) {
-				setEdgeColor(i, j, source->edgeColor(i, j));
-				setEdgeSize(i, j, source->edgeSize(i, j));
-				setEdgeFontSize(i, j, source->edgeFontSize(i, j));
-			} else if (edge(i, j))
-				setEdgeZValue(i, j, -2);
+			if (edge(i, j)) {
+				found = 0;
+				for (int k = 0; k < source->size(); k++) {
+					for (int l = 0; l < k; l++) {
+						if (source->edge(k, l)) {
+							if ((source->vertexText(l) == _vertexes[j].text()
+							  && source->vertexText(k) == _vertexes[i].text())
+							  || (source->vertexText(l) == _vertexes[i].text()
+							  && source->vertexText(k) == _vertexes[j].text())) {
+								setEdgeColor(i, j, source->edgeColor(k, l));
+								setEdgeSize(i, j, source->edgeSize(k, l));
+								setEdgeFontSize(i, j, source->edgeFontSize(k, l));
+								found = 1;
+							}
+						}
+					}
+				}
+				if (!found)
+					setEdgeZValue(i, j, -2);
+			}
 		}
 	}
 }
