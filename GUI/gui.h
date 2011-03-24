@@ -79,15 +79,18 @@ private:
 	QMenu *_fileMenu;
 	QMenu *_aboutMenu;
 	QMenu *_graphMenu;
+	QMenu *_projectionsMenu;
 
 	QToolBar *_fileToolBar;
 	QToolBar *_graphToolBar;
+	QToolBar *_projectionsToolBar;
 
 	QWidget *_graphProperties;
 	QWidget *_SAProperties;
 
 	QActionGroup *_fileActionGroup;
 	QActionGroup *_graphActionGroup;
+	QActionGroup *_projectActionGroup;
 
 	QAction *_exitAction;
 	QAction *_aboutAction;

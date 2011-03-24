@@ -63,6 +63,9 @@ void GUI::createActions()
 	_graphActionGroup = new QActionGroup(this);
 	_graphActionGroup->setExclusive(false);
 	_graphActionGroup->setEnabled(false);
+	_projectActionGroup = new QActionGroup(this);
+	_projectActionGroup->setExclusive(false);
+	_projectActionGroup->setEnabled(false);
 
 
 	// General actions
@@ -106,9 +109,11 @@ void GUI::createActions()
 	  tr("Reload graph"), this);
 	_reloadAction->setActionGroup(_graphActionGroup);
 	connect(_reloadAction, SIGNAL(triggered()), this, SLOT(reloadGraph()));
+
+	// Projections related actions
 	_projectAction = new QAction(QIcon(QPixmap(PROJECT_GRAPH_ICON)),
-	  tr("Project this to all graphs"), this);
-	_projectAction->setActionGroup(_graphActionGroup);
+	  tr("Project to all"), this);
+	_projectAction->setActionGroup(_projectActionGroup);
 	_projectAction->setCheckable(true);
 	connect(_projectAction, SIGNAL(triggered(bool)), this,
 	  SLOT(projectGraph(bool)));
@@ -127,8 +132,9 @@ void GUI::createMenus()
 	_graphMenu = menuBar()->addMenu(tr("Graph"));
 	_graphMenu->addAction(_transformAction);
 	_graphMenu->addAction(_reloadAction);
-	_graphMenu->addSeparator();
-	_graphMenu->addAction(_projectAction);
+
+	_projectionsMenu = menuBar()->addMenu(tr("Projections"));
+	_projectionsMenu->addAction(_projectAction);
 
 	_aboutMenu = menuBar()->addMenu(tr("Help"));
 	_aboutMenu->addAction(_aboutAction);
@@ -146,8 +152,9 @@ void GUI::createToolBars()
 	_graphToolBar = addToolBar(tr("Graph"));
 	_graphToolBar->addAction(_transformAction);
 	_graphToolBar->addAction(_reloadAction);
-	_graphToolBar->addSeparator();
-	_graphToolBar->addAction(_projectAction);
+
+	_projectionsToolBar = addToolBar(tr("Projections"));
+	_projectionsToolBar->addAction(_projectAction);
 }
 
 void GUI::createProperties()
@@ -366,6 +373,7 @@ void GUI::tabChanged(int current)
 		tab->project(_masterTab->graph());
 
 	_graphActionGroup->setEnabled(tab->enabled());
+	_projectActionGroup->setEnabled(tab->enabled());
 	_graphProperties->setEnabled(tab->enabled());
 
 	_zoom->setText(ZOOM_STRING(tab->view()->zoom()));
@@ -413,6 +421,7 @@ void GUI::openFile()
 		if (_viewTab->count() == 1) {
 			_fileActionGroup->setEnabled(true);
 			_graphActionGroup->setEnabled(true);
+			_projectActionGroup->setEnabled(true);
 		}
 	}
 }
@@ -488,6 +497,7 @@ void GUI::closeFile()
 	if (_viewTab->count() == 0) {
 		_fileActionGroup->setEnabled(false);
 		_graphActionGroup->setEnabled(false);
+		_projectActionGroup->setEnabled(false);
 	}
 }
 
@@ -520,7 +530,10 @@ void GUI::projectGraph(bool checked)
 			tab->project(TAB()->graph());
 			tab->setEnabled(false);
 		} else {
-			tab->setEdgeColor(tab->edgeColor());
+			if (tab->coloredEdges())
+				tab->colorizeEdges(true);
+			else
+				tab->setEdgeColor(tab->edgeColor());
 			tab->setEdgeSize(tab->edgeSize());
 			tab->setEdgeFontSize(tab->edgeFontSize());
 			tab->setEdgeZValue(-1);
