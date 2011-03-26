@@ -9,7 +9,10 @@ using namespace std;
 #define LINEAR_FACTOR	100
 #define EXP_THRESHOLD	LINEAR_FACTOR
 
-#define INIT_HUE		0.1f
+#define HUE_INIT		0.1f
+#define HUE_INCREMENT	0.618033988749895f
+#define SATURATION		0.99f
+#define VALUE			0.99f
 
 
 static inline bool lineSegmentCrossing(Coordinates l1p1, Coordinates l1p2,
@@ -35,7 +38,7 @@ Graph::Graph()
 	_vertexes = NULL;
 	_matrix = NULL;
 
-	_hueState = INIT_HUE;
+	_hueState = HUE_INIT;
 }
 
 Graph::~Graph()
@@ -66,7 +69,7 @@ void Graph::clear()
 	_size = 0;
 	_dimensions = Coordinates(0, 0);
 	_colors.clear();
-	_hueState = INIT_HUE;
+	_hueState = HUE_INIT;
 }
 
 int Graph::addVertex()
@@ -430,7 +433,7 @@ Color Graph::nextColor()
 {
 	_hueState += 0.618033988749895;
 	_hueState -= (int) _hueState;
-	return Color(hsv2rgb(_hueState, 0.99, 0.99));
+	return Color(hsv2rgb(_hueState, SATURATION, VALUE));
 }
 
 
