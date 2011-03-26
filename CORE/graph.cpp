@@ -431,7 +431,7 @@ void Graph::setEdgeFontSize(int size)
 
 Color Graph::nextColor()
 {
-	_hueState += 0.618033988749895;
+	_hueState += HUE_INCREMENT;
 	_hueState -= (int) _hueState;
 	return Color(hsv2rgb(_hueState, SATURATION, VALUE));
 }
