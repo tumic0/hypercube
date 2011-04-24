@@ -1,5 +1,5 @@
 ;Include Modern UI
-!include "MUI.nsh"
+!include "MUI2.nsh"
 
 ; The name of the installer
 Name "Hypercube"
@@ -14,6 +14,13 @@ InstallDir $PROGRAMFILES\Hypercube
 ; overwrite the old one automatically)
 InstallDirRegKey HKLM "Software\Hypercube" "Install_Dir"
 
+; Start menu page configuration
+!define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKCU" 
+!define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\Hypercube" 
+!define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Hypercube"
+
+Var StartMenuFolder
+
 ;--------------------------------
 
 ; Pages
@@ -22,6 +29,7 @@ InstallDirRegKey HKLM "Software\Hypercube" "Install_Dir"
 !insertmacro MUI_PAGE_LICENSE "licence.txt"
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_STARTMENU Application $StartMenuFolder
 !insertmacro MUI_PAGE_INSTFILES
 
 !insertmacro MUI_UNPAGE_CONFIRM
@@ -60,14 +68,26 @@ Section "Hypercube (required)" SEC_GUI_APP
   WriteRegDWORD HKLM \
     "Software\Microsoft\Windows\CurrentVersion\Uninstall\Hypercube" \
     "NoRepair" 1
-  WriteUninstaller "uninstall.exe"
-  
+  WriteUninstaller "$INSTDIR\uninstall.exe"
+
+  ; Create start menu entry and add links
+  !insertmacro MUI_STARTMENU_WRITE_BEGIN Application  
+    CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
+    CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
+    CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Hypercube.lnk" "$INSTDIR\hypercube.exe"
+  !insertmacro MUI_STARTMENU_WRITE_END
+
 SectionEnd
 
 Section "Hypercube-cli" SEC_CLI_APP
 
   File "hypercube-cli.exe"
- 
+
+  ; Add Start menu link
+  !insertmacro MUI_STARTMENU_WRITE_BEGIN Application  
+    CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Hypercube-cli.lnk" "$INSTDIR\hypercube-cli.exe"
+  !insertmacro MUI_STARTMENU_WRITE_END
+
 SectionEnd
 
 Section "QT libs" SEC_QT
@@ -93,6 +113,12 @@ Section "Uninstall"
 
   ; Remove directories used
   RMDir "$INSTDIR"
+
+  ; Remove Start menu entries
+  !insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuFolder
+  Delete "$SMPROGRAMS\$StartMenuFolder\*.*"
+  RMDir "$SMPROGRAMS\$StartMenuFolder"  
+  DeleteRegKey /ifempty HKCU "Software\Hypercube"
 
 SectionEnd
 
