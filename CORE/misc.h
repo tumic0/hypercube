@@ -1,7 +1,7 @@
-#ifndef COMMON_H_
-#define COMMON_H_
+#ifndef MISC_H_
+#define MISC_H_
 
 #define MAX(a,b) (((a) > (b)) ? (a) : (b))
 #define MIN(a,b) (((a) < (b)) ? (a) : (b))
 
-#endif /* COMMON_H_ */
+#endif /* MISC_H_ */
