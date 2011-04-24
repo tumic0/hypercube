@@ -9,7 +9,7 @@
 #define CLOSE_FILE_ICON			":/icons/dialog-close.png"
 #define TRANSFORM_GRAPH_ICON	":/icons/games-solve.png"
 #define RELOAD_GRAPH_ICON		":/icons/view-refresh.png"
-#define BIND_GRAPH_ICON			":/icons/document-encrypt.png"
-#define PROJECT_GRAPH_ICON		":/icons/emblem-symbolic-link.png"
+#define PROJECT_ICON			":/icons/format-stroke-color.png"
+#define BIND_ICON				":/icons/transform-move.png"
 
 #endif /* ICONS_H_ */

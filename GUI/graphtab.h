@@ -15,14 +15,12 @@ public:
 	GraphTab();
 	virtual ~GraphTab();
 
-	bool enabled() {return _enabled;}
-	void setEnabled(bool state);
-
 	IO::Error readGraph(const QString &fileName);
 	IO::Error readGraph();
 	IO::Error writeGraph(const QString &fileName, OutputProvider *provider);
 	IO::Error writeGraph();
 	void transformGraph();
+	void bindTo(Graph *graph);
 	void project(Graph *graph);
 
 	Graph *graph();
@@ -75,8 +73,6 @@ private:
 	void loadGraph();
 	void storeGraph();
 	void setGraphProperties();
-
-	bool _enabled;
 
 	Graph *_graph;
 	GraphView *_view;

@@ -14,8 +14,6 @@
 
 GraphTab::GraphTab()
 {
-	_enabled = true;
-
 	_graph = new Graph();
 	_view = new GraphView();
 	_sa = new SA();
@@ -34,12 +32,6 @@ GraphTab::~GraphTab()
 	delete _view;
 	delete _sa;
 	delete _graph;
-}
-
-void GraphTab::setEnabled(bool state)
-{
-	_enabled = state;
-	_view->setInteractive(state);
 }
 
 IO::Error GraphTab::readGraph(const QString &fileName)
@@ -121,10 +113,16 @@ void GraphTab::transformGraph(void)
 	loadGraph();
 }
 
-void GraphTab::project(Graph* graph)
+void GraphTab::bindTo(Graph *graph)
 {
 	storeGraph();
 	_graph->bindTo(graph);
+	loadGraph();
+}
+
+void GraphTab::project(Graph* graph)
+{
+	storeGraph();
 	_graph->project(graph);
 	loadGraph();
 }

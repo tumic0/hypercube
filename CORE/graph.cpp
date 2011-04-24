@@ -160,6 +160,16 @@ void Graph::project(Graph *source)
 	int found;
 
 	for (int i = 0; i < _size; i++) {
+		for (int j = 0; j < source->size(); j++) {
+			if (source->vertexText(j) == _vertexes[i].text()) {
+				setVertexColor(i, source->vertexColor(j));
+				setVertexSize(i, source->vertexSize(j));
+				setVertexFontSize(i, source->vertexFontSize(j));
+			}
+		}
+	}
+
+	for (int i = 0; i < _size; i++) {
 		for (int j = 0; j < i; j++) {
 			if (edge(i, j)) {
 				found = 0;

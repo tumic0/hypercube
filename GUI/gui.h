@@ -25,7 +25,8 @@ private slots:
 	void closeFile();
 	void transformGraph();
 	void reloadGraph();
-	void projectGraph(bool checked);
+	void bindGraph();
+	void projectGraph();
 
 	void setNodeDistribution(float value);
 	void setEdgeLength(float value);
@@ -103,6 +104,7 @@ private:
 	QAction *_transformAction;
 	QAction *_reloadAction;
 	QAction *_projectAction;
+	QAction *_bindAction;
 
 	QToolBox *_properties;
 	QTabWidget *_viewTab;
@@ -130,8 +132,6 @@ private:
 
 	QLabel *_fileName;
 	QLabel *_zoom;
-
-	GraphTab* _masterTab;
 };
 
 #endif // GUI_H_

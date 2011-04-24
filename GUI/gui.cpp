@@ -49,8 +49,6 @@ GUI::GUI()
 	widget->setLayout(layout);
 	setCentralWidget(widget);
 
-	_masterTab = NULL;
-
 	readSettings();
 }
 
@@ -111,12 +109,16 @@ void GUI::createActions()
 	connect(_reloadAction, SIGNAL(triggered()), this, SLOT(reloadGraph()));
 
 	// Projections related actions
-	_projectAction = new QAction(QIcon(QPixmap(PROJECT_GRAPH_ICON)),
-	  tr("Project to all"), this);
+	_projectAction = new QAction(QIcon(QPixmap(PROJECT_ICON)),
+	  tr("Project appearance"), this);
 	_projectAction->setActionGroup(_projectActionGroup);
-	_projectAction->setCheckable(true);
-	connect(_projectAction, SIGNAL(triggered(bool)), this,
-	  SLOT(projectGraph(bool)));
+	connect(_projectAction, SIGNAL(triggered()), this,
+	  SLOT(projectGraph()));
+	_bindAction = new QAction(QIcon(QPixmap(BIND_ICON)),
+	  tr("Project layout"), this);
+	_bindAction->setActionGroup(_projectActionGroup);
+	connect(_bindAction, SIGNAL(triggered()), this,
+	  SLOT(bindGraph()));
 }
 
 void GUI::createMenus()
@@ -134,6 +136,7 @@ void GUI::createMenus()
 	_graphMenu->addAction(_reloadAction);
 
 	_projectionsMenu = menuBar()->addMenu(tr("Projections"));
+	_projectionsMenu->addAction(_bindAction);
 	_projectionsMenu->addAction(_projectAction);
 
 	_aboutMenu = menuBar()->addMenu(tr("Help"));
@@ -154,6 +157,7 @@ void GUI::createToolBars()
 	_graphToolBar->addAction(_reloadAction);
 
 	_projectionsToolBar = addToolBar(tr("Projections"));
+	_projectionsToolBar->addAction(_bindAction);
 	_projectionsToolBar->addAction(_projectAction);
 }
 
@@ -369,13 +373,6 @@ void GUI::tabChanged(int current)
 	getSAProperties(tab);
 	getGraphProperties(tab);
 
-	if (_masterTab && tab != _masterTab)
-		tab->project(_masterTab->graph());
-
-	_graphActionGroup->setEnabled(tab->enabled());
-	_projectActionGroup->setEnabled(tab->enabled());
-	_graphProperties->setEnabled(tab->enabled());
-
 	_zoom->setText(ZOOM_STRING(tab->view()->zoom()));
 	_fileName->setText(tab->fileName());
 }
@@ -408,9 +405,6 @@ void GUI::openFile()
 		  + QString(":\n") + errorDescription(error));
 		delete tab;
 	} else {
-		if (_masterTab)
-			tab->setEnabled(false);
-
 		QFileInfo fi(fileName);
 		int index = _viewTab->addTab(tab, fi.fileName());
 
@@ -418,11 +412,12 @@ void GUI::openFile()
 
 		_viewTab->setCurrentIndex(index);
 
-		if (_viewTab->count() == 1) {
+		int cnt = _viewTab->count();
+		if (cnt == 1) {
 			_fileActionGroup->setEnabled(true);
 			_graphActionGroup->setEnabled(true);
+		} else if (cnt == 2)
 			_projectActionGroup->setEnabled(true);
-		}
 	}
 }
 
@@ -483,22 +478,15 @@ void GUI::closeFile()
 {
 	GraphTab* tab = TAB();
 
-	if (tab == _masterTab) {
-		for (int i = 0; i < _viewTab->count(); i++)
-			((GraphTab*) _viewTab->widget(i))->setEnabled(true);
-
-		_masterTab = NULL;
-		_projectAction->setChecked(false);
-	}
-
 	_viewTab->removeTab(_viewTab->indexOf(tab));
 	delete tab;
 
-	if (_viewTab->count() == 0) {
+	int cnt = _viewTab->count();
+	if (cnt == 0) {
 		_fileActionGroup->setEnabled(false);
 		_graphActionGroup->setEnabled(false);
+	} else if (cnt == 1)
 		_projectActionGroup->setEnabled(false);
-	}
 }
 
 void GUI::transformGraph()
@@ -517,7 +505,7 @@ void GUI::reloadGraph()
 	}
 }
 
-void GUI::projectGraph(bool checked)
+void GUI::bindGraph()
 {
 	GraphTab* tab;
 
@@ -525,23 +513,20 @@ void GUI::projectGraph(bool checked)
 		if (_viewTab->currentIndex() == i)
 			continue;
 		tab = ((GraphTab*) _viewTab->widget(i));
-
-		if (checked) {
-			tab->project(TAB()->graph());
-			tab->setEnabled(false);
-		} else {
-			if (tab->coloredEdges())
-				tab->colorizeEdges(true);
-			else
-				tab->setEdgeColor(tab->edgeColor());
-			tab->setEdgeSize(tab->edgeSize());
-			tab->setEdgeFontSize(tab->edgeFontSize());
-			tab->setEdgeZValue(-1);
-			tab->setEnabled(true);
-		}
+		tab->bindTo(TAB()->graph());
 	}
+}
 
-	_masterTab = (checked) ? TAB() : NULL;
+void GUI::projectGraph()
+{
+	GraphTab* tab;
+
+	for (int i = 0; i < _viewTab->count(); i++) {
+		if (_viewTab->currentIndex() == i)
+			continue;
+		tab = ((GraphTab*) _viewTab->widget(i));
+		tab->project(TAB()->graph());
+	}
 }
 
 
