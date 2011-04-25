@@ -49,6 +49,9 @@ GUI::GUI()
 	widget->setLayout(layout);
 	setCentralWidget(widget);
 
+	setWindowTitle("Hypercube");
+	setUnifiedTitleAndToolBarOnMac(true);
+
 	readSettings();
 }
 
