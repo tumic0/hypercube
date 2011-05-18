@@ -1,8 +1,10 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include "ps.h"
 #include "CORE/config.h"
+#include "ps.h"
+
+using namespace std;
 
 
 /*!
@@ -12,8 +14,6 @@
 	Lorem ipsum...
 */
 
-
-using namespace std;
 
 #define tr(val) (dim.y()-(val))
 
@@ -160,9 +160,9 @@ static void vertexes(Graph *graph, wofstream &fs)
 
 IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *filename)
 {
-	wofstream fs(filename);
-	if (!fs)
-		return OpenError;
+	wofstream fs;
+
+	fs.open(filename);
 
 	header(graph, fs);
 	edges(graph, fs, -2);

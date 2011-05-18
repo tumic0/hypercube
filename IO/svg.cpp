@@ -1,8 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include "IO/svg.h"
-#include "CORE/config.h"
-
+#include "utf8cvt.h"
+#include "svg.h"
 
 using namespace std;
 
@@ -82,7 +81,6 @@ static void vertexes(Graph *graph, wofstream &fs)
 	Coordinates c1;
 	Color color;
 
-
 	for (int i = 0; i < graph->size(); i++) {
 		c1 = graph->vertexCoordinates(i) + Coordinates(
 		  graph->vertexSize(i) / 2, graph->vertexSize(i) / 2);
@@ -93,7 +91,7 @@ static void vertexes(Graph *graph, wofstream &fs)
 			c1 += Coordinates(graph->vertexSize(i) / 2, graph->vertexSize(i));
 			fs << "\t<text x=\"" << c1.x() << "\" y=\"" << c1.y()
 			   << "\" font-size=\"" << graph->vertexFontSize(i) << "\">"
-			   << i << "</text>" << endl;
+			   << graph->vertexText(i) << "</text>" << endl;
 		}
 		fs << "</g>" << endl;
 	}
@@ -103,7 +101,11 @@ static void vertexes(Graph *graph, wofstream &fs)
 
 IO::Error SvgGraphOutput::writeGraph(Graph *graph, const char *filename)
 {
-	wofstream fs(filename);
+	wofstream fs;
+	locale utf8(std::locale(), new utf8cvt);
+
+	fs.imbue(utf8);
+	fs.open(filename);
 	if (!fs)
 		return OpenError;
 

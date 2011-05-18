@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <map>
+#include <string>
 #include "io.h"
 
 class ListGraphInput: public InputProvider
@@ -11,10 +12,10 @@ public:
 	virtual Error readGraph(Graph *graph, const char *fileName);
 
 private:
-	void addVertex(int vertex);
-	void addEdge(int src, int dst, int val);
+	void addVertex(std::wstring vertex);
+	void addEdge(std::wstring src, std::wstring dst, std::wstring val);
 
-	std::map<int,int> _vertexes;
+	std::map<std::wstring,int> _vertexes;
 	Graph *_graph;
 };
 

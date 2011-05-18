@@ -11,6 +11,7 @@ HEADERS += CORE/misc.h \
     CORE/sa.h \
     CORE/sa_log.h \
     CORE/vertex.h \
+    IO/utf8cvt.h \
     IO/io.h \
     IO/ps.h \
     IO/svg.h \
@@ -22,6 +23,7 @@ SOURCES += CORE/edge.cpp \
     CORE/color.cpp \
     CORE/graph.cpp \
     CORE/sa.cpp \
+    IO/utf8cvt.cpp \
     IO/io.cpp \
     IO/ps.cpp \
     IO/svg.cpp \

@@ -1,5 +1,6 @@
 #include <sstream>
 #include <cctype>
+#include "utf8cvt.h"
 #include "list.h"
 
 using namespace std;
@@ -15,7 +16,7 @@ using namespace std;
 	\verbatim START_VERTEX END_VERTEX EDGE_VALUE \endverbatim
 */
 
-void ListGraphInput::addVertex(int vertex)
+void ListGraphInput::addVertex(wstring vertex)
 {
 	if (_vertexes.find(vertex) != _vertexes.end())
 		return;
@@ -25,10 +26,10 @@ void ListGraphInput::addVertex(int vertex)
 	ss << vertex;
 	_graph->setVertexText(index, ss.str());
 
-	_vertexes.insert(pair<int,int>(vertex, index));
+	_vertexes.insert(pair<wstring,int>(vertex, index));
 }
 
-void ListGraphInput::addEdge(int src, int dst, int val)
+void ListGraphInput::addEdge(wstring src, wstring dst, wstring val)
 {
 	wstringstream ss;
 	int v1 = max(_vertexes[src], _vertexes[dst]);
@@ -41,17 +42,20 @@ void ListGraphInput::addEdge(int src, int dst, int val)
 
 IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName)
 {
-	ifstream fs(fileName);
+	wifstream fs;
+	locale utf8(std::locale(), new utf8cvt);
+	wstring line, src, dst, value;
+	int err = 0;
+
+	fs.imbue(utf8);
+	fs.open(fileName);
 	if (!fs)
 		return OpenError;
 
 	_graph = graph;
 
-	string line;
-	int src, dst, value;
-	int err = 0;
 	while (getline(fs, line)) {
-		istringstream iss(line);
+		wistringstream iss(line);
 		iss >> src >> dst >> value;
 		if (!iss) {
 			err = 1;
