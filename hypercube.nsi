@@ -118,7 +118,6 @@ Section "Uninstall"
   !insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuFolder
   Delete "$SMPROGRAMS\$StartMenuFolder\*.*"
   RMDir "$SMPROGRAMS\$StartMenuFolder"  
-  DeleteRegKey /ifempty HKCU "Software\Hypercube"
 
 SectionEnd
 
