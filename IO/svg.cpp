@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include "CORE/config.h"
 #include "utf8cvt.h"
 #include "svg.h"
 
@@ -38,7 +39,9 @@ static void header(Graph *graph, wofstream &fs)
 	   << "<svg width=\"" << width << "\" height=\"" << height
 	   << "\" viewBox=\"0 0 " << width << " " << height
 	   << "\" xmlns=\"http://www.w3.org/2000/svg\" "
-	      "baseProfile=\"tiny\">" << endl << endl;
+	      "baseProfile=\"tiny\">" << endl << endl
+	   << "<g font-family=\"" FONT_FAMILY "\" "
+	      "font-weight=\"normal\">"<< endl;
 }
 
 static void edges(Graph *graph, wofstream &fs, int zValue)
@@ -115,7 +118,7 @@ IO::Error SvgGraphOutput::writeGraph(Graph *graph, const char *filename)
 	vertexes(graph, fs);
 
 	/* SVG end */
-	fs << "</svg>" << endl;
+	fs << "</g>" << endl << endl << "</svg>" << endl;
 
 	fs.close();
 	if (fs.fail())
