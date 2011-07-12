@@ -36,6 +36,7 @@ static void header(Graph *graph, wofstream &fs)
 	int height = graph->dimensions().y();
 
 	fs << "<?xml version=\"1.0\" encoding=\"utf-8\"?>" << endl
+	   << "<!-- Created with Hypercube ("APP_HOMEPAGE") -->" << endl << endl
 	   << "<svg width=\"" << width << "\" height=\"" << height
 	   << "\" viewBox=\"0 0 " << width << " " << height
 	   << "\" xmlns=\"http://www.w3.org/2000/svg\" "
