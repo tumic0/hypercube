@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "CORE/config.h"
-#include "utf8cvt.h"
+#include "IO/encodings/utf8cvt.h"
 #include "svg.h"
 
 using namespace std;

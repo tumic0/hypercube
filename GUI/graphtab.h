@@ -5,6 +5,7 @@
 #include "CORE/graph.h"
 #include "CORE/sa.h"
 #include "IO/io.h"
+#include "IO/encoding.h"
 
 
 class GraphTab : public QWidget
@@ -25,6 +26,11 @@ public:
 
 	Graph *graph();
 	GraphView *view() {return _view;}
+
+	Encoding *inputEncoding() {return _inputEncoding;}
+	void setInputEncoding(Encoding *encoding);
+	bool antialiasing();
+	void setAntialiasing(bool value);
 
 	QPoint dimensions() const {return _dimensions;}
 	void setDimensions(const QPoint &dimensions);
@@ -80,6 +86,7 @@ private:
 
 	QString _inputFileName;
 	QString _outputFileName;
+	Encoding *_inputEncoding;
 	InputProvider *_inputProvider;
 	OutputProvider *_outputProvider;
 

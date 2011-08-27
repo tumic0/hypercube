@@ -1,7 +1,7 @@
 #ifndef SVG_H_
 #define SVG_H_
 
-#include "io.h"
+#include "IO/io.h"
 
 class SvgGraphOutput: public OutputProvider
 {

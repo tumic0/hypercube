@@ -26,7 +26,8 @@ using namespace std;
 */
 
 
-IO::Error MatrixGraphInput::readGraph(Graph *graph, const char *fileName)
+IO::Error MatrixGraphInput::readGraph(Graph *graph, const char *fileName,
+  Encoding*)
 {
 	int size, value;
 	wstringstream ss;

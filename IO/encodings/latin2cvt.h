@@ -1,17 +1,16 @@
-#ifndef UTF8CVT_H_
-#define UTF8CVT_H_
+#ifndef LATIN2CVT_H_
+#define LATIN2CVT_H_
 
 #include <locale>
 
-
-class utf8cvt: public std::codecvt<wchar_t,char,mbstate_t>
+class latin2cvt : public std::codecvt<wchar_t,char,mbstate_t>
 {
 protected:
 	virtual bool do_always_noconv() const throw() { return false; }
-	virtual int do_max_length() const throw() { return 3; }
-	virtual int do_encoding() const throw() { return 0; }
-	virtual int do_length(mbstate_t&, const char* from,
-	  const char* end, size_t max) const;
+	virtual int do_max_length() const throw() { return 1; }
+	virtual int do_encoding() const throw() { return 1; }
+	virtual int do_length(mbstate_t&, const char*, const char*,
+	  size_t max) const { return max; }
 	virtual result do_in(mbstate_t& state, const char* from,
 	  const char* from_end, const char*& from_next, wchar_t* to,
 	  wchar_t* to_limit, wchar_t*& to_next) const;
@@ -22,4 +21,4 @@ protected:
 	  char*& to_next) const;
 };
 
-#endif /* UTF8CVT_H_ */
+#endif /* LATIN2CVT_H_ */

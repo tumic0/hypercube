@@ -1,6 +1,6 @@
 #include <sstream>
 #include <cctype>
-#include "utf8cvt.h"
+#include "IO/encodings/latin2cvt.h"
 #include "list.h"
 
 using namespace std;
@@ -40,14 +40,18 @@ void ListGraphInput::addEdge(wstring src, wstring dst, wstring val)
 	_graph->setEdgeText(v1, v2, ss.str());
 }
 
-IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName)
+IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName,
+  Encoding *encoding)
 {
 	wifstream fs;
-	locale utf8(std::locale(), new utf8cvt);
 	wstring line, src, dst, value;
 	int err = 0;
 
-	fs.imbue(utf8);
+	if (encoding) {
+		locale lc(std::locale(), encoding->cvt());
+		fs.imbue(lc);
+	}
+
 	fs.open(fileName);
 	if (!fs)
 		return OpenError;

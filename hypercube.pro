@@ -1,31 +1,43 @@
 TARGET = hypercube
 QT += core \
     gui
-HEADERS += IO/list.h \
-    IO/matrix.h \
-    IO/utf8cvt.h \
-    IO/io.h \
-    IO/ps.h \
-    IO/svg.h \
-    GUI/graphview.h \
+HEADERS += IO/encodings/latin1cvt.h \
+    IO/encodings/latin1.h \
+    IO/encodings/cp1250.h \
+    IO/encodings/cp1250cvt.h \
+    IO/modules.h \
+    IO/encodings/latin2.h \
+    IO/encodings/utf8.h \
+    IO/providers/list.h \
+    IO/providers/matrix.h \
+    IO/providers/ps.h \
+    IO/providers/svg.h \
+    IO/encodings/latin2cvt.h \
+    IO/encodings/utf8cvt.h \
+    IO/encoding.h \
+    GUI/icons.h \
     GUI/vertexitem.h \
     GUI/edgeitem.h \
-    GUI/icons.h \
+    IO/io.h \
+    GUI/graphview.h \
     GUI/graphtab.h \
     GUI/colorcombobox.h \
     GUI/numericedit.h \
     GUI/gui.h
-SOURCES += CORE/color.cpp \
+SOURCES += IO/encodings/latin1cvt.cpp \
+    IO/encodings/latin2cvt.cpp \
+    IO/encodings/cp1250cvt.cpp \
+    IO/modules.cpp \
+    IO/providers/list.cpp \
+    IO/providers/matrix.cpp \
+    IO/providers/ps.cpp \
+    IO/providers/svg.cpp \
+    IO/encodings/utf8cvt.cpp \
+    CORE/color.cpp \
     CORE/edge.cpp \
     CORE/graph.cpp \
     CORE/sa.cpp \
     CORE/vertex.cpp \
-    IO/utf8cvt.cpp \
-    IO/list.cpp \
-    IO/matrix.cpp \
-    IO/io.cpp \
-    IO/ps.cpp \
-    IO/svg.cpp \
     GUI/main.cpp \
     GUI/vertexitem.cpp \
     GUI/edgeitem.cpp \

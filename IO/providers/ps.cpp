@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <fstream>
 #include "CORE/config.h"
+#include "IO/encodings/latin2cvt.h"
 #include "ps.h"
 
 using namespace std;
@@ -161,7 +162,9 @@ static void vertexes(Graph *graph, wofstream &fs)
 IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *filename)
 {
 	wofstream fs;
+	locale latin2(std::locale(), new latin2cvt);
 
+	fs.imbue(latin2);
 	fs.open(filename);
 
 	header(graph, fs);

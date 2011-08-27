@@ -2,7 +2,7 @@
 #define IO_H_
 
 #include "CORE/graph.h"
-
+#include "encoding.h"
 
 class IO
 {
@@ -20,7 +20,8 @@ public:
 class InputProvider : public IO
 {
 public:
-	virtual Error readGraph(Graph *graph, const char *fileName) = 0;
+	virtual Error readGraph(Graph *graph, const char *fileName,
+	  Encoding *encoding) = 0;
 };
 
 class OutputProvider : public IO
@@ -30,9 +31,5 @@ public:
 	virtual const char* type() = 0;
 	virtual const char* description() = 0;
 };
-
-
-extern OutputProvider* outputProviders[];
-extern InputProvider* inputProviders[];
 
 #endif /* IO_H_ */

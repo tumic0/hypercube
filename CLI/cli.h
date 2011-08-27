@@ -7,6 +7,7 @@
 
 class Graph;
 class SA;
+class Encoding;
 
 
 class CLI
@@ -33,6 +34,7 @@ private:
 	std::string _inputFileName;
 	std::string _outputFileName;
 	std::string _format;
+	std::string _encoding;
 
 	Coordinates _dimensions;
 	Color _vertexColor;

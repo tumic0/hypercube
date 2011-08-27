@@ -3,6 +3,8 @@
 #include "GUI/numericedit.h"
 #include "GUI/graphtab.h"
 #include "IO/io.h"
+#include "IO/encoding.h"
+#include "IO/modules.h"
 #include "CORE/config.h"
 #include "GUI/icons.h"
 
@@ -168,16 +170,55 @@ void GUI::createProperties()
 {
 	createGraphProperties();
 	createSAProperties();
+	createIOProperties();
 
 	_properties = new QToolBox;
 
 	_properties->addItem(_graphProperties, tr("Graph settings"));
-	_properties->addItem(_SAProperties, tr("SA settings"));
+	_properties->addItem(_SAProperties, tr("Algorithm settings"));
+	_properties->addItem(_IOProperties, tr("I/O settings"));
 
 	_properties->setSizePolicy(QSizePolicy(QSizePolicy::Maximum,
 	  QSizePolicy::Minimum));
-	_properties->setMinimumWidth(qMax(_graphProperties->sizeHint().width(),
-	  _SAProperties->sizeHint().width()));
+	_properties->setMinimumWidth(qMax(_IOProperties->sizeHint().width(),
+	  qMax(_graphProperties->sizeHint().width(),
+	  _SAProperties->sizeHint().width())));
+}
+
+void GUI::createIOProperties()
+{
+	QGroupBox *encodingBox = new QGroupBox(tr("Encoding"));
+
+	_inputEncoding = new QComboBox();
+
+	for (Encoding **ep = encodings; *ep; ep++)
+		_inputEncoding->addItem((*ep)->name());
+
+	connect(_inputEncoding, SIGNAL(activated(int)), this,
+	  SLOT(setInputEncoding(int)));
+
+	QFormLayout *encodingLayout = new QFormLayout;
+	encodingLayout->addRow(tr("Input encoding:"), _inputEncoding);
+	encodingBox->setLayout(encodingLayout);
+
+
+	QGroupBox *displayBox = new QGroupBox(tr("Display"));
+
+	_antialiasing = new QCheckBox(tr("Use antialiasing"), this);
+	QVBoxLayout *displayLayout = new QVBoxLayout;
+	displayLayout->addWidget(_antialiasing, 0, Qt::AlignTop);
+	displayBox->setLayout(displayLayout);
+
+	connect(_antialiasing, SIGNAL(stateChanged(int)),
+	  this, SLOT(setAntialiasing(int)));
+
+
+	QVBoxLayout *layout = new QVBoxLayout;
+	layout->addWidget(encodingBox);
+	layout->addWidget(displayBox);
+
+	_IOProperties = new QWidget;
+	_IOProperties->setLayout(layout);
 }
 
 void GUI::createSAProperties()
@@ -375,6 +416,7 @@ void GUI::tabChanged(int current)
 
 	getSAProperties(tab);
 	getGraphProperties(tab);
+	getIOProperties(tab);
 
 	_zoom->setText(ZOOM_STRING(tab->view()->zoom()));
 	_fileName->setText(tab->fileName());
@@ -401,6 +443,7 @@ void GUI::openFile()
 
 	setSAProperties(tab);
 	setGraphProperties(tab);
+	setIOProperties(tab);
 	IO::Error error = tab->readGraph(fileName);
 
 	if (error) {
@@ -651,6 +694,25 @@ void GUI::colorizeEdges(int state)
 	_edgeColor->setEnabled((state == Qt::Checked) ? false : true);
 }
 
+void GUI::setInputEncoding(int index)
+{
+	if (TAB())
+		TAB()->setInputEncoding(*(encodings + index));
+}
+
+void GUI::setAntialiasing(int state)
+{
+	if (TAB())
+		TAB()->setAntialiasing((state == Qt::Checked) ? true : false);
+}
+
+void GUI::setIOProperties(GraphTab *tab)
+{
+	tab->setInputEncoding(*(encodings + _inputEncoding->currentIndex()));
+	tab->setAntialiasing((_antialiasing->checkState() == Qt::Checked)
+	  ? true : false);
+}
+
 void GUI::setSAProperties(GraphTab *tab)
 {
 	tab->setNodeDistribution(_nodeDistribution->value());
@@ -680,6 +742,13 @@ void GUI::setGraphProperties(GraphTab *tab)
 	  ? true : false);
 	tab->colorizeEdges((_coloredEdges->checkState() == Qt::Checked)
 	  ? true : false);
+}
+
+void GUI::getIOProperties(GraphTab *tab)
+{
+	int index = (tab->inputEncoding() - *encodings) / sizeof(Encoding*);
+	_inputEncoding->setCurrentIndex(index);
+	_antialiasing->setChecked(tab->antialiasing());
 }
 
 void GUI::getSAProperties(GraphTab *tab)
@@ -742,7 +811,7 @@ void GUI::writeSettings()
 	settings.setValue("vertexColor", _vertexColor->color());
 	settings.endGroup();
 
-	settings.beginGroup("SA");
+	settings.beginGroup("Algorithm");
 	settings.setValue("nodeDistribution", _nodeDistribution->value());
 	settings.setValue("edgeLength", _edgeLength->value());
 	settings.setValue("edgeCrossings", _edgeCrossings->value());
@@ -750,6 +819,11 @@ void GUI::writeSettings()
 	settings.setValue("finalTemp", _finalTemp->value());
 	settings.setValue("coolFactor", _coolFactor->value());
 	settings.setValue("numSteps", _numSteps->value());
+	settings.endGroup();
+
+	settings.beginGroup("IO");
+	settings.setValue("inputEncoding", _inputEncoding->currentIndex());
+	settings.setValue("antialiasing", _antialiasing->checkState());
 	settings.endGroup();
 }
 
@@ -784,7 +858,7 @@ void GUI::readSettings()
 	  QColor(VERTEX_COLOR)).value<QColor>());
 	settings.endGroup();
 
-	settings.beginGroup("SA");
+	settings.beginGroup("Algorithm");
 	_nodeDistribution->setValue(settings.value("nodeDistribution",
 	  NODE_DISTRIBUTION).toFloat());
 	_edgeLength->setValue(settings.value("edgeLength",
@@ -795,6 +869,12 @@ void GUI::readSettings()
 	_finalTemp->setValue(settings.value("finalTemp", FINAL_TEMP).toFloat());
 	_coolFactor->setValue(settings.value("coolFactor", COOL_FACTOR).toFloat());
 	_numSteps->setValue(settings.value("numSteps", NUM_STEPS).toInt());
+	settings.endGroup();
+
+	settings.beginGroup("IO");
+	_inputEncoding->setCurrentIndex(settings.value("inputEncoding", 0).toInt());
+	_antialiasing->setChecked((Qt::CheckState)settings.value("antialiasing",
+	  Qt::Unchecked).toBool());
 	settings.endGroup();
 }
 

@@ -53,6 +53,9 @@ private slots:
 	void showVertexIDs(int state);
 	void colorizeEdges(int state);
 
+	void setInputEncoding(int index);
+	void setAntialiasing(int state);
+
 	void tabChanged(int current);
 	void zoom(qreal zoom);
 
@@ -66,11 +69,14 @@ private:
 	void createProperties();
 	void createSAProperties();
 	void createGraphProperties();
+	void createIOProperties();
 
+	void getIOProperties(GraphTab *tab);
 	void getSAProperties(GraphTab *tab);
 	void getGraphProperties(GraphTab *tab);
 	void setSAProperties(GraphTab *tab);
 	void setGraphProperties(GraphTab *tab);
+	void setIOProperties(GraphTab *tab);
 
 	void closeEvent(QCloseEvent *event);
 	void readSettings();
@@ -88,6 +94,7 @@ private:
 
 	QWidget *_graphProperties;
 	QWidget *_SAProperties;
+	QWidget *_IOProperties;
 
 	QActionGroup *_fileActionGroup;
 	QActionGroup *_graphActionGroup;
@@ -129,6 +136,9 @@ private:
 	FloatEdit *_coolFactor;
 	IntEdit *_numSteps;
 	QCheckBox *_debug;
+
+	QComboBox *_inputEncoding;
+	QCheckBox *_antialiasing;
 
 	QLabel *_fileName;
 	QLabel *_zoom;

@@ -2,6 +2,7 @@
 #include <QFileInfo>
 #include "vertexitem.h"
 #include "edgeitem.h"
+#include "IO/modules.h"
 #include "graphtab.h"
 
 
@@ -18,6 +19,7 @@ GraphTab::GraphTab()
 	_view = new GraphView();
 	_sa = new SA();
 
+	_inputEncoding = NULL;
 	_inputProvider = NULL;
 	_outputProvider = NULL;
 
@@ -42,7 +44,7 @@ IO::Error GraphTab::readGraph(const QString &fileName)
 
 	InputProvider **p = inputProviders;
 	while (*p) {
-		error = (*p)->readGraph(_graph, cFileName);
+		error = (*p)->readGraph(_graph, cFileName, _inputEncoding);
 		if (error == IO::Ok) {
 			_inputProvider = *p;
 			break;
@@ -69,7 +71,8 @@ IO::Error GraphTab::readGraph()
 	QByteArray ba = _inputFileName.toLocal8Bit();
 	const char *cFileName = ba.data();
 
-	IO::Error error = _inputProvider->readGraph(_graph, cFileName);
+	IO::Error error = _inputProvider->readGraph(_graph, cFileName,
+	  _inputEncoding);
 	if (error != IO::Ok)
 		return error;
 
@@ -195,6 +198,28 @@ void GraphTab::colorizeEdges(bool colorize)
 void GraphTab::setEdgeZValue(int value)
 {
 	_view->setEdgeZValue(value);
+}
+
+void GraphTab::setInputEncoding(Encoding *encoding)
+{
+	_inputEncoding = encoding;
+	if (_inputProvider)
+		readGraph();
+}
+
+bool GraphTab::antialiasing()
+{
+	return (_view->renderHints() & QPainter::Antialiasing)
+	  ? true : false;
+}
+
+void GraphTab::setAntialiasing(bool value)
+{
+	QPainter::RenderHints hints = _view->renderHints();
+	hints = (value) ? hints | QPainter::Antialiasing
+	  : hints & ~QPainter::Antialiasing;
+
+	_view->setRenderHints(hints);
 }
 
 

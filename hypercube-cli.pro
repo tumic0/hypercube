@@ -11,24 +11,34 @@ HEADERS += CORE/misc.h \
     CORE/sa.h \
     CORE/sa_log.h \
     CORE/vertex.h \
-    IO/utf8cvt.h \
-    IO/io.h \
-    IO/ps.h \
-    IO/svg.h \
-    IO/matrix.h \
-    IO/list.h \
-    CLI/cli.h
+    IO/encodings/latin1.h \
+    IO/encodings/cp1250.h \
+    IO/encodings/cp1250cvt.h \
+    IO/modules.h \
+    IO/encodings/latin2.h \
+    IO/encodings/utf8.h \
+    IO/providers/list.h \
+    IO/providers/matrix.h \
+    IO/providers/ps.h \
+    IO/providers/svg.h \
+    IO/encodings/latin2cvt.h \
+    IO/encodings/utf8cvt.h \
+    IO/encoding.h \
+    IO/io.h
 SOURCES += CORE/edge.cpp \
     CORE/vertex.cpp \
     CORE/color.cpp \
     CORE/graph.cpp \
     CORE/sa.cpp \
-    IO/utf8cvt.cpp \
-    IO/io.cpp \
-    IO/ps.cpp \
-    IO/svg.cpp \
-    IO/matrix.cpp \
-    IO/list.cpp \
+    IO/encodings/latin1cvt.cpp \
+    IO/encodings/latin2cvt.cpp \
+    IO/encodings/cp1250cvt.cpp \
+    IO/encodings/utf8cvt.cpp \
+    IO/modules.cpp \
+    IO/providers/list.cpp \
+    IO/providers/matrix.cpp \
+    IO/providers/ps.cpp \
+    IO/providers/svg.cpp \
     CLI/cli.cpp \
     CLI/main.cpp
 INCLUDEPATH += ./

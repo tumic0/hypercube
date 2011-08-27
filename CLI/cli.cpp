@@ -7,6 +7,7 @@
 #include "CORE/sa.h"
 #include "CORE/config.h"
 #include "IO/io.h"
+#include "IO/modules.h"
 #include "cli.h"
 
 using namespace std;
@@ -65,11 +66,27 @@ int CLI::exec()
 
 bool CLI::readGraph()
 {
+	Encoding **e = encodings;
 	InputProvider **p = inputProviders;
 	IO::Error error = IO::FormatError;
+	int found = 0;
+
+	if (_encoding == string())
+		_encoding = (char *)(*e)->name();
+
+	while (*e) {
+		if ((found = !strcmp(_encoding.c_str(), (*e)->name())))
+			break;
+		e++;
+	}
+
+	if (!found) {
+		cerr << "Unknown input encoding: " << _encoding << endl;
+		return false;
+	}
 
 	while (*p) {
-		error = (*p)->readGraph(_graph, _inputFileName.c_str());
+		error = (*p)->readGraph(_graph, _inputFileName.c_str(), *e);
 		if (error != IO::FormatError)
 			break;
 		p++;
@@ -131,6 +148,7 @@ void CLI::usage()
 	cout << "OPTIONS:" << endl;
 	cout << " -s <dimensions>  set image size to <dimensions>" << endl;
 	cout << " -f <format>      set output format to <format>" << endl;
+	cout << " -e <encoding>    set input file encoding to <encoding>" << endl;
 	cout << " -o <file>        set the output file to <file>" << endl;
 	cout << " -vc <color>      set vertex color to <color>" << endl;
 	cout << " -ec <color>      set edge color to <color>" << endl;
@@ -144,12 +162,21 @@ void CLI::usage()
 	cout << "option arguments:" << endl;
 	cout << " <dimesnsions>    width,height" << endl;
 	cout << " <color>          #RRGGBB" << endl;
-	cout << " <format>         supported formats: ";
+	cout << " <format>         ";
 
 	OutputProvider **p = outputProviders;
 	while (*p) {
 		cout << (*p)->type() << " ";
 		p++;
+	}
+
+	cout << endl;
+	cout << " <encoding>       ";
+
+	Encoding **e = encodings;
+	while (*e) {
+		cout << (*e)->name() << " ";
+		e++;
 	}
 
 	cout << endl;
@@ -174,6 +201,7 @@ int CLI::argument(int i)
 	}
 
 	ARG("-f", _format);
+	ARG("-e", _encoding);
 	ARG("-o", _outputFileName);
 
 	ARG("-s", _dimensions);
