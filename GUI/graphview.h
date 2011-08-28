@@ -6,6 +6,7 @@
 class QGraphicsScene;
 class EdgeItem;
 class VertexItem;
+class BoundingRectItem;
 
 
 class GraphView : public QGraphicsView
@@ -47,7 +48,7 @@ private:
 
 	QGraphicsScene *_scene;
 
-	QGraphicsRectItem *_boundingRect;
+	BoundingRectItem *_boundingRect;
 	QList<VertexItem*> _vertexList;
 	QList<EdgeItem*> _edgeList;
 

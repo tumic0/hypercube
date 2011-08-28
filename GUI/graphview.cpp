@@ -14,6 +14,26 @@
 */
 
 
+class BoundingRectItem : public QGraphicsRectItem
+{
+public:
+	BoundingRectItem(QGraphicsItem *parent = 0) : QGraphicsRectItem(parent)
+	  {setPen(Qt::DashLine);}
+	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+	  QWidget *widget);
+};
+
+void BoundingRectItem::paint(QPainter *painter,
+  const QStyleOptionGraphicsItem *option, QWidget *widget = 0)
+{
+	bool orig = painter->testRenderHint(QPainter::Antialiasing);
+
+	painter->setRenderHint(QPainter::Antialiasing, false);
+	QGraphicsRectItem::paint(painter, option, widget);
+	painter->setRenderHint(QPainter::Antialiasing, orig);
+}
+
+
 GraphView::GraphView(QWidget *parent)
 	: QGraphicsView(parent)
 {
@@ -21,9 +41,10 @@ GraphView::GraphView(QWidget *parent)
 	_dimensions = QPoint(0, 0);
 
 	_scene = new QGraphicsScene(this);
+	_boundingRect = new BoundingRectItem();
+	_scene->addItem(_boundingRect);
+
 	setScene(_scene);
-	_boundingRect = _scene->addRect(0, 0, 0, 0);
-	_boundingRect->setPen(Qt::DashLine);
 }
 
 GraphView::~GraphView()
