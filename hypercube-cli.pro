@@ -23,6 +23,8 @@ HEADERS += CORE/misc.h \
     IO/providers/svg.h \
     IO/encodings/latin2cvt.h \
     IO/encodings/utf8cvt.h \
+    IO/encodings/koi8rcvt.h \
+    IO/encodings/koi8r.h \
     IO/encoding.h \
     IO/io.h
 SOURCES += CORE/edge.cpp \
@@ -34,6 +36,7 @@ SOURCES += CORE/edge.cpp \
     IO/encodings/latin2cvt.cpp \
     IO/encodings/cp1250cvt.cpp \
     IO/encodings/utf8cvt.cpp \
+    IO/encodings/koi8rcvt.cpp \
     IO/modules.cpp \
     IO/providers/list.cpp \
     IO/providers/matrix.cpp \

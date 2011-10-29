@@ -6,6 +6,7 @@
 #include "encodings/utf8.h"
 #include "encodings/latin1.h"
 #include "encodings/latin2.h"
+#include "encodings/koi8r.h"
 #include "encodings/cp1250.h"
 
 
@@ -24,6 +25,7 @@ InputProvider* inputProviders[] = {
 Encoding* encodings[] = {
 	new Latin1,
 	new Latin2,
+	new KOI8R,
 	new CP1250,
 	new UTF8,
 	NULL

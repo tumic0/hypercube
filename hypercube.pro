@@ -1,7 +1,9 @@
 TARGET = hypercube
 QT += core \
     gui
-HEADERS += IO/encodings/latin1cvt.h \
+HEADERS += IO/encodings/koi8rcvt.h \
+    IO/encodings/koi8r.h \
+    IO/encodings/latin1cvt.h \
     IO/encodings/latin1.h \
     IO/encodings/cp1250.h \
     IO/encodings/cp1250cvt.h \
@@ -24,7 +26,8 @@ HEADERS += IO/encodings/latin1cvt.h \
     GUI/colorcombobox.h \
     GUI/numericedit.h \
     GUI/gui.h
-SOURCES += IO/encodings/latin1cvt.cpp \
+SOURCES += IO/encodings/koi8rcvt.cpp \
+    IO/encodings/latin1cvt.cpp \
     IO/encodings/latin2cvt.cpp \
     IO/encodings/cp1250cvt.cpp \
     IO/modules.cpp \
