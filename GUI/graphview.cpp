@@ -91,7 +91,7 @@ EdgeItem* GraphView::edge(int src, int dst)
 		if (v->edges().at(i)->destVertex() == _vertexList.at(dst))
 			return v->edges().at(i);
 
-	return NULL;
+	return 0;
 }
 
 EdgeItem* GraphView::addEdge(int src, int dst)
