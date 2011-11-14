@@ -19,9 +19,9 @@ GraphTab::GraphTab()
 	_view = new GraphView();
 	_sa = new SA();
 
-	_inputEncoding = NULL;
-	_inputProvider = NULL;
-	_outputProvider = NULL;
+	_inputEncoding = 0;
+	_inputProvider = 0;
+	_outputProvider = 0;
 
 	QVBoxLayout *layout = new QVBoxLayout;
 	layout->setContentsMargins(0, 0, 0, 0);

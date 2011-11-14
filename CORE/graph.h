@@ -18,7 +18,7 @@ public:
 	int addVertex();
 	void addEdge(int v1, int v2);
 	bool edge(int v1, int v2)
-	  {return (_matrix[v1][v2].edge == NULL) ? false : true;}
+	  {return (_matrix[v1][v2].edge) ? true : false;}
 
 	int size(void) {return _size;}
 

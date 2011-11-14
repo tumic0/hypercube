@@ -1,12 +1,14 @@
+#include <cstring>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 #include "CORE/config.h"
-#include "IO/encodings/latin2cvt.h"
+#include "IO/modules.h"
+#include "ps_snippet.h"
 #include "ps.h"
 
-using namespace std;
 
+using namespace std;
 
 /*!
 	\class PsGraphOutput
@@ -17,7 +19,6 @@ using namespace std;
 
 
 #define tr(val) (dim.y()-(val))
-
 
 static Coordinates edgeValuePos(Coordinates &p1, Coordinates &p2,
   int size, int fontSize)
@@ -34,6 +35,31 @@ static Coordinates edgeValuePos(Coordinates &p1, Coordinates &p2,
 }
 
 
+static void encoding(PsSnippet *sn, wofstream &fs)
+{
+	if (sn->font()->font())
+		fs << sn->font()->font() << endl << endl;
+
+	if (sn->encoding()->encoding()) {
+		fs << "/encoding [" << endl
+		   << sn->encoding()->encoding() << endl
+		   << "] def" << endl << endl;
+
+		fs << "/reencode {" << endl
+		   << "	findfont" << endl
+		   << "	dup length dict begin" << endl
+		   << "		{1 index /FID ne {def} {pop pop} ifelse} forall" << endl
+		   << "		/Encoding encoding def" << endl
+		   << "		currentdict" << endl
+		   << "	end" << endl
+		   << "	definefont pop" << endl
+		   << "} def" << endl << endl;
+
+		fs << "/font /" << sn->font()->name() << " reencode" << endl << endl;
+	} else
+		fs << "/font /" << sn->font()->name() << " def" << endl << endl;
+}
+
 static void header(Graph *graph, wofstream &fs)
 {
 	Coordinates dim = graph->dimensions();
@@ -48,7 +74,7 @@ static void header(Graph *graph, wofstream &fs)
 	fs << "/e {newpath moveto lineto stroke} def" << endl
 	   << "/v {newpath arc closepath fill} def" << endl
 	   << "/d {moveto show} def" << endl
-	   << "/f {/" FONT_FAMILY " findfont exch scalefont setfont} def" << endl
+	   << "/f {/font findfont exch scalefont setfont} def" << endl
 	   << "/lw {setlinewidth} def" << endl
 	   << "/c {setrgbcolor} def" << endl << endl;
 }
@@ -161,23 +187,31 @@ static void vertexes(Graph *graph, wofstream &fs)
 
 IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *filename)
 {
-	wofstream fs;
-	locale latin2(std::locale(), new latin2cvt);
+	for (PsSnippet **sp = snippets; *sp; sp++) {
+		codecvt<wchar_t,char,mbstate_t> *cvt = 0;
 
-	fs.imbue(latin2);
-	fs.open(filename);
+		for (Encoding **ep = encodings; *ep; ep++)
+			if (!strcmp((*sp)->encoding()->name(), (*ep)->name()))
+				cvt = (*ep)->cvt();
+		if (!cvt)
+			return WriteError;
 
-	header(graph, fs);
-	edges(graph, fs, -2);
-	edges(graph, fs, -1);
-	vertexes(graph, fs);
+		wofstream fs;
+		locale lc(std::locale(), cvt);
+		fs.imbue(lc);
+		fs.open(filename);
 
-	/* EPS end */
-	fs << "%%EOF" << endl;
+		header(graph, fs);
+		encoding(*sp, fs);
+		edges(graph, fs, -2);
+		edges(graph, fs, -1);
+		vertexes(graph, fs);
+		fs << "%%EOF" << endl;
 
-	fs.close();
-	if (fs.fail())
-		return WriteError;
+		fs.close();
+		if (!fs.fail())
+			return Ok;
+	}
 
-	return Ok;
+	return WriteError;
 }

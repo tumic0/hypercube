@@ -1,4 +1,3 @@
-#include <cstdlib>
 #include "providers/matrix.h"
 #include "providers/list.h"
 #include "providers/svg.h"
@@ -13,13 +12,13 @@
 OutputProvider* outputProviders[] = {
 	new SvgGraphOutput,
 	new PsGraphOutput,
-	NULL
+	0
 };
 
 InputProvider* inputProviders[] = {
 	new ListGraphInput,
 	new MatrixGraphInput,
-	NULL
+	0
 };
 
 Encoding* encodings[] = {
@@ -28,5 +27,5 @@ Encoding* encodings[] = {
 	new KOI8R,
 	new CP1250,
 	new UTF8,
-	NULL
+	0
 };

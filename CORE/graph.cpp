@@ -35,8 +35,8 @@ Graph::Graph()
 
 	_dimensions = Coordinates(0, 0);
 
-	_vertexes = NULL;
-	_matrix = NULL;
+	_vertexes = 0;
+	_matrix = 0;
 
 	_hueState = HUE_INIT;
 }
@@ -60,7 +60,7 @@ void Graph::clear()
 		for (int j = 0; j < i; j++) {
 			if (edge(i, j)) {
 				delete _matrix[i][j].edge;
-				_matrix[i][j].edge = NULL;
+				_matrix[i][j].edge = 0;
 				_matrix[i][j].distance = 0;
 			}
 		}
@@ -262,7 +262,7 @@ void Graph::allocateMemory()
 	// Initialize the new items
 	for (int i = _allocSize; i < allocSize; i++) {
 		for (int j = 0; j < i; j++) {
-			matrix[i][j].edge = NULL;
+			matrix[i][j].edge = 0;
 			matrix[i][j].distance = 0;
 		}
 	}

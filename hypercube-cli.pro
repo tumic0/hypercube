@@ -14,17 +14,22 @@ HEADERS += CORE/misc.h \
     IO/encodings/latin1.h \
     IO/encodings/cp1250.h \
     IO/encodings/cp1250cvt.h \
-    IO/modules.h \
     IO/encodings/latin2.h \
     IO/encodings/utf8.h \
-    IO/providers/list.h \
-    IO/providers/matrix.h \
-    IO/providers/ps.h \
-    IO/providers/svg.h \
     IO/encodings/latin2cvt.h \
     IO/encodings/utf8cvt.h \
     IO/encodings/koi8rcvt.h \
     IO/encodings/koi8r.h \
+    IO/providers/list.h \
+    IO/providers/matrix.h \
+    IO/providers/ps.h \
+    IO/providers/svg.h \
+    IO/providers/list.h \
+    IO/providers/matrix.h \
+    IO/providers/svg.h \
+    IO/providers/ps.h \
+    IO/providers/ps_snippet.h \
+    IO/modules.h \
     IO/encoding.h \
     IO/io.h
 SOURCES += CORE/edge.cpp \
@@ -41,6 +46,7 @@ SOURCES += CORE/edge.cpp \
     IO/providers/list.cpp \
     IO/providers/matrix.cpp \
     IO/providers/ps.cpp \
+    IO/providers/ps_snippet.cpp \
     IO/providers/svg.cpp \
     CLI/cli.cpp \
     CLI/main.cpp
