@@ -2,7 +2,7 @@
 #define CONFIG_H_
 
 #define APP_HOMEPAGE			"http://tumic.wz.cz/hypercube"
-#define APP_VERSION				"0.7"
+#define APP_VERSION				"0.8"
 
 #define FONT_FAMILY				"Helvetica"
 #define AVG_CHAR_WIDTH			0.66f
