@@ -38,7 +38,9 @@ static Coordinates edgeValuePos(Coordinates &p1, Coordinates &p2,
 static void encoding(PsSnippet *sn, wofstream &fs)
 {
 	if (sn->font()->font())
-		fs << sn->font()->font() << endl << endl;
+		fs << "%%BeginResource: font " << sn->font()->name() << endl
+		   << sn->font()->font() << endl
+		   << "%%EndResource" << endl << endl;
 
 	if (sn->encoding()->encoding()) {
 		fs << "/encoding [" << endl
@@ -64,13 +66,14 @@ static void header(Graph *graph, wofstream &fs)
 {
 	Coordinates dim = graph->dimensions();
 
-	/* DSC header */
 	fs << "%!PS-Adobe-3.0 EPSF-3.0" << endl
 	   << "%%BoundingBox: 0 0 " << dim.x() << " " << dim.y() << endl
 	   << "%%Creator: Hypercube ("APP_HOMEPAGE")" << endl
 	   << "%%EndComments" << endl << endl;
+}
 
-	/* Macros definitions */
+static void macros(wofstream &fs)
+{
 	fs << "/e {newpath moveto lineto stroke} def" << endl
 	   << "/v {newpath arc closepath fill} def" << endl
 	   << "/d {moveto show} def" << endl
@@ -197,12 +200,13 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *filename)
 			return WriteError;
 
 		wofstream fs;
-		locale lc(std::locale(), cvt);
+		locale lc(locale(), cvt);
 		fs.imbue(lc);
 		fs.open(filename);
 
 		header(graph, fs);
 		encoding(*sp, fs);
+		macros(fs);
 		edges(graph, fs, -2);
 		edges(graph, fs, -1);
 		vertexes(graph, fs);
