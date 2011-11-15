@@ -62,14 +62,22 @@ static void encoding(PsSnippet *sn, wofstream &fs)
 		fs << "/font /" << sn->font()->name() << " def" << endl << endl;
 }
 
-static void header(Graph *graph, wofstream &fs)
+static void header(Graph *graph, PsSnippet *sn, wofstream &fs)
 {
 	Coordinates dim = graph->dimensions();
 
 	fs << "%!PS-Adobe-3.0 EPSF-3.0" << endl
 	   << "%%BoundingBox: 0 0 " << dim.x() << " " << dim.y() << endl
-	   << "%%Creator: Hypercube ("APP_HOMEPAGE")" << endl
-	   << "%%EndComments" << endl << endl;
+	   << "%%Creator: Hypercube ("APP_HOMEPAGE")" << endl;
+
+	if (sn->font()->font())
+		fs << "%%DocumentSuppliedResources: font ";
+	else
+		fs << "%%DocumentNeededResources: font ";
+	fs << sn->font()->name() << endl;
+
+	fs << "%%EndComments" << endl << endl
+	   << "%%StartProlog" << endl;
 }
 
 static void macros(wofstream &fs)
@@ -80,6 +88,8 @@ static void macros(wofstream &fs)
 	   << "/f {/font findfont exch scalefont setfont} def" << endl
 	   << "/lw {setlinewidth} def" << endl
 	   << "/c {setrgbcolor} def" << endl << endl;
+
+	fs << "%%EndProlog" << endl << endl;
 }
 
 static void edges(Graph *graph, wofstream &fs, int zValue)
@@ -204,7 +214,7 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *filename)
 		fs.imbue(lc);
 		fs.open(filename);
 
-		header(graph, fs);
+		header(graph, *sp, fs);
 		encoding(*sp, fs);
 		macros(fs);
 		edges(graph, fs, -2);
