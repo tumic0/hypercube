@@ -35,8 +35,23 @@ static Coordinates edgeValuePos(Coordinates &p1, Coordinates &p2,
 }
 
 
-static void encoding(PsSnippet *sn, wofstream &fs)
+static void prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
 {
+	Coordinates dim = graph->dimensions();
+
+	fs << "%!PS-Adobe-3.0 EPSF-3.0" << endl
+	   << "%%BoundingBox: 0 0 " << dim.x() << " " << dim.y() << endl
+	   << "%%Creator: Hypercube ("APP_HOMEPAGE")" << endl;
+
+	if (sn->font()->font())
+		fs << "%%DocumentSuppliedResources: font ";
+	else
+		fs << "%%DocumentNeededResources: font ";
+	fs << sn->font()->name() << endl;
+
+	fs << "%%EndComments" << endl << endl
+	   << "%%BeginProlog" << endl;
+
 	if (sn->font()->font())
 		fs << "%%BeginResource: font " << sn->font()->name() << endl
 		   << sn->font()->font() << endl
@@ -60,28 +75,7 @@ static void encoding(PsSnippet *sn, wofstream &fs)
 		fs << "/font /" << sn->font()->name() << " reencode" << endl << endl;
 	} else
 		fs << "/font /" << sn->font()->name() << " def" << endl << endl;
-}
 
-static void header(Graph *graph, PsSnippet *sn, wofstream &fs)
-{
-	Coordinates dim = graph->dimensions();
-
-	fs << "%!PS-Adobe-3.0 EPSF-3.0" << endl
-	   << "%%BoundingBox: 0 0 " << dim.x() << " " << dim.y() << endl
-	   << "%%Creator: Hypercube ("APP_HOMEPAGE")" << endl;
-
-	if (sn->font()->font())
-		fs << "%%DocumentSuppliedResources: font ";
-	else
-		fs << "%%DocumentNeededResources: font ";
-	fs << sn->font()->name() << endl;
-
-	fs << "%%EndComments" << endl << endl
-	   << "%%StartProlog" << endl;
-}
-
-static void macros(wofstream &fs)
-{
 	fs << "/e {newpath moveto lineto stroke} def" << endl
 	   << "/v {newpath arc closepath fill} def" << endl
 	   << "/d {moveto show} def" << endl
@@ -214,9 +208,7 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *filename)
 		fs.imbue(lc);
 		fs.open(filename);
 
-		header(graph, *sp, fs);
-		encoding(*sp, fs);
-		macros(fs);
+		prolog(graph, *sp, fs);
 		edges(graph, fs, -2);
 		edges(graph, fs, -1);
 		vertexes(graph, fs);
