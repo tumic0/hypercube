@@ -708,7 +708,9 @@ void GUI::setAntialiasing(int state)
 
 void GUI::setIOProperties(GraphTab *tab)
 {
-	tab->setInputEncoding(*(encodings + _inputEncoding->currentIndex()));
+	Encoding* encoding = *(encodings + _inputEncoding->currentIndex());
+
+	tab->setInputEncoding(encoding);
 	tab->setAntialiasing((_antialiasing->checkState() == Qt::Checked)
 	  ? true : false);
 }
@@ -746,9 +748,14 @@ void GUI::setGraphProperties(GraphTab *tab)
 
 void GUI::getIOProperties(GraphTab *tab)
 {
-	int index = (tab->inputEncoding() - *encodings) / sizeof(Encoding*);
-	_inputEncoding->setCurrentIndex(index);
-	_antialiasing->setChecked(tab->antialiasing());
+	int index = 0;
+
+	for (Encoding **e = encodings; *e; e++, index++)
+		if (!strcmp((*e)->name(), tab->inputEncoding()->name()))
+			break;
+
+	BLOCK(_inputEncoding, setCurrentIndex(index));
+	BLOCK(_antialiasing, setChecked(tab->antialiasing()));
 }
 
 void GUI::getSAProperties(GraphTab *tab)
@@ -822,7 +829,7 @@ void GUI::writeSettings()
 	settings.endGroup();
 
 	settings.beginGroup("IO");
-	settings.setValue("inputEncoding", _inputEncoding->currentIndex());
+	settings.setValue("inputEncoding", _inputEncoding->currentText());
 	settings.setValue("antialiasing", _antialiasing->checkState());
 	settings.endGroup();
 }
@@ -872,7 +879,15 @@ void GUI::readSettings()
 	settings.endGroup();
 
 	settings.beginGroup("IO");
-	_inputEncoding->setCurrentIndex(settings.value("inputEncoding", 0).toInt());
+	int index = 0;
+	QString ie = settings.value("inputEncoding",
+	  (*encodings)->name()).toString();
+	for (Encoding **ep = encodings; *ep; ep++, index++) {
+		if (!strcmp((*ep)->name(), ie.toAscii().constData())) {
+			_inputEncoding->setCurrentIndex(index);
+			break;
+		}
+	}
 	_antialiasing->setChecked((Qt::CheckState)settings.value("antialiasing",
 	  Qt::Unchecked).toBool());
 	settings.endGroup();
