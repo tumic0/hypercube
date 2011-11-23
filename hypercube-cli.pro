@@ -39,6 +39,8 @@ HEADERS += CORE/sa_log.h \
     IO/encodings/cp1250.h \
     IO/encodings/koi8r.h \
     IO/encodings/utf8cvt.h \
+    IO/io.h \
+    IO/modules.h \
     CLI/cli.h
 SOURCES += CORE/edge.cpp \
     CORE/vertex.cpp \

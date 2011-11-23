@@ -10,7 +10,7 @@ using namespace std;
 #define EXP_THRESHOLD	LINEAR_FACTOR
 
 #define HUE_INIT		0.1f
-#define HUE_INCREMENT	0.618033988749895f
+#define HUE_INCREMENT	0.62f
 #define SATURATION		0.99f
 #define VALUE			0.99f
 
