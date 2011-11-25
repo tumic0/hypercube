@@ -3,14 +3,6 @@
 #include "config.h"
 
 
-/*!
-	\class Vertex
-	\brief Defines vertex objects of a Graph.
-
-	This class is used for Graph internal purposes only.
-*/
-
-
 Vertex::Vertex()
 {
 	_size = 0;

@@ -2,6 +2,7 @@
 #include "graph.h"
 #include "misc.h"
 
+
 using namespace std;
 
 #define INIT_SIZE		20
@@ -20,13 +21,6 @@ static inline bool lineSegmentCrossing(Coordinates l1p1, Coordinates l1p2,
 static inline int euclideanDistanceSqr(Coordinates p1, Coordinates p2);
 static unsigned hsv2rgb(float h, float s, float v);
 
-
-/*!
-	\class Graph
-	\brief A class representing graphs.
-
-	Lorem ipsum...
-*/
 
 Graph::Graph()
 {

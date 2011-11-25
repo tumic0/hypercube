@@ -6,13 +6,6 @@
 #include "sa_log.h"
 
 
-/*!
-	\class SA
-	\brief Simulated annealing computation
-
-	Lorem ipsum...
-*/
-
 static inline float rnd();
 static inline int crop(int x, int min, int max);
 

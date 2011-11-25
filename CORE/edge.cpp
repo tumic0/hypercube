@@ -2,14 +2,6 @@
 #include "config.h"
 
 
-/*!
-	\class Edge
-	\brief Defines edge objects of a Graph.
-
-	This class is used for Graph internal purposes only.
-*/
-
-
 Edge::Edge() {
 	_crossings = 0;
 	_length = 0;

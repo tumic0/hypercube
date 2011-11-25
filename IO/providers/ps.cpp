@@ -10,14 +10,6 @@
 
 using namespace std;
 
-/*!
-	\class PsGraphOutput
-	\brief PostScript output provider.
-
-	Lorem ipsum...
-*/
-
-
 #define tr(val) (dim.y()-(val))
 
 static Coordinates edgeValuePos(Coordinates &p1, Coordinates &p2,

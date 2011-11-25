@@ -5,27 +5,6 @@
 
 using namespace std;
 
-/*!
-	\class MatrixGraphInput
-	\brief Input provider for adjacency matrix graph representation.
-
-	Loads graphs represented as adjacency matrixes. The adjacency matrix
-	representation starts with a single number on a separate line representing
-	the number of vertexes of the graph. Starting with the next line, the
-	adjacency matrix itself follows. Numbers > 0 are taken as edges with the
-	given edge value.
-
-	Example:
-
-	\verbatim
-	3
-	0 1 1
-	1 0 1
-	1 1 0
-	\endverbatim
-*/
-
-
 IO::Error MatrixGraphInput::readGraph(Graph *graph, const char *fileName,
   Encoding*)
 {

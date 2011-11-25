@@ -3,6 +3,7 @@
 #include "IO/providers/ps_snippets/ce.h"
 #include "IO/providers/ps_snippets/cyrillic.h"
 
+
 PsSnippet* snippets[] = {
 	new Default,
 	new CE,

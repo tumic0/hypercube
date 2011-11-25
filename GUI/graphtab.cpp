@@ -6,13 +6,6 @@
 #include "graphtab.h"
 
 
-/*!
-	\class GraphTab
-	\brief GraphView to Graph bonding class
-
-	Lorem ipsum...
-*/
-
 GraphTab::GraphTab()
 {
 	_graph = new Graph();

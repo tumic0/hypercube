@@ -4,16 +4,6 @@
 #include "CORE/config.h"
 
 
-/*!
-	\class EdgeItem
-	\brief Defines edge items that can be added to a GraphView.
-
-	Lorem ipsun...
-*/
-
-/*!
-	Constructs an edge from vertex \a src to vertex \a dst.
-*/
 EdgeItem::EdgeItem(VertexItem *src, VertexItem *dst)
 {
 	_color = QColor();

@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include "koi8rcvt.h"
 
+
 using namespace std;
 
 struct cw {

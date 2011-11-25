@@ -4,16 +4,8 @@
 #include "IO/encodings/utf8cvt.h"
 #include "svg.h"
 
+
 using namespace std;
-
-
-/*!
-	\class SvgGraphOutput
-	\brief SVG output provider.
-
-	Lorem ipsum...
-*/
-
 
 static Coordinates edgeValuePos(Coordinates &p1, Coordinates &p2,
   int size, int fontSize)

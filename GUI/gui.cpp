@@ -9,14 +9,6 @@
 #include "GUI/icons.h"
 
 
-/*!
-	\class GUI
-	\brief The application's graphical user interface.
-
-	The GUI class provides the application's graphical user interface.
-*/
-
-
 #define TAB() ((GraphTab*) _viewTab->currentWidget())
 
 #define BLOCK(widget, action) \
@@ -31,9 +23,6 @@ static QString saveFilter(OutputProvider *provider);
 static QString errorDescription(IO::Error error);
 
 
-/*!
-	Constructs the application's graphical user interface.
-*/
 GUI::GUI()
 {
 	createActions();

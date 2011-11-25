@@ -2,29 +2,7 @@
 #include <QPainter>
 #include "colorcombobox.h"
 
-/*!
-	\class ColorComboBox
-	\brief A selection widget for choosing colors.
 
-	The ColorComboBox widget provides a set of predefined colors and a special
-	item that lets the user choose his own color using the QColorDialog.
-*/
-
-
-/*!
-	\fn void ColorComboBox::activated(const QColor &color)
-
-	This signal is emitted whenever a new color is choosen from the list.
-	The \a color argument is the color of the newly selected item.
-
-	The signal is not emitted when the current color is changed
-	programmatically by calling setColor().
-*/
-
-
-/*!
-	Constructs a color combo box widget.
-*/
 ColorComboBox::ColorComboBox(QWidget *parent)
 	: QComboBox(parent)
 {
@@ -41,9 +19,6 @@ ColorComboBox::ColorComboBox(QWidget *parent)
 	setColor(lastActivated);
 }
 
-/*!
-	Adds an item with the given \a color and \a name to the widget.
-*/
 void ColorComboBox::addColor(const QColor &color, const QString &name)
 {
 	QFontMetrics fm = fontMetrics();
@@ -59,31 +34,16 @@ void ColorComboBox::addColor(const QColor &color, const QString &name)
 	insertItem(colorCount(), pix, name, color);
 }
 
-/*!
-	The current number of items in the widget.
-
-	The special item for selecting user defined colors is not counted, use
-	count() if you want the number of all items.
-*/
 int ColorComboBox::colorCount() const
 {
     return QComboBox::count() - 1;
 }
 
-/*!
-	The color of the currently selected item.
-*/
 QColor ColorComboBox::color() const
 {
 	return qVariantValue<QColor>(itemData(currentIndex()));
 }
 
-/*!
-	Sets the widget's item with color \a color to be the current item.
-
-	If there is no item with color \a color in the widget, the color is
-	created.
-*/
 void ColorComboBox::setColor(const QColor &color)
 {
 	int index;
@@ -96,9 +56,6 @@ void ColorComboBox::setColor(const QColor &color)
 	}
 }
 
-/*!
-	\reimp
-*/
 QSize ColorComboBox::sizeHint() const
 {
 	QFontMetrics fm = fontMetrics();

@@ -3,18 +3,8 @@
 #include "IO/encodings/latin2cvt.h"
 #include "list.h"
 
+
 using namespace std;
-
-
-/*!
-	\class ListGraphInput
-	\brief Input provider for edge list graph representation.
-
-	Loads graphs represented as edge lists. Each line of the input file
-	represents an edge in the format
-
-	\verbatim START_VERTEX END_VERTEX EDGE_VALUE \endverbatim
-*/
 
 void ListGraphInput::addVertex(wstring vertex)
 {

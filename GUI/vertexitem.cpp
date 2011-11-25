@@ -7,13 +7,6 @@
 #include "CORE/config.h"
 
 
-/*!
-	\class VertexItem
-	\brief Defines vertex items that can be added to a GraphView.
-
-	Lorem ipsun...
-*/
-
 VertexItem::VertexItem()
 {
 	_color = QColor();

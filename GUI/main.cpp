@@ -2,6 +2,7 @@
 #include "GUI/gui.h"
 #include "GUI/icons.h"
 
+
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);

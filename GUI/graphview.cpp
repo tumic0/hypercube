@@ -6,14 +6,6 @@
 #include "edgeitem.h"
 
 
-/*!
-	\class GraphView
-	\brief A widget for displaying and manipulating Graph objects.
-
-	Lorem ipsum...
-*/
-
-
 class BoundingRectItem : public QGraphicsRectItem
 {
 public:

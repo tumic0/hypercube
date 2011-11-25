@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include "cp1250cvt.h"
 
+
 using namespace std;
 
 struct cw {
