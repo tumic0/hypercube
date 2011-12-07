@@ -64,14 +64,15 @@ static void prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
 		   << "	definefont pop" << endl
 		   << "} def" << endl << endl;
 
-		fs << "/font /" << sn->font()->name() << " reencode" << endl << endl;
+		fs << "/rfont /" << sn->font()->name() << " reencode" << endl
+		   << "/font /rfont def" << endl << endl;
 	} else
 		fs << "/font /" << sn->font()->name() << " def" << endl << endl;
 
 	fs << "/e {newpath moveto lineto stroke} def" << endl
 	   << "/v {newpath arc closepath fill} def" << endl
 	   << "/d {moveto show} def" << endl
-	   << "/f {/font findfont exch scalefont setfont} def" << endl
+	   << "/f {font findfont exch scalefont setfont} def" << endl
 	   << "/lw {setlinewidth} def" << endl
 	   << "/c {setrgbcolor} def" << endl << endl;
 
