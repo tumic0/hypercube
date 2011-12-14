@@ -163,15 +163,15 @@ void GUI::createProperties()
 
 	_properties = new QToolBox;
 
-	_properties->addItem(_graphProperties, tr("Graph settings"));
-	_properties->addItem(_SAProperties, tr("Algorithm settings"));
-	_properties->addItem(_IOProperties, tr("I/O settings"));
-
 	_properties->setSizePolicy(QSizePolicy(QSizePolicy::Maximum,
-	  QSizePolicy::Minimum));
+	  QSizePolicy::Ignored));
 	_properties->setMinimumWidth(qMax(_IOProperties->sizeHint().width(),
 	  qMax(_graphProperties->sizeHint().width(),
 	  _SAProperties->sizeHint().width())));
+
+	_properties->addItem(_graphProperties, tr("Graph settings"));
+	_properties->addItem(_SAProperties, tr("Algorithm settings"));
+	_properties->addItem(_IOProperties, tr("I/O settings"));
 }
 
 void GUI::createIOProperties()
@@ -392,6 +392,7 @@ void GUI::createStatusBar()
 	statusBar()->addPermanentWidget(_zoom, 1);
 	statusBar()->setSizeGripEnabled(false);
 }
+
 
 void GUI::tabChanged(int current)
 {
