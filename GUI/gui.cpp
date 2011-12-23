@@ -721,6 +721,12 @@ void GUI::setSAProperties(GraphTab *tab)
 
 void GUI::setGraphProperties(GraphTab *tab)
 {
+	tab->showVertexIDs((_vertexIDs->checkState() == Qt::Checked)
+	  ? true : false);
+	tab->showEdgeValues((_edgeValues->checkState() == Qt::Checked)
+	  ? true : false);
+	tab->colorizeEdges((_coloredEdges->checkState() == Qt::Checked)
+	  ? true : false);
 	tab->setDimensions(QPoint(_graphWidth->value(), _graphHeight->value()));
 	tab->setEdgeSize(_edgeSize->value());
 	tab->setVertexSize(_vertexSize->value());
@@ -728,12 +734,6 @@ void GUI::setGraphProperties(GraphTab *tab)
 	tab->setVertexColor(_vertexColor->color());
 	tab->setVertexFontSize(_vertexFontSize->value());
 	tab->setEdgeFontSize(_edgeFontSize->value());
-	tab->showVertexIDs((_vertexIDs->checkState() == Qt::Checked)
-	  ? true : false);
-	tab->showEdgeValues((_edgeValues->checkState() == Qt::Checked)
-	  ? true : false);
-	tab->colorizeEdges((_coloredEdges->checkState() == Qt::Checked)
-	  ? true : false);
 }
 
 void GUI::getIOProperties(GraphTab *tab)
