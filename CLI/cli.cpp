@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include <cstring>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -13,7 +12,7 @@
 using namespace std;
 
 
-static char *replaceExtension(const char *fileName, const char *ext);
+static string replaceExtension(string &fileName, string &extension);
 
 
 CLI::CLI(int argc, char *argv[])
@@ -75,7 +74,7 @@ bool CLI::readGraph()
 		_encoding = (char *)(*e)->name();
 
 	while (*e) {
-		if ((found = !strcmp(_encoding.c_str(), (*e)->name())))
+		if ((found = !_encoding.compare((*e)->name())))
 			break;
 		e++;
 	}
@@ -114,11 +113,10 @@ bool CLI::writeGraph()
 	if (_format == string())
 		_format = (char *)(*p)->type();
 	if (_outputFileName == string())
-		_outputFileName = string(replaceExtension(_inputFileName.c_str(),
-		  _format.c_str()));
+		_outputFileName = replaceExtension(_inputFileName, _format);
 
 	while (*p) {
-		if ((found = !strcmp(_format.c_str(), (*p)->type())))
+		if ((found = !_format.compare((*p)->type())))
 			break;
 		p++;
 	}
@@ -157,28 +155,20 @@ void CLI::usage()
 	cout << " -vf <size>       set vertex font size to <size>" << endl;
 	cout << " -ef <size>       set edge font size to <size>" << endl;
 	cout << " -c               asign a unique color to every uniqe edge value"
-	  << endl;
+		 << endl;
 	cout << endl;
 	cout << "option arguments:" << endl;
 	cout << " <dimesnsions>    width,height" << endl;
 	cout << " <color>          #RRGGBB" << endl;
+
 	cout << " <format>         ";
-
-	OutputProvider **p = outputProviders;
-	while (*p) {
+	for (OutputProvider **p = outputProviders; *p; p++)
 		cout << (*p)->type() << " ";
-		p++;
-	}
-
 	cout << endl;
+
 	cout << " <encoding>       ";
-
-	Encoding **e = encodings;
-	while (*e) {
+	for (Encoding **e = encodings; *e; e++)
 		cout << (*e)->name() << " ";
-		e++;
-	}
-
 	cout << endl;
 }
 
@@ -284,19 +274,12 @@ void CLI::setSAProperties()
 	_sa->setNumSteps(_numSteps);
 }
 
-char *replaceExtension(const char *fileName, const char *ext)
+string replaceExtension(string &fileName, string &extension)
 {
-	int len;
-	const char *cp;
-	char *res;
+	size_t len;
 
-	cp = strrchr(fileName, '.');
-	len = (cp == NULL) ? strlen(fileName) : (cp - fileName);
-
-	res = new char[len + strlen(ext) + 1];
-	memcpy(res, fileName, len);
-	res[len] = '.';
-	memcpy(res + len + 1, ext, strlen(ext) + 1);
-
-	return res;
+	if ((len = fileName.rfind('.')) == string::npos)
+		return fileName + string(".") + extension;
+	else
+		return fileName.substr(0, len + 1) + extension;
 }
