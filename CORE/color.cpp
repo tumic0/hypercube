@@ -15,7 +15,7 @@ Color::Color(unsigned rgb)
 
 bool Color::valid()
 {
-	return _data & ~RGB_MASK;
+	return (_data & ~RGB_MASK) ? true : false;
 }
 
 unsigned Color::rgb()

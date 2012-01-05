@@ -315,9 +315,9 @@ void Graph::updateDistance(int v1, int v2)
 	int distance = euclideanDistanceSqr(_vertexes[v1].coordinates(),
 	  _vertexes[v2].coordinates());
 
-	_matrix[v1][v2].distance = 1 / (float)distance;
+	_matrix[v1][v2].distance = 1.0f / (float)distance;
 	if (edge(v1, v2))
-		_matrix[v1][v2].edge->setLength(distance);
+		_matrix[v1][v2].edge->setLength((float)distance);
 }
 
 void Graph::updateDistance(int v)

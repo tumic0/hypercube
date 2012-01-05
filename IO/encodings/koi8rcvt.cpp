@@ -5,7 +5,7 @@
 using namespace std;
 
 struct cw {
-	char c;
+	unsigned char c;
 	wchar_t w;
 };
 
@@ -96,7 +96,7 @@ codecvt_base::result koi8rcvt::do_out(mbstate_t&, const wchar_t* from,
 	for (from_next = from, to_next = to; from_next < from_end
 	  && to_next < to_limit; from_next++, to_next++) {
 		if (*from_next < 0x80)
-			*to_next = *from_next;
+			*to_next = (char)*from_next;
 		else {
 			key.w = *from_next;
 			if ((res = (struct cw*) bsearch(&key, ucs2koi,
