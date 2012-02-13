@@ -1,8 +1,10 @@
 #include <QtGui>
 #include <QFileInfo>
+#include "CORE/vertex.h"
+#include "CORE/edge.h"
+#include "IO/modules.h"
 #include "vertexitem.h"
 #include "edgeitem.h"
-#include "IO/modules.h"
 #include "graphtab.h"
 
 
@@ -218,9 +220,12 @@ void GraphTab::setAntialiasing(bool value)
 
 void GraphTab::loadGraph()
 {
+	Vertex *vtx;
+	Edge *edg;
 	VertexItem *v;
 	EdgeItem *e;
 	Coordinates c;
+
 
 	/* Clear the old graph if any */
 	_view->clear();
@@ -229,38 +234,38 @@ void GraphTab::loadGraph()
 	_view->setDimensions(QPoint(_graph->dimensions().x(),
 	  _graph->dimensions().y()));
 
-	for (int i = 0; i < _graph->size(); i++) {
+	for (size_t i = 0; i < _graph->vertex_size(); i++) {
+		vtx = _graph->vertex(i);
 		v = _view->addVertex();
 
-		c = _graph->vertexCoordinates(i);
-		v->setColor(QColor(_graph->vertexColor(i).rgb()));
-		v->setSize(_graph->vertexSize(i));
-		v->setText(QString::fromStdWString(_graph->vertexText(i)));
-		v->setFontSize(_graph->vertexFontSize(i));
+		c = vtx->coordinates();
+		v->setColor(QColor(vtx->color().rgb()));
+		v->setSize(vtx->size());
+		v->setText(QString::fromStdWString(vtx->text()));
+		v->setFontSize(vtx->fontSize());
 		v->setPos(c.x(), c.y());
 	}
 
-	for (int i = 0; i < _graph->size(); i++) {
-		for (int j = 0; j < i; j++) {
-			if (_graph->edge(i, j)) {
-				e = _view->addEdge(i, j);
+	for (size_t i = 0; i < _graph->edge_size(); i++) {
+		edg = _graph->edge(i);
+		e = _view->addEdge(edg->src()->id(), edg->dst()->id());
 
-				e->setColor(QColor(_graph->edgeColor(i, j).rgb()));
-				e->setSize(_graph->edgeSize(i, j));
-				e->setText(QString::fromStdWString(
-				  _graph->edgeText(i, j)));
-				e->setFontSize(_graph->edgeFontSize(i, j));
-				e->setZValue(_graph->edgeZValue(i, j));
-			}
-		}
+		e->setColor(QColor(edg->color().rgb()));
+		e->setSize(edg->size());
+		e->setText(QString::fromStdWString(edg->text()));
+		e->setFontSize(edg->fontSize());
+		e->setZValue(edg->zValue());
 	}
 }
 
 void GraphTab::storeGraph()
 {
+	Vertex *vtx;
+	Edge *edg;
 	VertexItem *v;
 	EdgeItem *e;
 	QPointF pos;
+
 
 	/* Clear the old graph if any */
 	_graph->clear();
@@ -272,24 +277,25 @@ void GraphTab::storeGraph()
 	for (int i = 0; i < _view->graphSize(); i++) {
 		v = _view->vertex(i);
 		pos = v->scenePos();
-		_graph->addVertex();
+		vtx = _graph->addVertex();
 
-		_graph->moveVertex(i, Coordinates(pos.x(), pos.y()));
-		_graph->setVertexColor(i, v->color().rgb());
-		_graph->setVertexSize(i, v->size());
-		_graph->setVertexFontSize(i, v->fontSize());
+		vtx->setCoordinates(Coordinates(pos.x(), pos.y()));
+		vtx->setColor(v->color().rgb());
+		vtx->setSize(v->size());
+		vtx->setText(v->text().toStdWString());
+		vtx->setFontSize(v->fontSize());
 	}
 
 	for (int i = 0; i < _view->graphSize(); i++) {
 		for (int j = 0; j < i; j++) {
 			if ((e = _view->edge(i, j))) {
-				_graph->addEdge(i, j);
+				edg = _graph->addEdge(_graph->vertex(i), _graph->vertex(j));
 
-				_graph->setEdgeColor(i, j, e->color().rgb());
-				_graph->setEdgeSize(i, j, e->size());
-				_graph->setEdgeText(i, j, e->text().toStdWString());
-				_graph->setEdgeFontSize(i, j, e->fontSize());
-				_graph->setEdgeZValue(i, j, e->zValue());
+				edg->setColor(e->color().rgb());
+				edg->setSize(e->size());
+				edg->setText(e->text().toStdWString());
+				edg->setFontSize(e->fontSize());
+				edg->setZValue(e->zValue());
 			}
 		}
 	}

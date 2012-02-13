@@ -2,6 +2,8 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include "CORE/vertex.h"
+#include "CORE/edge.h"
 #include "CORE/config.h"
 #include "IO/modules.h"
 #include "ps_snippet.h"
@@ -10,7 +12,7 @@
 
 using namespace std;
 
-#define tr(val) (dim.y()-(val))
+#define tr(val,dim) ((dim).y()-(val))
 
 static Coordinates edgeValuePos(Coordinates &p1, Coordinates &p2,
   int size, int fontSize)
@@ -79,107 +81,114 @@ static void prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
 	fs << "%%EndProlog" << endl << endl;
 }
 
-static void edges(Graph *graph, wofstream &fs, int zValue)
+static void edges(Graph *graph, wofstream &fs)
 {
 	Coordinates c1, c2, t;
 	Color color;
-	int fontSize, lineWidth;
+	int fontSize = -1, lineWidth = -1;
 	Coordinates dim = graph->dimensions();
+	Edge *e;
 
 
-	color = Color();
-	lineWidth = -1;
-	for (int i = 0; i < graph->size(); i++) {
-		c1 = graph->vertexCoordinates(i) + Coordinates(
-		  graph->vertexSize(i) / 2, graph->vertexSize(i) / 2);
-		for (int j = 0; j < i; j++) {
-			if (graph->edge(i, j) && graph->edgeZValue(i, j) == zValue) {
-				c2 = graph->vertexCoordinates(j) + Coordinates(
-		  		  graph->vertexSize(j) / 2, graph->vertexSize(j) / 2);
-				if (color != graph->edgeColor(i, j)) {
-					color = graph->edgeColor(i, j);
-					fs << color.red() << " " << color.green() << " "
-					   << color.blue() << " c" << endl;
-				}
-				if (lineWidth != graph->edgeSize(i, j)) {
-					lineWidth = graph->edgeSize(i, j);
-					fs << lineWidth << " lw" << endl;
-				}
-				fs << c1.x() << " " << tr(c1.y()) << " "
-				   << c2.x() << " " << tr(c2.y()) << " e" << endl;
+	for (int zValue = -2; zValue < 0; zValue++ ) {
+		for (size_t i = 0; i < graph->edge_size(); i++) {
+			e = graph->edge(i);
+			if (e->zValue() != zValue)
+				continue;
+
+			c1 = e->src()->coordinates() + Coordinates(
+			  e->src()->size() / 2, e->src()->size() / 2);
+			c2 = e->dst()->coordinates() + Coordinates(
+			  e->dst()->size() / 2, e->dst()->size() / 2);
+
+			if (color != e->color()) {
+				color = e->color();
+				fs << color.red() << " " << color.green() << " "
+				   << color.blue() << " c" << endl;
 			}
-		}
-	}
-	fs << endl;
-
-	fontSize = -1;
-	for (int i = 0; i < graph->size(); i++) {
-		c1 = graph->vertexCoordinates(i) + Coordinates(
-		  graph->vertexSize(i) / 2, graph->vertexSize(i) / 2);
-		for (int j = 0; j < i; j++) {
-			if (graph->edge(i, j) && graph->edgeFontSize(i, j) > 0) {
-				c2 = graph->vertexCoordinates(j) + Coordinates(
-				  graph->vertexSize(j) / 2, graph->vertexSize(j) / 2);
-				if (graph->edgeFontSize(i, j) != fontSize) {
-					fontSize = graph->edgeFontSize(i, j);
-					fs << fontSize << " f" << endl;
-				}
-				if (graph->edgeColor(i, j) != color) {
-					color = graph->edgeColor(i, j);
-					fs << color.red() << " " << color.green() << " "
-					   << color.blue() << " c" << endl;
-				}
-				t = edgeValuePos(c1, c2, graph->edgeSize(i, j),
-				  graph->edgeFontSize(i, j));
-				fs << "(" << graph->edgeText(i, j) << ") "
-				   << t.x() << " " << tr(t.y()) << " d" << endl;
+			if (lineWidth != e->size()) {
+				lineWidth = e->size();
+				fs << lineWidth << " lw" << endl;
 			}
+			fs << c1.x() << " " << tr(c1.y(), dim) << " "
+			   << c2.x() << " " << tr(c2.y(), dim) << " e" << endl;
 		}
+		fs << endl;
+
+		for (size_t i = 0; i < graph->edge_size(); i++) {
+			e = graph->edge(i);
+			if (e->zValue() != zValue || e->fontSize() == 0)
+				continue;
+
+			c1 = e->src()->coordinates() + Coordinates(
+			  e->src()->size() / 2, e->src()->size() / 2);
+			c2 = e->dst()->coordinates() + Coordinates(
+			  e->dst()->size() / 2, e->dst()->size() / 2);
+
+			if (e->fontSize() != fontSize) {
+				fontSize = e->fontSize();
+				fs << fontSize << " f" << endl;
+			}
+			if (e->color() != color) {
+				color = e->color();
+				fs << color.red() << " " << color.green() << " "
+				   << color.blue() << " c" << endl;
+			}
+
+			t = edgeValuePos(c1, c2, e->size(), e->fontSize());
+			fs << "(" << e->text() << ") "
+			   << t.x() << " " << tr(t.y(), dim) << " d" << endl;
+		}
+		fs << endl;
 	}
-	fs << endl;
 }
 
 static void vertexes(Graph *graph, wofstream &fs)
 {
-	Coordinates c1;
+	Coordinates c;
 	Color color;
-	int fontSize;
+	int fontSize = -1;
 	Coordinates dim = graph->dimensions();
+	Vertex *v;
 
 
-	for (int i = 0; i < graph->size(); i++) {
-		c1 = graph->vertexCoordinates(i) + Coordinates(
-		  graph->vertexSize(i) / 2, graph->vertexSize(i) / 2);
-		if (graph->vertexColor(i) != color) {
-			color = graph->vertexColor(i);
+	for (size_t i = 0; i < graph->vertex_size(); i++) {
+		v = graph->vertex(i);
+
+		c = v->coordinates()
+		  + Coordinates(v->size() / 2, v->size() / 2);
+
+		if (v->color() != color) {
+			color = v->color();
 			fs << color.red() << " " << color.green() << " " << color.blue()
 			   << " c" << endl;
 		}
-		fs << c1.x() << " " << tr(c1.y()) << " " << graph->vertexSize(i) / 2
+		fs << c.x() << " " << tr(c.y(), dim) << " " << v->size() / 2
 		   << " 0 360 v" << endl;
 	}
 	fs << endl;
 
+	for (size_t i = 0; i < graph->vertex_size(); i++) {
+		v = graph->vertex(i);
+		if (v->fontSize() == 0)
+			continue;
 
-	fontSize = -1;
-	for (int i = 0; i < graph->size(); i++) {
-		if (graph->vertexFontSize(i) > 0) {
-			c1 = graph->vertexCoordinates(i) + Coordinates(
-			  graph->vertexSize(i) / 2, graph->vertexSize(i) / 2);
-			if (graph->vertexFontSize(i) != fontSize) {
-				fontSize = graph->vertexFontSize(i);
-				fs << fontSize << " f" << endl;
-			}
-			if (graph->vertexColor(i) != color) {
-				color = graph->vertexColor(i);
-				fs << color.red() << " " << color.green() << " " << color.blue()
-				   << " c" << endl;
-			}
-			fs << "(" << graph->vertexText(i) << ") "
-			   << c1.x() + graph->vertexSize(i) / 2 << " "
-			   << tr(c1.y() + graph->vertexSize(i))
-			   << " d" << endl;
+		c = v->coordinates()
+		  + Coordinates(v->size() / 2, v->size() / 2);
+
+		if (v->fontSize() != fontSize) {
+			fontSize = v->fontSize();
+			fs << fontSize << " f" << endl;
 		}
+		if (v->color() != color) {
+			color = v->color();
+			fs << color.red() << " " << color.green() << " " << color.blue()
+			   << " c" << endl;
+		}
+		fs << "(" << v->text() << ") "
+		   << c.x() + v->size() / 2 << " "
+		   << tr(c.y() + v->size(), dim)
+		   << " d" << endl;
 	}
 	fs << endl;
 }
@@ -202,8 +211,7 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *filename)
 		fs.open(filename);
 
 		prolog(graph, *sp, fs);
-		edges(graph, fs, -2);
-		edges(graph, fs, -1);
+		edges(graph, fs);
 		vertexes(graph, fs);
 		fs << "%%EOF" << endl;
 

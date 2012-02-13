@@ -6,16 +6,16 @@
 #include "margin.h"
 #include "color.h"
 
+class Vertex;
 
 class Edge
 {
 public:
-	Edge();
+	Edge(Vertex *src, Vertex *dst, size_t id);
 
-	int crossings() {return _crossings;}
-	void setCrossings(int crossings) {_crossings = crossings;}
-	float length() {return _length;}
-	void setLength(float length) {_length = length;}
+	size_t id() {return _id;}
+	Vertex *src() {return _src;}
+	Vertex *dst() {return _dst;}
 
 	Margin margin() const {return _margin;}
 
@@ -33,11 +33,11 @@ public:
 private:
 	void computeMargin();
 
-	int _crossings;
-	float _length;
+	size_t _id;
+	Vertex *_src;
+	Vertex *_dst;
 
 	Margin _margin;
-
 	std::wstring _text;
 	Color _color;
 	int _size;

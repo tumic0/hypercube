@@ -48,7 +48,10 @@ HEADERS += CORE/sa_log.h \
     GUI/colorcombobox.h \
     GUI/gui.h \
     GUI/graphtab.h \
-    GUI/edgeitem.h
+    GUI/edgeitem.h \
+    CORE/container.h \
+    CORE/colormap.h \
+    CORE/adjlist.h
 SOURCES += IO/providers/ps_snippet.cpp \
     IO/encodings/koi8rcvt.cpp \
     IO/encodings/latin1cvt.cpp \
@@ -72,7 +75,8 @@ SOURCES += IO/providers/ps_snippet.cpp \
     GUI/graphtab.cpp \
     GUI/colorcombobox.cpp \
     GUI/numericedit.cpp \
-    GUI/gui.cpp
+    GUI/gui.cpp \
+    CORE/colormap.cpp
 DEFINES += SA_LOG_SUPPORT
 RESOURCES += hypercube.qrc
 TRANSLATIONS = lang/hypercube_cs.ts

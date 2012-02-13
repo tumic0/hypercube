@@ -6,17 +6,18 @@
 #include "margin.h"
 #include "color.h"
 
+class Graph;
 
 class Vertex
 {
 public:
-	Vertex();
+	Vertex(Graph *graph, size_t id);
+
+	size_t id() {return _id;}
+	Graph *graph() {return _graph;}
 
 	Coordinates coordinates() const {return _coordinates;}
-	void setCoordinates(const Coordinates &c) {_coordinates = c;}
-	Margin totalMargin() const {return _totalMargin;}
-	void setTotalMargin(const Margin &m) {_totalMargin = m;}
-
+	void setCoordinates(const Coordinates &c);
 	Margin margin() const {return _margin;}
 
 	std::wstring text() const {return _text;}
@@ -33,12 +34,13 @@ private:
 
 	Coordinates _coordinates;
 	Margin _margin;
-	Margin _totalMargin;
-
 	std::wstring _text;
 	Color _color;
 	int _size;
 	int _fontSize;
+
+	size_t _id;
+	Graph *_graph;
 };
 
 #endif /* VERTEX_H_ */

@@ -11,6 +11,9 @@ HEADERS += CORE/sa_log.h \
     CORE/config.h \
     CORE/edge.h \
     CORE/color.h \
+    CORE/container.h \
+    CORE/colormap.h \
+    CORE/adjlist.h \
     IO/encoding.h \
     IO/providers/ps.h \
     IO/providers/ps_snippets/encodings/latin2.ps.h \
@@ -47,6 +50,7 @@ SOURCES += CORE/edge.cpp \
     CORE/color.cpp \
     CORE/graph.cpp \
     CORE/sa.cpp \
+    CORE/colormap.cpp \
     IO/encodings/latin1cvt.cpp \
     IO/encodings/latin2cvt.cpp \
     IO/encodings/cp1250cvt.cpp \

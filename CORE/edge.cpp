@@ -1,10 +1,14 @@
-#include "edge.h"
 #include "config.h"
+#include "graph.h"
+#include "vertex.h"
+#include "edge.h"
 
 
-Edge::Edge() {
-	_crossings = 0;
-	_length = 0;
+Edge::Edge(Vertex *src, Vertex *dst, size_t id)
+{
+	_src = src;
+	_dst = dst;
+	_id = id;
 
 	_size = 0;
 	_fontSize = 0;
@@ -39,4 +43,7 @@ void Edge::computeMargin()
 		  Coordinates(0, _size / 2 + _fontSize));
 	} else
 		_margin = Margin();
+
+	_src->graph()->updateMargins(_src->id());
+	_dst->graph()->updateMargins(_dst->id());
 }

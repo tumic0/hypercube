@@ -1,6 +1,7 @@
 #include <sstream>
 #include <cctype>
-#include "IO/encodings/latin2cvt.h"
+#include "CORE/vertex.h"
+#include "CORE/edge.h"
 #include "list.h"
 
 
@@ -11,23 +12,23 @@ void ListGraphInput::addVertex(wstring vertex)
 	if (_vertexes.find(vertex) != _vertexes.end())
 		return;
 
-	int index = _graph->addVertex();
+	Vertex *v = _graph->addVertex();
 	wstringstream ss;
 	ss << vertex;
-	_graph->setVertexText(index, ss.str());
+	v->setText(ss.str());
 
-	_vertexes.insert(pair<wstring,int>(vertex, index));
+	_vertexes.insert(pair<wstring,size_t>(vertex, v->id()));
 }
 
 void ListGraphInput::addEdge(wstring src, wstring dst, wstring val)
 {
 	wstringstream ss;
-	int v1 = max(_vertexes[src], _vertexes[dst]);
-	int v2 = min(_vertexes[src], _vertexes[dst]);
+	size_t v1 = max(_vertexes[src], _vertexes[dst]);
+	size_t v2 = min(_vertexes[src], _vertexes[dst]);
 
 	ss << val;
-	_graph->addEdge(v1, v2);
-	_graph->setEdgeText(v1, v2, ss.str());
+	Edge *e = _graph->addEdge(_graph->vertex(v1), _graph->vertex(v2));
+	e->setText(ss.str());
 }
 
 IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName,

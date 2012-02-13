@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <ctime>
+#include "vertex.h"
 #include "graph.h"
 #include "sa.h"
 #include "sa_log.h"
@@ -28,7 +29,7 @@ inline Coordinates SA::newVertexLocation(Graph *g, int v, float temp)
 {
 	Coordinates offset, location;
 	Coordinates bounds = g->dimensions();
-	Coordinates loc = g->vertexCoordinates(v);
+	Coordinates loc = g->vertex(v)->coordinates();
 	Margin margin = g->margin(v);
 
 	offset.setX((int)((temp / _initTemp) * bounds.x() * (2 * rnd() - 1)));
@@ -56,10 +57,10 @@ inline void SA::newState(Graph *g, float temp)
 	float cost, new_cost, delta, ex, acc;
 
 	cost = evaluateState(g);
-	id = rand() % g->size();
-	Coordinates location = g->vertexCoordinates(id);
+	id = rand() % g->vertex_size();
+	Coordinates location = g->vertex(id)->coordinates();
 	Coordinates new_location = newVertexLocation(g, id, temp);
-	g->moveVertex(id, new_location);
+	g->vertex(id)->setCoordinates(new_location);
 	new_cost = evaluateState(g);
 
 	delta = (new_cost - cost);
@@ -68,7 +69,7 @@ inline void SA::newState(Graph *g, float temp)
 	if ((delta < 0) || (ex < acc))
 		cost = new_cost;
 	else
-		g->moveVertex(id, location);
+		g->vertex(id)->setCoordinates(location);
 
 	LOG_ACCEPTANCE(delta, ex, acc);
 }

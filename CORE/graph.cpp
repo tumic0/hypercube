@@ -1,443 +1,248 @@
 #include <cstdlib>
+#include "vertex.h"
+#include "edge.h"
 #include "graph.h"
 #include "misc.h"
 
-
 using namespace std;
-
-#define INIT_SIZE		20
-#define EXP_FACTOR		2
-#define LINEAR_FACTOR	100
-#define EXP_THRESHOLD	LINEAR_FACTOR
-
-#define HUE_INIT		0.1f
-#define HUE_INCREMENT	0.62f
-#define SATURATION		0.99f
-#define VALUE			0.99f
 
 
 static inline bool lineSegmentCrossing(Coordinates l1p1, Coordinates l1p2,
   Coordinates l2p1, Coordinates l2p2);
 static inline int euclideanDistanceSqr(Coordinates p1, Coordinates p2);
-static unsigned hsv2rgb(float h, float s, float v);
 
-
-Graph::Graph()
-{
-	_size = 0;
-	_allocSize = 0;
-
-	_dimensions = Coordinates(0, 0);
-
-	_vertexes = 0;
-	_matrix = 0;
-
-	_hueState = HUE_INIT;
-}
-
-Graph::~Graph()
-{
-	delete[] _vertexes;
-
-	for (int i = 0; i < _allocSize; i++) {
-		for (int j = 0; j < i; j++)
-			if (edge(i, j))
-				delete _matrix[i][j].edge;
-		delete[] _matrix[i];
-	}
-	delete[] _matrix;
-}
 
 void Graph::clear()
 {
-	for (int i = 0; i < _size; i++) {
-		for (int j = 0; j < i; j++) {
-			if (edge(i, j)) {
-				delete _matrix[i][j].edge;
-				_matrix[i][j].edge = 0;
-				_matrix[i][j].distance = 0;
-			}
-		}
-	}
-
-	_size = 0;
 	_dimensions = Coordinates(0, 0);
-	_colors.clear();
-	_hueState = HUE_INIT;
+
+	_vertexes.clear();
+	_edges.clear();
+	_neighbours.clear();
+
+	_distances.clear();
+	_crossings.clear();
+	_lengths.clear();
+
+	_margins.clear();
+	_colormap.clear();
 }
 
-int Graph::addVertex()
+Vertex* Graph::addVertex()
 {
-	int v;
+	Vertex *v = new Vertex(this, _vertexes.size());
+	_vertexes.push_back(v);
+	_neighbours.addVertex();
 
-	if (_size == _allocSize)
-		allocateMemory();
-	updateDistance(_size);
+	_margins.push_back(Margin());
+	_distances.increment();
 
-	v = _size;
-	_size++;
+	updateDistance(v->id());
 
 	return v;
 }
 
-void Graph::addEdge(int src, int dst)
+Edge* Graph::addEdge(Vertex *src, Vertex *dst)
 {
-	_matrix[src][dst].edge = new Edge();
+	Edge *e = new Edge(src, dst, _edges.size());
+	_edges.push_back(e);
+	_neighbours.addEdge(e);
 
-	updateCrossings(src);
-	updateCrossings(dst);
+	_crossings.increment();
+	_lengths.increment();
+
+	updateCrossings(e->id());
+	updateLength(e->id());
+
+	return e;
 }
 
 void Graph::center(void)
 {
 	Coordinates mn, mx, offset;
 
-	mn = vertexCoordinates(0) - margin(0).lt();
-	mx = vertexCoordinates(0) + margin(0).rb();
+	if (!vertex_size())
+		return;
 
-	for (int i = 1; i < _size; i++) {
-		mn = min(mn, vertexCoordinates(i) - margin(i).lt());
-		mx = max(mx, vertexCoordinates(i) + margin(i).rb());
+	mn = vertex(0)->coordinates() - margin(0).lt();
+	mx = vertex(0)->coordinates() + margin(0).rb();
+
+	for (size_t i = 1; i < _vertexes.size(); i++) {
+		mn = min(mn, vertex(i)->coordinates() - margin(i).lt());
+		mx = max(mx, vertex(i)->coordinates() + margin(i).rb());
 	}
 
-	offset = (_dimensions - mx - mn) / 2;
+	offset = (dimensions() - mx - mn) / 2;
 
-	for (int i = 0; i < _size; i++)
-		_vertexes[i].setCoordinates(vertexCoordinates(i) + offset);
+	for (size_t i = 0; i < _vertexes.size(); i++)
+		vertex(i)->setCoordinates(vertex(i)->coordinates() + offset);
 }
 
 void Graph::randomize(void)
 {
-	for (int i = 0; i < _size; i++)
-		moveVertex(i, Coordinates(
+	for (size_t i = 0; i < vertex_size(); i++)
+		vertex(i)->setCoordinates(Coordinates(
 		  margin(i).lt().x() + rand()
 		    % (dimensions().x() - margin(i).rb().x() - margin(i).lt().x()),
 		  margin(i).lt().y() + rand()
-		    % (dimensions().y() - margin(i).rb().y() - margin(i).lt().y())));
+			% (dimensions().y() - margin(i).rb().y() - margin(i).lt().y()))
+		);
 }
 
 void Graph::colorize(void)
 {
-	Color color;
-	map<wstring, Color>::iterator it;
-
-	for (int i = 0; i < _size; i++) {
-		for (int j = 0; j < i; j++) {
-			if (edge(i, j)) {
-				it = _colors.find(edgeText(i, j));
-
-				if (it == _colors.end()) {
-					color = Color(nextColor());
-					_colors.insert(pair<wstring, Color>(edgeText(i, j), color));
-				} else {
-					color = (*it).second;
-				}
-
-				setEdgeColor(i, j, color);
-			}
-		}
-	}
+	for (size_t i = 0; i < edge_size(); i++)
+		edge(i)->setColor(_colormap.color(edge(i)->text()));
 }
 
 void Graph::bindTo(Graph *source)
 {
-	setDimensions(source->dimensions());
+	for (size_t i = 0; i < vertex_size(); i++)
+		for (size_t j = 0; j < source->vertex_size(); j++)
+			if (source->vertex(j)->text() == _vertexes[i]->text())
+				_vertexes[i]->setCoordinates(source->vertex(j)->coordinates());
 
-	for (int i = 0; i < _size; i++)
-		for (int j = 0; j < source->size(); j++)
-			if (source->vertexText(j) == _vertexes[i].text())
-				moveVertex(i, source->vertexCoordinates(j));
 }
 
 void Graph::project(Graph *source)
 {
-	int found;
+	bool found;
 
-	for (int i = 0; i < _size; i++) {
-		for (int j = 0; j < source->size(); j++) {
-			if (source->vertexText(j) == _vertexes[i].text()) {
-				setVertexColor(i, source->vertexColor(j));
-				setVertexSize(i, source->vertexSize(j));
-				setVertexFontSize(i, source->vertexFontSize(j));
+	for (size_t i = 0; i < vertex_size(); i++) {
+		for (size_t j = 0; j < source->vertex_size(); j++) {
+			if (source->vertex(j)->text() == _vertexes[i]->text()) {
+				vertex(i)->setColor(source->vertex(j)->color());
+				vertex(i)->setSize(source->vertex(j)->size());
+				vertex(i)->setFontSize(source->vertex(j)->fontSize());
 			}
 		}
 	}
 
-	for (int i = 0; i < _size; i++) {
-		for (int j = 0; j < i; j++) {
-			if (edge(i, j)) {
-				found = 0;
-				for (int k = 0; k < source->size(); k++) {
-					for (int l = 0; l < k; l++) {
-						if (source->edge(k, l)) {
-							if ((source->vertexText(l) == _vertexes[j].text()
-							  && source->vertexText(k) == _vertexes[i].text())
-							  || (source->vertexText(l) == _vertexes[i].text()
-							  && source->vertexText(k) == _vertexes[j].text())) {
-								setEdgeColor(i, j, source->edgeColor(k, l));
-								setEdgeSize(i, j, source->edgeSize(k, l));
-								setEdgeFontSize(i, j, source->edgeFontSize(k, l));
-								found = 1;
-							}
-						}
-					}
-				}
-				if (!found)
-					setEdgeZValue(i, j, -2);
+	for (size_t i = 0; i < edge_size(); i++) {
+		found = false;
+		for (size_t j = 0; j < source->edge_size(); j++) {
+			if ((source->edge(j)->src()->text() == edge(i)->src()->text()
+			  && source->edge(j)->dst()->text() == edge(i)->dst()->text())
+			  || (source->edge(j)->src()->text() == edge(i)->dst()->text()
+			  && source->edge(j)->dst()->text() == edge(i)->src()->text())) {
+				edge(i)->setColor(source->edge(j)->color());
+				edge(i)->setSize(source->edge(j)->size());
+				edge(i)->setFontSize(source->edge(j)->fontSize());
+				found = true;
 			}
 		}
+		if (!found)
+			edge(i)->setZValue(-2);
 	}
 }
 
-int Graph::crossings()
+void Graph::updateCoordinates(size_t vid)
 {
-	int crossings = 0;
+	AdjacencyList::edge_iterator it;
 
-	for (int i = 0; i < _size; i++)
-		for (int j = 0; j < i; j++)
-			if (edge(i, j))
-				crossings += _matrix[i][j].edge->crossings();
-
-	return crossings;
-}
-
-float Graph::distance()
-{
-	float distance = 0;
-
-	for (int i = 0; i < _size; i++)
-		for (int j = 0; j < i; j++)
-			distance += _matrix[i][j].distance;
-
-	return distance;
-}
-
-float Graph::length()
-{
-	float length = 0;
-
-	for (int i = 0; i < _size; i++)
-		for (int j = 0; j < i; j++)
-			if (edge(i, j))
-				length += _matrix[i][j].edge->length();
-
-	return  length;
-}
-
-void Graph::moveVertex(int v, const Coordinates &location)
-{
-	_vertexes[v].setCoordinates(location);
-
-	updateCrossings(v);
-	updateDistance(v);
-}
-
-void Graph::allocateMemory()
-{
-	int allocSize;
-	Vertex *vertexes;
-	MatrixItem **matrix;
-
-
-	// Compute the new allocated size
-	if (_allocSize == 0)
-		allocSize = INIT_SIZE;
-	else if (_allocSize < EXP_THRESHOLD)
-		allocSize = _allocSize * EXP_FACTOR;
-	else
-		allocSize = _allocSize + LINEAR_FACTOR;
-
-	// Allocate data structures for the graph representation
-	vertexes = new Vertex[allocSize];
-	matrix = new MatrixItem*[allocSize];
-	for (int i = 0; i < allocSize; i++)
-		matrix[i] = new MatrixItem[i];
-
-	// Initialize the new items
-	for (int i = _allocSize; i < allocSize; i++) {
-		for (int j = 0; j < i; j++) {
-			matrix[i][j].edge = 0;
-			matrix[i][j].distance = 0;
-		}
+	for (it = _neighbours.begin(vid); it != _neighbours.end(vid); it++) {
+		updateCrossings(*it);
+		updateLength(*it);
 	}
 
+	updateDistance(vid);
+}
 
-	// If reallocating, copy the current values to the new structures
-	if (allocSize > INIT_SIZE) {
-		for (int i = 0; i < _allocSize; i++) {
-			vertexes[i] = _vertexes[i];
-			for (int j = 0; j < i; j++)
-					matrix[i][j] = _matrix[i][j];
-		}
+void Graph::updateMargins(size_t vid)
+{
+	Margin m;
+
+	for (size_t i = 0; i < _edges.size(); i++)
+		m = max(m, _edges[i]->margin());
+
+	if (m != Margin()) {
+		m.setRb(m.rb() + Coordinates(0, _vertexes[vid]->size() / 2));
+		m.setLt(m.lt() - Coordinates(0, _vertexes[vid]->size() / 2));
 	}
 
-	// Free the old data structures if any
-	if (allocSize > INIT_SIZE) {
-		delete[] _vertexes;
+	m = max(m, _vertexes[vid]->margin());
 
-		for (int i = 0; i < _allocSize; i++)
-			delete[] _matrix[i];
-		delete[] _matrix;
+	_margins[vid] = m;
+}
+
+
+void Graph::updateCrossings(size_t eid)
+{
+	for (size_t i = 0; i < _edges.size(); i++) {
+		if (_edges[eid]->src()->id() == _edges[i]->src()->id()
+		  || _edges[eid]->src()->id() == _edges[i]->dst()->id()
+		  || _edges[eid]->dst()->id() == _edges[i]->src()->id()
+		  || _edges[eid]->dst()->id() == _edges[i]->dst()->id())
+			continue;
+
+		if (lineSegmentCrossing(
+		  _edges[eid]->src()->coordinates(),
+		  _edges[eid]->dst()->coordinates(),
+		  _edges[i]->src()->coordinates(),
+		  _edges[i]->dst()->coordinates()))
+			_crossings.setValue(eid, i, 1);
+		else
+			_crossings.setValue(eid, i, 0);
 	}
-
-	// Setup the object pointers to new structures
-	_allocSize = allocSize;
-	_vertexes = vertexes;
-	_matrix = matrix;
 }
 
-void Graph::updateCrossings(int v1, int v2)
+void Graph::updateLength(size_t eid)
 {
-	_matrix[v1][v2].edge->setCrossings(0);
-
-	for (int i = v1 + 1; i < _size; i++)
-		for (int j = 0; j < i; j++)
-			if (edge(i, j) && (v1 != j && v2 != j))
-				if (lineSegmentCrossing(_vertexes[v1].coordinates(),
-				  _vertexes[v2].coordinates(), _vertexes[i].coordinates(),
-				  _vertexes[j].coordinates()))
-					_matrix[v1][v2].edge->setCrossings(
-					  _matrix[v1][v2].edge->crossings() + 1);
+	int dist = euclideanDistanceSqr(_edges[eid]->src()->coordinates(),
+	  _edges[eid]->dst()->coordinates());
+	_lengths.setValue(eid, (float)dist);
 }
 
-void Graph::updateCrossings(int v)
+void Graph::updateDistance(size_t vid)
 {
-	for (int n = 0; n < v; n++)
-		if (edge(v, n))
-			updateCrossings(v, n);
-	for (int n = v + 1; n < _size; n++)
-		if (edge(n, v))
-			updateCrossings(n, v);
-}
+	int dist;
 
-void Graph::updateDistance(int v1, int v2)
-{
-	int distance = euclideanDistanceSqr(_vertexes[v1].coordinates(),
-	  _vertexes[v2].coordinates());
+	for (size_t i = 0; i < _vertexes.size(); i++) {
+		if (i == vid)
+			continue;
 
-	_matrix[v1][v2].distance = 1.0f / (float)distance;
-	if (edge(v1, v2))
-		_matrix[v1][v2].edge->setLength((float)distance);
-}
-
-void Graph::updateDistance(int v)
-{
-	for (int n = 0; n < v; n++)
-		updateDistance(v, n);
-	for (int n = v + 1; n < _size; n++)
-		updateDistance(n, v);
-}
-
-void Graph::updateMargins(int v)
-{
-	Margin margin;
-
-	for (int n = 0; n < v; n++)
-		if (edge(v, n))
-			margin = max(margin, _matrix[v][n].edge->margin());
-	for (int n = v + 1; n < _size; n++)
-		if (edge(n, v))
-			margin = max(margin, _matrix[n][v].edge->margin());
-
-	if (margin != Margin()) {
-		margin.setRb(margin.rb() + Coordinates(0, _vertexes[v].size() / 2));
-		margin.setLt(margin.lt() - Coordinates(0, _vertexes[v].size() / 2));
+		dist = euclideanDistanceSqr(_vertexes[vid]->coordinates(),
+		  _vertexes[i]->coordinates());
+		if (dist != 0)
+			_distances.setValue(vid, i, 1.0f / (float)dist);
 	}
-
-	margin = max(margin, _vertexes[v].margin());
-
-	_vertexes[v].setTotalMargin(margin);
-}
-
-
-void Graph::setVertexText(int v, const std::wstring &text)
-{
-	_vertexes[v].setText(text);
-	updateMargins(v);
-}
-
-void Graph::setVertexSize(int v, int size)
-{
-	_vertexes[v].setSize(size);
-	updateMargins(v);
-}
-
-void Graph::setVertexFontSize(int v, int size)
-{
-	_vertexes[v].setFontSize(size);
-	updateMargins(v);
-}
-
-
-void Graph::setEdgeText(int v1, int v2, const std::wstring &text)
-{
-	_matrix[v1][v2].edge->setText(text);
-	updateMargins(v1);
-	updateMargins(v2);
-}
-
-void Graph::setEdgeSize(int v1, int v2, int size)
-{
-	_matrix[v1][v2].edge->setSize(size);
-	updateMargins(v1);
-	updateMargins(v2);
-}
-
-void Graph::setEdgeFontSize(int v1, int v2, int size)
-{
-	_matrix[v1][v2].edge->setFontSize(size);
-	updateMargins(v1);
-	updateMargins(v2);
 }
 
 
 void Graph::setVertexColor(const Color &color)
 {
-	for (int i = 0; i < _size; i++)
-		setVertexColor(i, color);
+	for (size_t i = 0; i < _vertexes.size(); i++)
+		_vertexes[i]->setColor(color);
 }
 
 void Graph::setVertexSize(int size)
 {
-	for (int i = 0; i < _size; i++)
-		setVertexSize(i, size);
+	for (size_t i = 0; i < _vertexes.size(); i++)
+		_vertexes[i]->setSize(size);
 }
 
 void Graph::setEdgeColor(const Color &color)
 {
-	for (int i = 0; i < _size; i++)
-		for (int j = 0; j < i; j++)
-			if (edge(i, j))
-				setEdgeColor(i, j, color);
+	for (size_t i = 0; i < _edges.size(); i++)
+		_edges[i]->setColor(color);
 }
 
 void Graph::setEdgeSize(int size)
 {
-	for (int i = 0; i < _size; i++)
-		for (int j = 0; j < i; j++)
-			if (edge(i, j))
-				setEdgeSize(i, j, size);
+	for (size_t i = 0; i < _edges.size(); i++)
+		_edges[i]->setSize(size);
 }
 
 void Graph::setVertexFontSize(int size)
 {
-	for (int i = 0; i < _size; i++)
-		setVertexFontSize(i, size);
+	for (size_t i = 0; i < _vertexes.size(); i++)
+		_vertexes[i]->setFontSize(size);
 }
 
 void Graph::setEdgeFontSize(int size)
 {
-	for (int i = 0; i < _size; i++)
-		for (int j = 0; j < i; j++)
-			if (edge(i, j))
-				setEdgeFontSize(i, j, size);
-}
-
-Color Graph::nextColor()
-{
-	_hueState += HUE_INCREMENT;
-	_hueState -= (int) _hueState;
-	return Color(hsv2rgb(_hueState, SATURATION, VALUE));
+	for (size_t i = 0; i < _edges.size(); i++)
+		_edges[i]->setFontSize(size);
 }
 
 
@@ -481,41 +286,4 @@ int euclideanDistanceSqr(Coordinates p1, Coordinates p2)
 {
 	return abs(((p1.x() - p2.x()) * (p1.x() - p2.x()))
 	  + ((p1.y() - p2.y()) * (p1.y() - p2.y())));
-}
-
-unsigned hsv2rgb(float h, float s, float v)
-{
-	unsigned hi;
-	float r = 0, g = 0, b = 0, p, q, t, f;
-
-	hi = (unsigned)(h * 6.0f);
-	f = h * 6.0f - hi;
-	p = v * (1.0f - s);
-	q = v * (1.0f - f * s);
-	t = v * (1.0f - (1.0f - f) * s);
-
-	switch (hi) {
-		case 0:
-			r = v; g = t; b = p;
-			break;
-		case 1:
-			r = q; g = v; b = p;
-			break;
-		case 2:
-			r = p; g = v; b = t;
-			break;
-		case 3:
-			r = p; g = q; b = v;
-			break;
-		case 4:
-			r = t; g = p; b = v;
-			break;
-		case 5:
-			r = v; g = p; b = q;
-			break;
-	}
-
-	return ((unsigned)(r * 256) << 16)
-	  + ((unsigned)(g * 256) << 8)
-	  + (unsigned)(b * 256);
 }

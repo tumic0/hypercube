@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include "CORE/config.h"
+#include "CORE/vertex.h"
+#include "CORE/edge.h"
 #include "IO/encodings/utf8cvt.h"
 #include "svg.h"
 
@@ -37,57 +39,64 @@ static void header(Graph *graph, wofstream &fs)
 	      "font-weight=\"normal\">"<< endl;
 }
 
-static void edges(Graph *graph, wofstream &fs, int zValue)
+static void edges(Graph *graph, wofstream &fs)
 {
 	Coordinates c1, c2, t;
 	Color color;
+	Edge *e;
 
-	for (int i = 0; i < graph->size(); i++) {
-		c1 = graph->vertexCoordinates(i) + Coordinates(
-		  graph->vertexSize(i) / 2, graph->vertexSize(i) / 2);
-		for (int j = 0; j < i; j++) {
-			if (graph->edge(i, j) && graph->edgeZValue(i, j) == zValue) {
-				c2 = graph->vertexCoordinates(j) + Coordinates(
-				  graph->vertexSize(j) / 2, graph->vertexSize(j) / 2);
-				color = graph->edgeColor(i, j);
+	for (int zValue = -2; zValue < 0; zValue++) {
+		for (size_t i = 0; i < graph->edge_size(); i++) {
+			e = graph->edge(i);
+			if (e->zValue() != zValue)
+				continue;
 
-				fs << "<g>" << endl;
-				fs << "\t<line x1=\"" << c1.x() << "\" y1=\"" << c1.y()
-				   << "\" x2=\"" << c2.x() << "\" y2=\"" << c2.y()
-				   << "\" stroke=\"" << color
-				   << "\" stroke-width=\"" << graph->edgeSize(i, j)
-				   << "\"/>" << endl;
-				if (graph->edgeFontSize(i, j) > 0) {
-					t = edgeValuePos(c1, c2, graph->edgeSize(i, j),
-					  graph->edgeFontSize(i, j));
-					fs << "\t<text x=\"" << t.x() << "\" y=\"" << t.y()
-					   << "\" fill=\"" << color << "\" font-size=\""
-					   << graph->edgeFontSize(i, j) << "\">"
-					   << graph->edgeText(i, j) << "</text>" << endl;
-				}
-				fs << "</g>" << endl;
+			c1 = e->src()->coordinates() + Coordinates(
+			  e->src()->size() / 2, e->src()->size() / 2);
+			c2 = e->dst()->coordinates() + Coordinates(
+			  e->dst()->size() / 2, e->dst()->size() / 2);
+			color = e->color();
+
+			fs << "<g>" << endl;
+			fs << "\t<line x1=\"" << c1.x() << "\" y1=\"" << c1.y()
+			   << "\" x2=\"" << c2.x() << "\" y2=\"" << c2.y()
+			   << "\" stroke=\"" << color
+			   << "\" stroke-width=\"" << e->size()
+			   << "\"/>" << endl;
+			if (e->fontSize() > 0) {
+				t = edgeValuePos(c1, c2, e->size(),
+				  e->fontSize());
+				fs << "\t<text x=\"" << t.x() << "\" y=\"" << t.y()
+				   << "\" fill=\"" << color << "\" font-size=\""
+				   << e->fontSize() << "\">"
+				   << e->text() << "</text>" << endl;
 			}
+			fs << "</g>" << endl;
 		}
+		fs << endl;
 	}
-	fs << endl;
 }
 
 static void vertexes(Graph *graph, wofstream &fs)
 {
-	Coordinates c1;
+	Coordinates c;
 	Color color;
+	Vertex *v;
 
-	for (int i = 0; i < graph->size(); i++) {
-		c1 = graph->vertexCoordinates(i) + Coordinates(
-		  graph->vertexSize(i) / 2, graph->vertexSize(i) / 2);
-		fs << "<g fill=\"" << graph->vertexColor(i) << "\">" << endl;
-		fs << "\t<circle cx=\"" << c1.x() << "\" cy=\"" << c1.y()
-		   << "\" r=\"" << graph->vertexSize(i) / 2 << "\"/>" << endl;
-		if (graph->vertexFontSize(i) > 0) {
-			c1 += Coordinates(graph->vertexSize(i) / 2, graph->vertexSize(i));
-			fs << "\t<text x=\"" << c1.x() << "\" y=\"" << c1.y()
-			   << "\" font-size=\"" << graph->vertexFontSize(i) << "\">"
-			   << graph->vertexText(i) << "</text>" << endl;
+	for (size_t i = 0; i < graph->vertex_size(); i++) {
+		v = graph->vertex(i);
+
+		c = v->coordinates() + Coordinates(
+		  v->size() / 2, v->size() / 2);
+
+		fs << "<g fill=\"" << v->color() << "\">" << endl;
+		fs << "\t<circle cx=\"" << c.x() << "\" cy=\"" << c.y()
+		   << "\" r=\"" << v->size() / 2 << "\"/>" << endl;
+		if (v->fontSize() > 0) {
+			c += Coordinates(v->size() / 2, v->size());
+			fs << "\t<text x=\"" << c.x() << "\" y=\"" << c.y()
+			   << "\" font-size=\"" << v->fontSize() << "\">"
+			   << v->text() << "</text>" << endl;
 		}
 		fs << "</g>" << endl;
 	}
@@ -106,11 +115,8 @@ IO::Error SvgGraphOutput::writeGraph(Graph *graph, const char *filename)
 		return OpenError;
 
 	header(graph, fs);
-	edges(graph, fs, -2);
-	edges(graph, fs, -1);
+	edges(graph, fs);
 	vertexes(graph, fs);
-
-	/* SVG end */
 	fs << "</g>" << endl << endl << "</svg>" << endl;
 
 	fs.close();

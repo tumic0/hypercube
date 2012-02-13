@@ -1,15 +1,17 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "CORE/vertex.h"
+#include "CORE/edge.h"
 #include "matrix.h"
+
 
 using namespace std;
 
 IO::Error MatrixGraphInput::readGraph(Graph *graph, const char *fileName,
   Encoding*)
 {
-	int size, value;
-	wstringstream ss;
+	size_t size, value;
 
 
 	ifstream fs(fileName);
@@ -20,23 +22,25 @@ IO::Error MatrixGraphInput::readGraph(Graph *graph, const char *fileName,
 		return FormatError;
 
 
-	for (int i = 0; i < size; i++) {
-		ss.str(L"");
+	for (size_t i = 0; i < size; i++) {
+		wstringstream ss;
 		ss << i;
-		graph->setVertexText(graph->addVertex(), ss.str());
+
+		Vertex *v = graph->addVertex();
+		v->setText(ss.str());
 	}
 
-
-	for (int i = 0; i < size; i++) {
-		for (int j = 0; j < size; j++) {
+	for (size_t i = 0; i < size; i++) {
+		for (size_t j = 0; j < size; j++) {
 			if (!(fs >> value))
 				return FormatError;
 			else
 				if (value > 0 && j < i) {
-					ss.str(L"");
+					wstringstream ss;
 					ss << value;
-					graph->addEdge(i, j);
-					graph->setEdgeText(i, j, ss.str());
+
+					Edge *e = graph->addEdge(graph->vertex(i), graph->vertex(j));
+					e->setText(ss.str());
 				}
 		}
 	}

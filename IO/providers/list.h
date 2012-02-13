@@ -16,7 +16,7 @@ private:
 	void addVertex(std::wstring vertex);
 	void addEdge(std::wstring src, std::wstring dst, std::wstring val);
 
-	std::map<std::wstring,int> _vertexes;
+	std::map<std::wstring, size_t> _vertexes;
 	Graph *_graph;
 };
 

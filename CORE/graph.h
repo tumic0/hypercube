@@ -1,78 +1,48 @@
 #ifndef GRAPH_H_
 #define GRAPH_H_
 
-#include <map>
+#include <vector>
 #include <string>
+#include "adjlist.h"
+#include "container.h"
 #include "coordinates.h"
 #include "color.h"
-#include "vertex.h"
-#include "edge.h"
+#include "colormap.h"
 
+
+class Vertex;
+class Edge;
 
 class Graph
 {
 public:
-	Graph();
-	~Graph();
+	Vertex *addVertex();
+	Edge *addEdge(Vertex *src, Vertex *dst);
 
-	int addVertex();
-	void addEdge(int v1, int v2);
-	bool edge(int v1, int v2)
-	  {return (_matrix[v1][v2].edge) ? true : false;}
+	size_t vertex_size() {return _vertexes.size();}
+	size_t edge_size() {return _edges.size();}
+	Vertex *vertex(size_t id) {return _vertexes[id];}
+	Edge *edge(size_t id) {return _edges[id];}
 
-	int size(void) {return _size;}
-
-	void moveVertex(int v, const Coordinates &location);
-	Coordinates vertexCoordinates(int v) const
-	  {return _vertexes[v].coordinates();}
-	Margin margin(int v) const
-	  {return _vertexes[v].totalMargin();}
 	Coordinates dimensions(void) const {return _dimensions;}
 	void setDimensions(const Coordinates &dimensions)
 	  {_dimensions = dimensions;}
 
-	int crossings(void);
-	float distance(void);
-	float length(void);
+	void updateCoordinates(size_t vid);
+	void updateMargins(size_t vid);
+
+	Margin margin(size_t vid) const {return _margins[vid];}
+	unsigned crossings() {return _crossings.sum();}
+	float distance() {return _distances.sum();}
+	float length() {return _lengths.sum();}
 
 	void clear();
-	void center(void);
-	void randomize(void);
-	void colorize(void);
+	void center();
+	void randomize();
+	void colorize();
+
 	void bindTo(Graph *source);
 	void project(Graph *source);
-
-	std::wstring vertexText(int v) const
-	  {return _vertexes[v].text();}
-	void setVertexText(int v, const std::wstring &text);
-	Color vertexColor(int v) const
-	  {return _vertexes[v].color();}
-	void setVertexColor(int v, const Color &color)
-	  {_vertexes[v].setColor(color);}
-	int vertexSize(int v)
-	  {return _vertexes[v].size();}
-	void setVertexSize(int v, int size);
-	int vertexFontSize(int v)
-	  {return _vertexes[v].fontSize();}
-	void setVertexFontSize(int v, int size);
-
-	std::wstring edgeText(int v1, int v2) const
-	  {return _matrix[v1][v2].edge->text();}
-	void setEdgeText(int v1, int v2, const std::wstring &text);
-	Color edgeColor(int v1, int v2) const
-	  {return _matrix[v1][v2].edge->color();}
-	void setEdgeColor(int v1, int v2, const Color &color)
-	  {_matrix[v1][v2].edge->setColor(color);}
-	int edgeSize(int v1, int v2)
-	  {return _matrix[v1][v2].edge->size();}
-	void setEdgeSize(int v1, int v2, int size);
-	int edgeFontSize(int v1, int v2)
-	  {return _matrix[v1][v2].edge->fontSize();}
-	void setEdgeFontSize(int v1, int v2, int size);
-	int edgeZValue(int v1, int v2)
-	  {return _matrix[v1][v2].edge->zValue();}
-	void setEdgeZValue(int v1, int v2, int value)
-	  {_matrix[v1][v2].edge->setZValue(value);}
 
 	void setVertexColor(const Color &color);
 	void setVertexSize(int size);
@@ -83,32 +53,22 @@ public:
 
 private:
 
-	struct MatrixItem
-	{
-		Edge *edge;
-		float distance;
-	};
-
-	void allocateMemory();
-
-	void updateCrossings(int v);
-	void updateCrossings(int v1, int v2);
-	void updateDistance(int v);
-	void updateDistance(int v1, int v2);
-	void updateMargins(int v);
-
-	Color nextColor();
-
-	int _size;
-	int _allocSize;
+	void updateDistance(size_t vid);
+	void updateCrossings(size_t eid);
+	void updateLength(size_t eid);
 
 	Coordinates _dimensions;
 
-	Vertex *_vertexes;
-	MatrixItem **_matrix;
+	std::vector<Vertex*> _vertexes;
+	std::vector<Edge*> _edges;
+	AdjacencyList _neighbours;
 
-	std::map<std::wstring, Color> _colors;
-	float _hueState;
+	LinearContainer<float> _lengths;
+	MatrixContainer<float> _distances;
+	MatrixContainer<unsigned> _crossings;
+	std::vector<Margin> _margins;
+
+	ColorMap _colormap;
 };
 
 #endif /* GRAPH_H_ */
