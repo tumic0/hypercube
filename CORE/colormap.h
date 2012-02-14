@@ -2,6 +2,7 @@
 #define COLORMAP_H_
 
 #include <map>
+#include <string>
 #include "color.h"
 
 class ColorMap
