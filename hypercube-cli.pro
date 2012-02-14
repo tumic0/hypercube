@@ -16,21 +16,21 @@ HEADERS += CORE/sa_log.h \
     CORE/adjlist.h \
     IO/encoding.h \
     IO/providers/ps.h \
-    IO/providers/ps_snippets/encodings/latin2.ps.h \
-    IO/providers/ps_snippets/encodings/latin1.h \
-    IO/providers/ps_snippets/encodings/koi8r.ps.h \
-    IO/providers/ps_snippets/encodings/latin2.h \
-    IO/providers/ps_snippets/encodings/koi8r.h \
-    IO/providers/ps_snippets/default.h \
-    IO/providers/ps_snippets/cyrillic.h \
-    IO/providers/ps_snippets/fonts/nimbus.pfa.h \
-    IO/providers/ps_snippets/fonts/nimbus.h \
-    IO/providers/ps_snippets/fonts/helvetica_ce.h \
-    IO/providers/ps_snippets/fonts/helvetica.h \
-    IO/providers/ps_snippets/ce.h \
+    IO/providers/ps/encodings/latin2.ps.h \
+    IO/providers/ps/encodings/latin1.h \
+    IO/providers/ps/encodings/koi8r.ps.h \
+    IO/providers/ps/encodings/latin2.h \
+    IO/providers/ps/encodings/koi8r.h \
+    IO/providers/ps/default.h \
+    IO/providers/ps/cyrillic.h \
+    IO/providers/ps/fonts/nimbus.pfa.h \
+    IO/providers/ps/fonts/nimbus.h \
+    IO/providers/ps/fonts/helvetica_ce.h \
+    IO/providers/ps/fonts/helvetica.h \
+    IO/providers/ps/ce.h \
+    IO/providers/ps/snippet.h \
     IO/providers/svg.h \
     IO/providers/matrix.h \
-    IO/providers/ps_snippet.h \
     IO/providers/list.h \
     IO/encodings/latin1cvt.h \
     IO/encodings/cp1250cvt.h \
@@ -60,7 +60,7 @@ SOURCES += CORE/edge.cpp \
     IO/providers/list.cpp \
     IO/providers/matrix.cpp \
     IO/providers/ps.cpp \
-    IO/providers/ps_snippet.cpp \
+    IO/providers/ps/snippet.cpp \
     IO/providers/svg.cpp \
     CLI/cli.cpp \
     CLI/main.cpp

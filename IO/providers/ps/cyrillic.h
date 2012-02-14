@@ -1,9 +1,9 @@
 #ifndef CYRILLIC_H_
 #define CYRILLIC_H_
 
-#include "IO/providers/ps_snippet.h"
-#include "IO/providers/ps_snippets/encodings/koi8r.h"
-#include "IO/providers/ps_snippets/fonts/nimbus.h"
+#include "snippet.h"
+#include "encodings/koi8r.h"
+#include "fonts/nimbus.h"
 
 class Cyrillic : public PsSnippet
 {

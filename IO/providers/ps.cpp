@@ -6,7 +6,7 @@
 #include "CORE/edge.h"
 #include "CORE/config.h"
 #include "IO/modules.h"
-#include "ps_snippet.h"
+#include "IO/providers/ps/snippet.h"
 #include "ps.h"
 
 

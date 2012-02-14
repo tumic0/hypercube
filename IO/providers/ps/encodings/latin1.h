@@ -1,7 +1,7 @@
 #ifndef PS_LATIN1_H_
 #define PS_LATIN1_H_
 
-#include "IO/providers/ps_snippet.h"
+#include "IO/providers/ps/snippet.h"
 
 class PsLatin1 : public PsEncoding
 {

@@ -1,9 +1,9 @@
 #ifndef DEFAULT_H_
 #define DEFAULT_H_
 
-#include "IO/providers/ps_snippet.h"
-#include "IO/providers/ps_snippets/encodings/latin1.h"
-#include "IO/providers/ps_snippets/fonts/helvetica.h"
+#include "snippet.h"
+#include "encodings/latin1.h"
+#include "fonts/helvetica.h"
 
 class Default : public PsSnippet
 {

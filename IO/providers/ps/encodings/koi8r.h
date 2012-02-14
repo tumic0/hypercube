@@ -1,7 +1,7 @@
 #ifndef PS_KOI8R_H_
 #define PS_KOI8R_H_
 
-#include "IO/providers/ps_snippet.h"
+#include "IO/providers/ps/snippet.h"
 #include "koi8r.ps.h"
 
 class PsKOI8R : public PsEncoding

@@ -1,9 +1,9 @@
 #ifndef CE_H_
 #define CE_H_
 
-#include "IO/providers/ps_snippet.h"
-#include "IO/providers/ps_snippets/encodings/latin2.h"
-#include "IO/providers/ps_snippets/fonts/helvetica_ce.h"
+#include "snippet.h"
+#include "encodings/latin2.h"
+#include "fonts/helvetica_ce.h"
 
 class CE : public PsSnippet
 {

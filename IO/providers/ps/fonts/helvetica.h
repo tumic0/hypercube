@@ -1,7 +1,7 @@
 #ifndef HELVETICA_H_
 #define HELVETICA_H_
 
-#include "IO/providers/ps_snippet.h"
+#include "IO/providers/ps/snippet.h"
 
 class Helvetica : public PsFont
 {
