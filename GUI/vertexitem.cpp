@@ -7,8 +7,10 @@
 #include "CORE/config.h"
 
 
-VertexItem::VertexItem()
+VertexItem::VertexItem(int id)
 {
+	_id = id;
+
 	_color = QColor();
 	_size = 0;
 	_fontSize = 0;

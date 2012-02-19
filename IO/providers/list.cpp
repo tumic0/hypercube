@@ -23,11 +23,10 @@ void ListGraphInput::addVertex(wstring vertex)
 void ListGraphInput::addEdge(wstring src, wstring dst, wstring val)
 {
 	wstringstream ss;
-	size_t v1 = max(_vertexes[src], _vertexes[dst]);
-	size_t v2 = min(_vertexes[src], _vertexes[dst]);
 
 	ss << val;
-	Edge *e = _graph->addEdge(_graph->vertex(v1), _graph->vertex(v2));
+	Edge *e = _graph->addEdge(_graph->vertex(_vertexes[src]),
+	  _graph->vertex(_vertexes[dst]));
 	e->setText(ss.str());
 }
 
@@ -36,7 +35,7 @@ IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName,
 {
 	wifstream fs;
 	wstring line, src, dst, value;
-	int err = 0;
+	IO::Error err = Ok;
 
 	if (encoding) {
 		locale lc(std::locale(), encoding->cvt());
@@ -53,7 +52,7 @@ IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName,
 		wistringstream iss(line);
 		iss >> src >> dst >> value;
 		if (!iss) {
-			err = 1;
+			err = FormatError;
 			break;
 		}
 
@@ -62,11 +61,13 @@ IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName,
 		addEdge(src, dst, value);
 	}
 
-	fs.close();
 	_vertexes.clear();
+	fs.close();
+	if (fs.bad())
+		err = ReadError;
 
 	if (err)
-		return FormatError;
-	else
-		return Ok;
+		graph->clear();
+
+	return err;
 }

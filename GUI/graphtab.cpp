@@ -227,10 +227,8 @@ void GraphTab::loadGraph()
 	Coordinates c;
 
 
-	/* Clear the old graph if any */
 	_view->clear();
 
-	/* Add the new graph */
 	_view->setDimensions(QPoint(_graph->dimensions().x(),
 	  _graph->dimensions().y()));
 
@@ -248,7 +246,8 @@ void GraphTab::loadGraph()
 
 	for (size_t i = 0; i < _graph->edge_size(); i++) {
 		edg = _graph->edge(i);
-		e = _view->addEdge(edg->src()->id(), edg->dst()->id());
+		e = _view->addEdge(_view->vertex(edg->src()->id()),
+		  _view->vertex(edg->dst()->id()));
 
 		e->setColor(QColor(edg->color().rgb()));
 		e->setSize(edg->size());
@@ -267,14 +266,12 @@ void GraphTab::storeGraph()
 	QPointF pos;
 
 
-	/* Clear the old graph if any */
 	_graph->clear();
 
-	/* Add the new graph */
 	_graph->setDimensions(Coordinates(_view->dimensions().x(),
 	  _view->dimensions().y()));
 
-	for (int i = 0; i < _view->graphSize(); i++) {
+	for (int i = 0; i < _view->vertex_size(); i++) {
 		v = _view->vertex(i);
 		pos = v->scenePos();
 		vtx = _graph->addVertex();
@@ -286,18 +283,16 @@ void GraphTab::storeGraph()
 		vtx->setFontSize(v->fontSize());
 	}
 
-	for (int i = 0; i < _view->graphSize(); i++) {
-		for (int j = 0; j < i; j++) {
-			if ((e = _view->edge(i, j))) {
-				edg = _graph->addEdge(_graph->vertex(i), _graph->vertex(j));
+	for (int i = 0; i < _view->edge_size(); i++) {
+		e = _view->edge(i);
+		edg = _graph->addEdge(_graph->vertex(e->src()->id()),
+		  _graph->vertex(e->dst()->id()));
 
-				edg->setColor(e->color().rgb());
-				edg->setSize(e->size());
-				edg->setText(e->text().toStdWString());
-				edg->setFontSize(e->fontSize());
-				edg->setZValue(e->zValue());
-			}
-		}
+		edg->setColor(e->color().rgb());
+		edg->setSize(e->size());
+		edg->setText(e->text().toStdWString());
+		edg->setFontSize(e->fontSize());
+		edg->setZValue(e->zValue());
 	}
 }
 

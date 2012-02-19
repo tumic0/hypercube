@@ -29,7 +29,6 @@ void BoundingRectItem::paint(QPainter *painter,
 GraphView::GraphView(QWidget *parent)
 	: QGraphicsView(parent)
 {
-	_graphSize = 0;
 	_dimensions = QPoint(0, 0);
 
 	_scene = new QGraphicsScene(this);
@@ -46,51 +45,28 @@ GraphView::~GraphView()
 
 void GraphView::clear()
 {
-	while (!_vertexList.isEmpty())
-		delete _vertexList.takeFirst();
-	while (!_edgeList.isEmpty())
-		delete _edgeList.takeFirst();
-
-	_graphSize = 0;
-}
-
-int GraphView::graphSize()
-{
-	return _graphSize;
-}
-
-VertexItem* GraphView::vertex(int id)
-{
-	return _vertexList.at(id);
+	for (int i = 0; i < _vertexes.size(); i++)
+		delete _vertexes[i];
+	_vertexes.clear();
+	for (int i = 0; i < _edges.size(); i++)
+		delete _edges[i];
+	_edges.clear();
 }
 
 VertexItem* GraphView::addVertex()
 {
-	VertexItem *v = new VertexItem();
+	VertexItem *v = new VertexItem(_vertexes.size());
 	_scene->addItem(v);
-	_vertexList.append(v);
-
-	_graphSize++;
+	_vertexes.append(v);
 
 	return v;
 }
 
-EdgeItem* GraphView::edge(int src, int dst)
+EdgeItem* GraphView::addEdge(VertexItem *src, VertexItem *dst)
 {
-	VertexItem *v = _vertexList.at(src);
-
-	for (int i = 0; i < v->edges().size(); i++)
-		if (v->edges().at(i)->destVertex() == _vertexList.at(dst))
-			return v->edges().at(i);
-
-	return 0;
-}
-
-EdgeItem* GraphView::addEdge(int src, int dst)
-{
-	EdgeItem *e = new EdgeItem(_vertexList.at(src), _vertexList.at(dst));
+	EdgeItem *e = new EdgeItem(src, dst);
 	_scene->addItem(e);
-	_edgeList.append(e);
+	_edges.append(e);
 
 	return e;
 }
@@ -103,8 +79,8 @@ QPoint GraphView::dimensions(void) const
 void GraphView::setDimensions(const QPoint dimensions)
 {
 	QPoint offset = ((dimensions / 2) - (_dimensions / 2));
-	for (int i = 0; i < _vertexList.size(); ++i)
-		_vertexList.at(i)->moveBy(offset.x(), offset.y());
+	for (int i = 0; i < _vertexes.size(); ++i)
+		_vertexes.at(i)->moveBy(offset.x(), offset.y());
 
 
 	_boundingRect->setRect(0, 0, dimensions.x() - 1,
@@ -117,44 +93,44 @@ void GraphView::setDimensions(const QPoint dimensions)
 
 void GraphView::setVertexColor(const QColor &color)
 {
-	for (int i = 0; i < _vertexList.size(); i++)
-		_vertexList.at(i)->setColor(color);
+	for (int i = 0; i < _vertexes.size(); i++)
+		_vertexes.at(i)->setColor(color);
 }
 
 void GraphView::setEdgeColor(const QColor &color)
 {
-	for (int i = 0; i < _edgeList.size(); i++)
-		_edgeList.at(i)->setColor(color);
+	for (int i = 0; i < _edges.size(); i++)
+		_edges.at(i)->setColor(color);
 }
 
 void GraphView::setVertexSize(int size)
 {
-	for (int i = 0; i < _vertexList.size(); i++)
-		_vertexList.at(i)->setSize(size);
+	for (int i = 0; i < _vertexes.size(); i++)
+		_vertexes.at(i)->setSize(size);
 }
 
 void GraphView::setEdgeSize(int size)
 {
-	for (int i = 0; i < _edgeList.size(); i++)
-		_edgeList.at(i)->setSize(size);
+	for (int i = 0; i < _edges.size(); i++)
+		_edges.at(i)->setSize(size);
 }
 
 void GraphView::setVertexFontSize(int size)
 {
-	for (int i = 0; i < _vertexList.size(); i++)
-		_vertexList.at(i)->setFontSize(size);
+	for (int i = 0; i < _vertexes.size(); i++)
+		_vertexes.at(i)->setFontSize(size);
 }
 
 void GraphView::setEdgeFontSize(int size)
 {
-	for (int i = 0; i < _edgeList.size(); i++)
-		_edgeList.at(i)->setFontSize(size);
+	for (int i = 0; i < _edges.size(); i++)
+		_edges.at(i)->setFontSize(size);
 }
 
 void GraphView::setEdgeZValue(int value)
 {
-	for (int i = 0; i < _edgeList.size(); i++)
-		_edgeList.at(i)->setZValue(value);
+	for (int i = 0; i < _edges.size(); i++)
+		_edges.at(i)->setZValue(value);
 }
 
 

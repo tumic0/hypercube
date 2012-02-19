@@ -10,8 +10,10 @@ class QGraphicsSceneMouseEvent;
 class VertexItem : public QGraphicsEllipseItem
 {
 public:
-	VertexItem();
+	VertexItem(int id);
 	virtual ~VertexItem();
+
+	int id() {return _id;}
 
 	void addEdge(EdgeItem *edge);
 	QList<EdgeItem *> edges() const {return _edgeList;}
@@ -37,6 +39,8 @@ private:
 	qreal _size;
 	QColor _color;
 	int _fontSize;
+
+	int _id;
 };
 
 #endif /* VERTEXITEM_H_ */

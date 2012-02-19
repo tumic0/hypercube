@@ -12,8 +12,8 @@ public:
 	EdgeItem(VertexItem *src, VertexItem *dest);
 	virtual ~EdgeItem();
 
-	VertexItem* srcVertex(void) {return _src;}
-	VertexItem* destVertex(void) {return _dest;}
+	VertexItem* src(void) {return _src;}
+	VertexItem* dst(void) {return _dest;}
 	void adjust();
 
 	QColor color(void) const {return _color;}
@@ -26,12 +26,10 @@ public:
 	void setFontSize(int size);
 
 private:
+	VertexItem *_src, *_dest;
+
 	QLineF edgeLine();
 	QPointF textPos();
-
-	VertexItem *_src, *_dest;
-	QPointF _srcPoint;
-	QPointF _destPoint;
 
 	QGraphicsSimpleTextItem* _text;
 

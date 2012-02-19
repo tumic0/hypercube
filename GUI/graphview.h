@@ -17,14 +17,19 @@ public:
 	GraphView(QWidget *parent = 0);
 	virtual ~GraphView();
 
-	int graphSize();
 	void setDimensions(const QPoint dimensions);
 	QPoint dimensions(void) const;
 
-	VertexItem* vertex(int id);
+
 	VertexItem* addVertex();
-	EdgeItem* edge(int src, int dst);
-	EdgeItem* addEdge(int src, int dst);
+	EdgeItem* addEdge(VertexItem *src, VertexItem *dst);
+
+	int vertex_size() {return _vertexes.size();}
+	int edge_size() {return _edges.size();}
+	VertexItem* vertex(int id) {return _vertexes.at(id);}
+	EdgeItem* edge(int id) {return _edges.at(id);}
+
+
 	void clear();
 
 	void showEdgeValues(bool visible);
@@ -49,10 +54,9 @@ private:
 	QGraphicsScene *_scene;
 
 	BoundingRectItem *_boundingRect;
-	QList<VertexItem*> _vertexList;
-	QList<EdgeItem*> _edgeList;
+	QVector<VertexItem*> _vertexes;
+	QVector<EdgeItem*> _edges;
 
-	int _graphSize;
 	QPoint _dimensions;
 };
 
