@@ -30,11 +30,9 @@ GraphView::GraphView(QWidget *parent)
 	: QGraphicsView(parent)
 {
 	_dimensions = QPoint(0, 0);
+	_boundingRect = 0;
 
 	_scene = new QGraphicsScene(this);
-	_boundingRect = new BoundingRectItem();
-	_scene->addItem(_boundingRect);
-
 	setScene(_scene);
 }
 
@@ -45,11 +43,10 @@ GraphView::~GraphView()
 
 void GraphView::clear()
 {
-	for (int i = 0; i < _vertexes.size(); i++)
-		delete _vertexes[i];
+	_scene->clear();
+	_boundingRect = 0;
+
 	_vertexes.clear();
-	for (int i = 0; i < _edges.size(); i++)
-		delete _edges[i];
 	_edges.clear();
 }
 
@@ -82,6 +79,11 @@ void GraphView::setDimensions(const QPoint dimensions)
 	for (int i = 0; i < _vertexes.size(); ++i)
 		_vertexes.at(i)->moveBy(offset.x(), offset.y());
 
+
+	if (!_boundingRect) {
+		_boundingRect = new BoundingRectItem();
+		_scene->addItem(_boundingRect);
+	}
 
 	_boundingRect->setRect(0, 0, dimensions.x() - 1,
 	  dimensions.y() - 1);
