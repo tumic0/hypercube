@@ -47,7 +47,6 @@ HEADERS += CORE/sa_log.h \
     CLI/cli.h
 SOURCES += CORE/edge.cpp \
     CORE/vertex.cpp \
-    CORE/color.cpp \
     CORE/graph.cpp \
     CORE/sa.cpp \
     CORE/colormap.cpp \

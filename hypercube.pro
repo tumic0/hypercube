@@ -52,7 +52,7 @@ HEADERS += CORE/sa_log.h \
     GUI/gui.h \
     GUI/graphtab.h \
     GUI/edgeitem.h
-SOURCES += CORE/color.cpp \
+SOURCES += \
     CORE/edge.cpp \
     CORE/graph.cpp \
     CORE/sa.cpp \

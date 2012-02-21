@@ -4,18 +4,19 @@
 #include <iostream>
 #include <iomanip>
 
+
 class Color
 {
 public:
-	Color();
-	Color(unsigned rgb);
+	Color() {_data = ~RGB_MASK;}
+	Color(unsigned rgb) {_data = rgb & RGB_MASK;}
 
-	bool valid();
-	unsigned rgb();
+	bool valid() {return (_data & ~RGB_MASK) ? true : false;}
+	unsigned rgb() {return _data;}
 
-	float red();
-	float green();
-	float blue();
+	float red() {return ((float)(_data >> 16) / 255);}
+	float green() {return ((float)((_data & 0x0000FF00) >> 8) / 255);}
+	float blue() {return ((float)(_data & 0x000000FF) / 255);}
 
 	bool operator==(const Color &color) {return (_data == color._data);}
 	bool operator!=(const Color &color) {return !(*this == color);}
@@ -41,6 +42,7 @@ public:
 	}
 
 private:
+	static const unsigned RGB_MASK = 0x00FFFFFF;
 	unsigned _data;
 };
 
