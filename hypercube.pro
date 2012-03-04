@@ -14,6 +14,7 @@ HEADERS += CORE/sa_log.h \
     CORE/container.h \
     CORE/colormap.h \
     CORE/adjlist.h \
+    CORE/vector.h \
     IO/io.h \
     IO/modules.h \
     IO/encoding.h \

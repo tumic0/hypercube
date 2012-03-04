@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "adjlist.h"
+#include "vector.h"
 #include "container.h"
 #include "coordinates.h"
 #include "color.h"
@@ -59,8 +60,8 @@ private:
 
 	Coordinates _dimensions;
 
-	std::vector<Vertex*> _vertexes;
-	std::vector<Edge*> _edges;
+	Vector<Vertex*> _vertexes;
+	Vector<Edge*> _edges;
 	AdjacencyList _neighbours;
 
 	LinearContainer<float> _lengths;
