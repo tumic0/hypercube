@@ -7,17 +7,22 @@ Name "Hypercube"
 ; The file to write
 OutFile "install.exe"
 
+RequestExecutionLevel user
+
 ; The default installation directory
-InstallDir $PROGRAMFILES\Hypercube
+InstallDir "$LOCALAPPDATA\Hypercube"
 
 ; Registry key to check for directory (so if you install again, it will 
 ; overwrite the old one automatically)
-InstallDirRegKey HKLM "Software\Hypercube" "Install_Dir"
+InstallDirRegKey HKCU "Software\Hypercube" "Install_Dir"
+
+; Registry key for uninstaller
+!define REGENTRY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Hypercube" 
 
 ; Start menu page configuration
 !define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKCU" 
 !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\Hypercube" 
-!define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Hypercube"
+!define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Hypercube" 
 
 Var StartMenuFolder
 
@@ -53,21 +58,15 @@ Section "Hypercube (required)" SEC_GUI_APP
   File "hypercube.exe"
   
   ; Write the installation path into the registry
-  WriteRegStr HKLM SOFTWARE\Hypercube "Install_Dir" "$INSTDIR"
+  WriteRegStr HKCU SOFTWARE\Hypercube "Install_Dir" "$INSTDIR"
   
   ; Write the uninstall keys for Windows
-  WriteRegStr HKLM \
-    "Software\Microsoft\Windows\CurrentVersion\Uninstall\Hypercube" \
-    "DisplayName" "Hypercube"
-  WriteRegStr HKLM \
-    "Software\Microsoft\Windows\CurrentVersion\Uninstall\Hypercube" \
-    "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegDWORD HKLM \
-    "Software\Microsoft\Windows\CurrentVersion\Uninstall\Hypercube" \
-    "NoModify" 1
-  WriteRegDWORD HKLM \
-    "Software\Microsoft\Windows\CurrentVersion\Uninstall\Hypercube" \
-    "NoRepair" 1
+  WriteRegStr HKCU "${REGENTRY}" "DisplayName" "Hypercube"
+  WriteRegStr HKCU "${REGENTRY}" "Publisher" "Martin Tuma"
+  WriteRegStr HKCU "${REGENTRY}" "DisplayVersion" "git"
+  WriteRegStr HKCU "${REGENTRY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegDWORD HKCU "${REGENTRY}" "NoModify" 1
+  WriteRegDWORD HKCU "${REGENTRY}" "NoRepair" 1
   WriteUninstaller "$INSTDIR\uninstall.exe"
 
   ; Create start menu entry and add links
@@ -104,9 +103,8 @@ SectionEnd
 Section "Uninstall"
   
   ; Remove registry keys
-  DeleteRegKey HKLM \
-    "Software\Microsoft\Windows\CurrentVersion\Uninstall\Hypercube"
-  DeleteRegKey HKLM SOFTWARE\Hypercube
+  DeleteRegKey HKCU "${REGENTRY}"
+  DeleteRegKey HKCU SOFTWARE\Hypercube
 
   ; Remove files and uninstaller
   Delete "$INSTDIR\*.*"
