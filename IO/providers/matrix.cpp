@@ -35,7 +35,7 @@ IO::Error MatrixGraphInput::readGraph(Graph *graph, const char *fileName,
 			if (!(fs >> value))
 				return FormatError;
 			else
-				if (value > 0 && j < i) {
+				if (value > 0) {
 					wstringstream ss;
 					ss << value;
 
