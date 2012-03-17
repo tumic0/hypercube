@@ -36,16 +36,16 @@ static void edges(Graph *graph, wofstream &fs)
 
 			LineF line(
 			  CoordinatesF(e->src()->coordinates())
-				+ CoordinatesF(e->src()->size() / 2.0, e->src()->size() / 2.0),
+				+ CoordinatesF((float)e->src()->size() / 2, (float)e->src()->size() / 2),
 			  CoordinatesF(e->dst()->coordinates())
-				+ CoordinatesF(e->dst()->size() / 2.0, e->dst()->size() / 2.0)
+				+ CoordinatesF((float)e->dst()->size() / 2, (float)e->dst()->size() / 2)
 			);
 
 			fs << "<g>" << endl;
 
 			if (e->fontSize() > 0) {
 				CoordinatesF t = OutputProvider::edgeTextPosition(
-				  line, e->size(), e->fontSize());
+				  line, (float)e->size(), (float)e->fontSize());
 
 				fs << "\t<text x=\"" << t.toCoordinates().x()
 				   << "\" y=\"" << t.toCoordinates().y()
@@ -56,7 +56,7 @@ static void edges(Graph *graph, wofstream &fs)
 
 			if (e->directed()) {
 				OutputProvider::Arrow arrow = OutputProvider::arrow(line,
-				  e->dst()->size());
+				  (float)e->dst()->size());
 
 				fs << "\t<polygon points=\""
 				   << arrow.p[0].toCoordinates() << " "
@@ -94,7 +94,7 @@ static void vertexes(Graph *graph, wofstream &fs)
 		   << "\" r=\"" << v->size() / 2 << "\"/>" << endl;
 
 		if (v->fontSize() > 0) {
-			c = OutputProvider::vertexTextPosition(c, v->size());
+			c = OutputProvider::vertexTextPosition(c, (float)v->size());
 			fs << "\t<text x=\"" << c.x() << "\" y=\"" << c.y()
 			   << "\" font-size=\"" << v->fontSize() << "\">"
 			   << v->text() << "</text>" << endl;

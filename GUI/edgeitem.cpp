@@ -6,8 +6,8 @@
 #include "edgeitem.h"
 
 
-const float Pi = 3.141592;
-const float C1 = 0.866025; /* sqrt(3)/2 */
+const float Pi = 3.141592f;
+const float C1 = 0.866025f; /* sqrt(3)/2 */
 
 EdgeItem::EdgeItem(VertexItem *src, VertexItem *dst)
 {

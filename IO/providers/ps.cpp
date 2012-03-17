@@ -81,9 +81,9 @@ static void edges(Graph *graph, wofstream &fs)
 				continue;
 
 			LineF line(
-			  CoordinatesF(e->src()->size() / 2.0, e->src()->size() / 2.0)
+			  CoordinatesF((float)e->src()->size() / 2, (float)e->src()->size() / 2)
 				+ e->src()->coordinates(),
-			  CoordinatesF(e->dst()->size() / 2.0, e->dst()->size() / 2.0)
+			  CoordinatesF((float)e->dst()->size() / 2, (float)e->dst()->size() / 2)
 				+ e->dst()->coordinates()
 			);
 
@@ -95,7 +95,7 @@ static void edges(Graph *graph, wofstream &fs)
 
 			if (e->directed()) {
 				OutputProvider::Arrow arrow = OutputProvider::arrow(line,
-				  e->dst()->size());
+				  (float)e->dst()->size());
 
 				fs << arrow.p[0].x() << " " << tr(arrow.p[0].y(), dim) << " "
 				   << arrow.p[1].x() << " " << tr(arrow.p[1].y(), dim) << " "
@@ -121,7 +121,7 @@ static void edges(Graph *graph, wofstream &fs)
 			}
 
 			CoordinatesF t = OutputProvider::edgeTextPosition(
-			  line, e->size(), e->fontSize());
+			  line, (float)e->size(), (float)e->fontSize());
 			fs << "(" << e->text() << ") "
 			   << t.x() << " " << tr(t.y(), dim) << " d" << endl;
 		}
@@ -140,7 +140,7 @@ static void vertexes(Graph *graph, wofstream &fs)
 		Vertex *v = graph->vertex(i);
 
 		CoordinatesF c(v->coordinates() + CoordinatesF(
-		  v->size() / 2.0, v->size() / 2.0));
+		  (float)v->size() / 2, (float)v->size() / 2));
 
 		if (v->color() != color) {
 			color = v->color();
@@ -160,7 +160,7 @@ static void vertexes(Graph *graph, wofstream &fs)
 			fs << fontSize << " f" << endl;
 		}
 
-		c = OutputProvider::vertexTextPosition(c, v->size());
+		c = OutputProvider::vertexTextPosition(c, (float)v->size());
 		fs << "(" << v->text() << ") "
 		   << c.x() << " " << tr(c.y(), dim) << " d" << endl;
 	}

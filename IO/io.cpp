@@ -2,8 +2,8 @@
 #include "io.h"
 
 
-const float Pi = 3.141592;
-const float C1 = 0.866025; /* sqrt(3)/2 */
+const float Pi = 3.141592f;
+const float C1 = 0.866025f; /* sqrt(3)/2 */
 
 CoordinatesF OutputProvider::edgeTextPosition(const LineF &line, float size,
   float fontSize)
@@ -18,7 +18,7 @@ CoordinatesF OutputProvider::edgeTextPosition(const LineF &line, float size,
 CoordinatesF OutputProvider::vertexTextPosition(const CoordinatesF &point,
   float size)
 {
-	return point + Coordinates(size / 2, size);
+	return point + CoordinatesF(size / 2, size);
 }
 
 OutputProvider::Arrow OutputProvider::arrow(LineF &line, float size)
@@ -28,7 +28,7 @@ OutputProvider::Arrow OutputProvider::arrow(LineF &line, float size)
 
 	angle = acos(line.dx() / line.length());
 	if (line.dy() >= 0)
-		angle = 2.0 * Pi - angle;
+		angle = 2 * Pi - angle;
 
 	arrow.p[0] = line.pointAt(1 - ((size / 2) / line.length()));
 	arrow.p[1] = CoordinatesF(sin(angle - Pi / 3) * size,
@@ -37,7 +37,7 @@ OutputProvider::Arrow OutputProvider::arrow(LineF &line, float size)
 	  cos(angle - Pi + Pi / 3) * size) + arrow.p[0];
 
 	line.setP2(
-	  line.pointAt(1 - ((size * C1 * 1.5) / line.length())));
+	  line.pointAt(1 - ((size * C1 * 1.5f) / line.length())));
 
 	return arrow;
 }
