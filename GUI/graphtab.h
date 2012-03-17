@@ -49,6 +49,8 @@ public:
 	bool vertexIDs() {return _showVertexIDs;}
 	bool edgeValues() {return _showEdgeValues;}
 	bool coloredEdges() {return _coloredEdges;}
+	bool directedGraph() {return _directedGraph;}
+	void setDirectedGraph(bool state);
 	void showVertexIDs(bool show);
 	void showEdgeValues(bool show);
 	void colorizeEdges(bool colorize);
@@ -100,6 +102,7 @@ private:
 	bool _showVertexIDs;
 	bool _showEdgeValues;
 	bool _coloredEdges;
+	bool _directedGraph;
 };
 
 #endif /* GRAPHTAB_H_ */

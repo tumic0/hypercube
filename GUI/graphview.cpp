@@ -135,6 +135,13 @@ void GraphView::setEdgeZValue(int value)
 		_edges.at(i)->setZValue(value);
 }
 
+void GraphView::setDirectedGraph(bool state)
+{
+	for (int i = 0; i < _edges.size(); i++)
+		_edges.at(i)->setDirected(state);
+	_directed = state;
+}
+
 
 void GraphView::wheelEvent(QWheelEvent *event)
 {

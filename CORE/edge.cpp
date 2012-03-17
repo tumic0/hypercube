@@ -13,6 +13,7 @@ Edge::Edge(Vertex *src, Vertex *dst, size_t id)
 	_size = 0;
 	_fontSize = 0;
 	_zValue = -1;
+	_directed = true;
 }
 
 void Edge::setText(const std::wstring &text)

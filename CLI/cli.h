@@ -53,6 +53,7 @@ private:
 	int _numSteps;
 
 	bool _coloredEdges;
+	bool _directedGraph;
 };
 
 #endif // CLI_H_

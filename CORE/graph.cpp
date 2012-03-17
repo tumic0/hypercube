@@ -1,15 +1,11 @@
 #include <cstdlib>
 #include "vertex.h"
 #include "edge.h"
+#include "line.h"
 #include "graph.h"
 #include "misc.h"
 
 using namespace std;
-
-
-static inline bool lineSegmentCrossing(Coordinates l1p1, Coordinates l1p2,
-  Coordinates l2p1, Coordinates l2p2);
-static inline int euclideanDistanceSqr(Coordinates p1, Coordinates p2);
 
 
 void Graph::clear()
@@ -168,6 +164,8 @@ void Graph::updateMargins(size_t vid)
 
 void Graph::updateCrossings(size_t eid)
 {
+	Line l1(edge(eid)->src()->coordinates(), edge(eid)->dst()->coordinates());
+
 	for (size_t i = 0; i < _edges.size(); i++) {
 		if (_edges[eid]->src()->id() == _edges[i]->src()->id()
 		  || _edges[eid]->src()->id() == _edges[i]->dst()->id()
@@ -175,11 +173,9 @@ void Graph::updateCrossings(size_t eid)
 		  || _edges[eid]->dst()->id() == _edges[i]->dst()->id())
 			continue;
 
-		if (lineSegmentCrossing(
-		  _edges[eid]->src()->coordinates(),
-		  _edges[eid]->dst()->coordinates(),
-		  _edges[i]->src()->coordinates(),
-		  _edges[i]->dst()->coordinates()))
+		Line l2(edge(i)->src()->coordinates(), edge(i)->dst()->coordinates());
+
+		if (l1.crossing(l2))
 			_crossings.setValue(eid, i, 1);
 		else
 			_crossings.setValue(eid, i, 0);
@@ -188,21 +184,20 @@ void Graph::updateCrossings(size_t eid)
 
 void Graph::updateLength(size_t eid)
 {
-	int dist = euclideanDistanceSqr(_edges[eid]->src()->coordinates(),
-	  _edges[eid]->dst()->coordinates());
-	_lengths.setValue(eid, (float)dist);
+	Line line(edge(eid)->src()->coordinates(), edge(eid)->dst()->coordinates());
+
+	_lengths.setValue(eid, (float)line.lengthSqr());
 }
 
 void Graph::updateDistance(size_t vid)
 {
-	int dist;
-
 	for (size_t i = 0; i < _vertexes.size(); i++) {
 		if (i == vid)
 			continue;
 
-		dist = euclideanDistanceSqr(_vertexes[vid]->coordinates(),
-		  _vertexes[i]->coordinates());
+		Line line(_vertexes[vid]->coordinates(), _vertexes[i]->coordinates());
+		int dist = line.lengthSqr();
+
 		if (dist != 0)
 			_distances.setValue(vid, i, 1.0f / (float)dist);
 	}
@@ -245,45 +240,8 @@ void Graph::setEdgeFontSize(int size)
 		_edges[i]->setFontSize(size);
 }
 
-
-bool lineSegmentCrossing(Coordinates l1p1, Coordinates l1p2,
-  Coordinates l2p1, Coordinates l2p2)
+void Graph::setDirected(bool state)
 {
-	int ua_t, ub_t, u_b;
-
-	ua_t = (l2p2.x() - l2p1.x()) * (l1p1.y() - l2p1.y())
-	  - (l2p2.y() - l2p1.y()) * (l1p1.x() - l2p1.x());
-	ub_t = (l1p2.x() - l1p1.x()) * (l1p1.y() - l2p1.y())
-	  - (l1p2.y() - l1p1.y()) * (l1p1.x() - l2p1.x());
-	u_b = (l2p2.y() - l2p1.y()) * (l1p2.x() - l1p1.x())
-	  - (l2p2.x() - l2p1.x()) * (l1p2.y() - l1p1.y());
-
-	if (u_b == 0) {
-		if (ua_t == 0 && ub_t == 0) {
-			int lx = MIN(l1p1.x(), l1p1.x() + (l1p2.x() - l1p1.x()));
-			int ux = MAX(l1p1.x(), l1p1.x() + (l1p2.x() - l1p1.x()));
-			int ly = MIN(l1p1.y(), l1p1.y() + (l1p2.y() - l1p1.y()));
-			int uy = MAX(l1p1.y(), l1p1.y() + (l1p2.y() - l1p1.y()));
-
-			if (((l2p1.x() >= lx && l2p1.x() <= ux)
-			  || (l2p2.x() >= lx && l2p2.x() <= ux))
-			  && ((l2p1.y() >= ly && l2p1.y() <= uy)
-			  || (l2p2.y() >= ly && l2p2.y() <= uy)))
-				return true;
-		}
-	} else {
-		float ua = (float)ua_t / (float)u_b;
-		float ub = (float)ub_t / (float)u_b;
-
-		if (0 <= ua && ua <= 1 && 0 <= ub && ub <= 1)
-			return true;
-	}
-
-	return false;
-}
-
-int euclideanDistanceSqr(Coordinates p1, Coordinates p2)
-{
-	return abs(((p1.x() - p2.x()) * (p1.x() - p2.x()))
-	  + ((p1.y() - p2.y()) * (p1.y() - p2.y())));
+	for (size_t i = 0; i < _edges.size(); i++)
+		_edges[i]->setDirected(state);
 }

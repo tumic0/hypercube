@@ -1,42 +1,46 @@
 #include <QPainter>
-#include "edgeitem.h"
-#include "vertexitem.h"
+#include <cmath>
+#include "CORE/misc.h"
 #include "CORE/config.h"
+#include "vertexitem.h"
+#include "edgeitem.h"
 
+
+const float Pi = 3.141592;
+const float C1 = 0.866025; /* sqrt(3)/2 */
 
 EdgeItem::EdgeItem(VertexItem *src, VertexItem *dst)
 {
-	_color = QColor();
+	_directed = true;
 	_size = 0;
 	_fontSize = 0;
 
-	_text = new QGraphicsSimpleTextItem(QString::null, this);
-	_text->setFont(QFont(FONT_FAMILY));
+	_text.setParentItem(this);
+	_text.setFont(QFont(FONT_FAMILY));
 
-	setAcceptedMouseButtons(0);
 	setZValue(-1);
 
 	_src = src;
-	_dest = dst;
-	_src->addEdge(this);
-	_dest->addEdge(this);
-	adjust();
-}
+	_dst = dst;
 
-EdgeItem::~EdgeItem()
-{
-	delete _text;
+	_src->addEdge(this);
+	_dst->addEdge(this);
+
+	adjust();
+
+	setCacheMode(DeviceCoordinateCache);
 }
 
 void EdgeItem::adjust()
 {
-	setLine(edgeLine());
-	_text->setPos(textPos());
+	prepareGeometryChange();
+	_text.setPos(textPos());
 }
 
-qreal EdgeItem::size()
+void EdgeItem::setDirected(bool val)
 {
-	return _size;
+	_directed = val;
+	update();
 }
 
 void EdgeItem::setSize(qreal size)
@@ -48,16 +52,18 @@ void EdgeItem::setSize(qreal size)
 	} else {
 		if (!isVisible())
 			setVisible(true);
-		setPen(QPen(QBrush(_color), _size));
-		_text->setPos(textPos());
+		_text.setPos(textPos());
 	}
+
+	update();
 }
 
 void EdgeItem::setColor(const QColor &color)
 {
 	_color = color;
-	setPen(QPen(QBrush(_color), _size));
-	_text->setBrush(QBrush(color));
+	_text.setBrush(QBrush(color));
+
+	update();
 }
 
 void EdgeItem::setFontSize(int size)
@@ -65,31 +71,26 @@ void EdgeItem::setFontSize(int size)
 	_fontSize = size;
 
 	if (size <= 0) {
-		_text->setVisible(false);
+		_text.setVisible(false);
 	} else {
-		if (!_text->isVisible())
-			_text->setVisible(true);
-		QFont font = _text->font();
+		if (!_text.isVisible())
+			_text.setVisible(true);
+		QFont font = _text.font();
 		font.setPixelSize(size);
-		_text->setFont(font);
-		_text->setPos(textPos());
+		_text.setFont(font);
+		_text.setPos(textPos());
 	}
 
-	update(boundingRect());
+	update();
 }
 
 QLineF EdgeItem::edgeLine()
 {
-	if (!_src || !_dest)
-		return QLineF();
+	QPointF src, dst;
+	src = _src->coordinates() + QPointF(_src->size() / 2, _src->size() / 2);
+	dst = _dst->coordinates() + QPointF(_dst->size() / 2, _dst->size() / 2);
 
-	QPointF sourceOffset = QPointF(_src->size() / 2, _src->size() / 2);
-	QPointF destOffset = QPointF(_dest->size() / 2, _dest->size() / 2);
-
-	QLineF line(mapFromItem(_src, 0, 0) + sourceOffset,
-	  mapFromItem(_dest, 0, 0) + destOffset);
-
-	return line;
+	return QLineF(src, dst);
 }
 
 QPointF EdgeItem::textPos()
@@ -98,7 +99,47 @@ QPointF EdgeItem::textPos()
 
 	if ((line.dx() > 0 && line.dy() > 0) || (line.dx() < 0 && line.dy() < 0))
 		return (line.pointAt(0.5) + QPointF(_size / 2, - _size / 2)
-		  - QPointF(0, _text->font().pixelSize()));
+		  - QPointF(0, _text.font().pixelSize()));
 	else
 		return (line.pointAt(0.5) + QPointF(_size / 2, _size / 2));
+}
+
+
+QRectF EdgeItem::boundingRect() const
+{
+	qreal inc = qMax(_src->size(), _dst->size());
+	QRectF rect = QRectF(_src->coordinates(), _dst->coordinates());
+
+	return rect.normalized().adjusted(-inc, -inc, inc, inc);
+}
+
+void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
+  QWidget *)
+{
+	QLineF line = edgeLine();
+
+	if (_directed) {
+		QPointF arrow[3];
+		float angle;
+
+		angle = acos(line.dx() / line.length());
+		if (line.dy() >= 0)
+			angle = 2.0 * Pi - angle;
+
+		arrow[0] = line.pointAt(1 - ((_dst->size() / 2.0) / line.length()));
+		arrow[1] = arrow[0] + QPointF(sin(angle - Pi / 3) * _dst->size(),
+		  cos(angle - Pi / 3) * _dst->size());
+		arrow[2] = arrow[0] + QPointF(sin(angle - Pi + Pi / 3) * _dst->size(),
+		  cos(angle - Pi + Pi / 3) * _dst->size());
+
+		line.setP2(line.pointAt(1 - ((_dst->size() * C1 * 1.5) / line.length())));
+
+		painter->setPen(QPen(Qt::NoPen));
+		painter->setBrush(_color);
+		painter->drawPolygon(QPolygonF() << arrow[0] << arrow[1] << arrow[2]);
+	}
+
+	painter->setPen(QPen(_color, _size, Qt::SolidLine, Qt::FlatCap,
+	  Qt::BevelJoin));
+	painter->drawLine(line);
 }

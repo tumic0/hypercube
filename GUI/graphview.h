@@ -19,7 +19,8 @@ public:
 
 	void setDimensions(const QPoint dimensions);
 	QPoint dimensions(void) const;
-
+	void setDirectedGraph(bool state);
+	bool directedGraph() {return _directed;}
 
 	VertexItem* addVertex();
 	EdgeItem* addEdge(VertexItem *src, VertexItem *dst);
@@ -58,6 +59,7 @@ private:
 	QVector<EdgeItem*> _edges;
 
 	QPoint _dimensions;
+	bool _directed;
 };
 
 #endif /* GRAPHSCENE_H_ */

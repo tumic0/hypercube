@@ -25,7 +25,7 @@ public:
 	Vertex *vertex(size_t id) {return _vertexes[id];}
 	Edge *edge(size_t id) {return _edges[id];}
 
-	Coordinates dimensions(void) const {return _dimensions;}
+	Coordinates dimensions() const {return _dimensions;}
 	void setDimensions(const Coordinates &dimensions)
 	  {_dimensions = dimensions;}
 
@@ -51,6 +51,7 @@ public:
 	void setEdgeSize(int size);
 	void setVertexFontSize(int size);
 	void setEdgeFontSize(int size);
+	void setDirected(bool state);
 
 private:
 
@@ -59,6 +60,7 @@ private:
 	void updateLength(size_t eid);
 
 	Coordinates _dimensions;
+	bool _directed;
 
 	Vector<Vertex*> _vertexes;
 	Vector<Edge*> _edges;

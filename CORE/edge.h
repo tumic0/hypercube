@@ -29,6 +29,8 @@ public:
 	void setFontSize(int size);
 	int zValue() {return _zValue;}
 	void setZValue(int value) {_zValue = value;}
+	bool directed() {return _directed;}
+	void setDirected(bool state) {_directed = state;}
 
 private:
 	void computeMargin();
@@ -43,6 +45,7 @@ private:
 	int _size;
 	int _fontSize;
 	int _zValue;
+	bool _directed;
 };
 
 #endif /* EDGE_H_ */

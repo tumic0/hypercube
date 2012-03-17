@@ -6,33 +6,40 @@
 class VertexItem;
 class GraphView;
 
-class EdgeItem : public QGraphicsLineItem
+class EdgeItem : public QGraphicsItem
 {
 public:
 	EdgeItem(VertexItem *src, VertexItem *dest);
-	virtual ~EdgeItem();
 
-	VertexItem* src(void) {return _src;}
-	VertexItem* dst(void) {return _dest;}
+	VertexItem* src() const {return _src;}
+	VertexItem* dst() const {return _dst;}
 	void adjust();
 
-	QColor color(void) const {return _color;}
+	bool directed() const {return _directed;}
+	void setDirected(bool val);
+	QColor color() const {return _color;}
 	void setColor(const QColor &color);
-	qreal size();
+	qreal size() const {return _size;}
 	void setSize(qreal size);
-	QString text() const {return _text->text();}
-	void setText(const QString &text) {_text->setText(text);}
-	int fontSize() {return _fontSize;}
+	QString text() const {return _text.text();}
+	void setText(const QString &text) {_text.setText(text);}
+	int fontSize() const {return _fontSize;}
 	void setFontSize(int size);
 
+protected:
+	QRectF boundingRect() const;
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+	  QWidget *widget);
+
 private:
-	VertexItem *_src, *_dest;
+	VertexItem *_src, *_dst;
 
 	QLineF edgeLine();
 	QPointF textPos();
 
-	QGraphicsSimpleTextItem* _text;
+	QGraphicsSimpleTextItem _text;
 
+	bool _directed;
 	qreal _size;
 	QColor _color;
 	int _fontSize;

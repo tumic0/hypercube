@@ -48,10 +48,11 @@ private slots:
 	void setEdgeSize(int size);
 	void setEdgeFontSize(int size);
 	void setVertexFontSize(int size);
+	void colorizeEdges(int state);
 
 	void showEdgeValues(int state);
 	void showVertexIDs(int state);
-	void colorizeEdges(int state);
+	void directGraph(int state);
 
 	void setInputEncoding(int index);
 	void setAntialiasing(int state);
@@ -125,6 +126,7 @@ private:
 	QCheckBox *_edgeValues;
 	QCheckBox *_vertexIDs;
 	QCheckBox *_coloredEdges;
+	QCheckBox *_directedGraph;
 	ColorComboBox *_edgeColor;
 	ColorComboBox *_vertexColor;
 

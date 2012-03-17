@@ -3,25 +3,12 @@
 #include "CORE/config.h"
 #include "CORE/vertex.h"
 #include "CORE/edge.h"
+#include "CORE/line.h"
+#include "CORE/misc.h"
 #include "IO/encodings/utf8cvt.h"
 #include "svg.h"
 
-
 using namespace std;
-
-static Coordinates edgeValuePos(Coordinates &p1, Coordinates &p2,
-  int size, int fontSize)
-{
-	Coordinates u, m;
-
-	u = p2 - p1;
-	m = p1 + (u / 2);
-
-	if ((u.x() > 0 && u.y() > 0) || (u.x() < 0 && u.y() < 0))
-		return Coordinates(m.x() + size / 2, m.y() - size / 2);
-	else
-		return Coordinates(m.x() + size / 2, m.y() + size / 2 + fontSize);
-}
 
 
 static void header(Graph *graph, wofstream &fs)
@@ -41,36 +28,52 @@ static void header(Graph *graph, wofstream &fs)
 
 static void edges(Graph *graph, wofstream &fs)
 {
-	Coordinates c1, c2, t;
-	Color color;
-	Edge *e;
-
 	for (int zValue = -2; zValue < 0; zValue++) {
 		for (size_t i = 0; i < graph->edge_size(); i++) {
-			e = graph->edge(i);
+			Edge *e = graph->edge(i);
 			if (e->zValue() != zValue)
 				continue;
 
-			c1 = e->src()->coordinates() + Coordinates(
-			  e->src()->size() / 2, e->src()->size() / 2);
-			c2 = e->dst()->coordinates() + Coordinates(
-			  e->dst()->size() / 2, e->dst()->size() / 2);
-			color = e->color();
+			LineF line(
+			  CoordinatesF(e->src()->coordinates())
+				+ CoordinatesF(e->src()->size() / 2.0, e->src()->size() / 2.0),
+			  CoordinatesF(e->dst()->coordinates())
+				+ CoordinatesF(e->dst()->size() / 2.0, e->dst()->size() / 2.0)
+			);
 
 			fs << "<g>" << endl;
-			fs << "\t<line x1=\"" << c1.x() << "\" y1=\"" << c1.y()
-			   << "\" x2=\"" << c2.x() << "\" y2=\"" << c2.y()
-			   << "\" stroke=\"" << color
+
+			if (e->fontSize() > 0) {
+				CoordinatesF t = OutputProvider::edgeTextPosition(
+				  line, e->size(), e->fontSize());
+
+				fs << "\t<text x=\"" << t.toCoordinates().x()
+				   << "\" y=\"" << t.toCoordinates().y()
+				   << "\" fill=\"" << e->color()
+				   << "\" font-size=\"" << e->fontSize()
+				   << "\">" << e->text() << "</text>" << endl;
+			}
+
+			if (e->directed()) {
+				OutputProvider::Arrow arrow = OutputProvider::arrow(line,
+				  e->dst()->size());
+
+				fs << "\t<polygon points=\""
+				   << arrow.p[0].toCoordinates() << " "
+				   << arrow.p[1].toCoordinates() << " "
+				   << arrow.p[2].toCoordinates()
+				   << "\" fill=\"" << e->color()
+				   << "\"/>" << endl;
+			}
+
+			fs << "\t<line x1=\"" << line.p1().toCoordinates().x()
+			   << "\" y1=\"" << line.p1().toCoordinates().y()
+			   << "\" x2=\"" << line.p2().toCoordinates().x()
+			   << "\" y2=\"" << line.p2().toCoordinates().y()
+			   << "\" stroke=\"" << e->color()
 			   << "\" stroke-width=\"" << e->size()
 			   << "\"/>" << endl;
-			if (e->fontSize() > 0) {
-				t = edgeValuePos(c1, c2, e->size(),
-				  e->fontSize());
-				fs << "\t<text x=\"" << t.x() << "\" y=\"" << t.y()
-				   << "\" fill=\"" << color << "\" font-size=\""
-				   << e->fontSize() << "\">"
-				   << e->text() << "</text>" << endl;
-			}
+
 			fs << "</g>" << endl;
 		}
 		fs << endl;
@@ -79,25 +82,24 @@ static void edges(Graph *graph, wofstream &fs)
 
 static void vertexes(Graph *graph, wofstream &fs)
 {
-	Coordinates c;
-	Color color;
-	Vertex *v;
-
 	for (size_t i = 0; i < graph->vertex_size(); i++) {
-		v = graph->vertex(i);
+		Vertex *v = graph->vertex(i);
 
-		c = v->coordinates() + Coordinates(
-		  v->size() / 2, v->size() / 2);
+		CoordinatesF c(v->coordinates() + Coordinates(
+		  v->size() / 2, v->size() / 2));
 
 		fs << "<g fill=\"" << v->color() << "\">" << endl;
-		fs << "\t<circle cx=\"" << c.x() << "\" cy=\"" << c.y()
+		fs << "\t<circle cx=\"" << c.toCoordinates().x()
+		   << "\" cy=\"" << c.toCoordinates().y()
 		   << "\" r=\"" << v->size() / 2 << "\"/>" << endl;
+
 		if (v->fontSize() > 0) {
-			c += Coordinates(v->size() / 2, v->size());
+			c = OutputProvider::vertexTextPosition(c, v->size());
 			fs << "\t<text x=\"" << c.x() << "\" y=\"" << c.y()
 			   << "\" font-size=\"" << v->fontSize() << "\">"
 			   << v->text() << "</text>" << endl;
 		}
+
 		fs << "</g>" << endl;
 	}
 	fs << endl;

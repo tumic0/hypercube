@@ -15,6 +15,7 @@ HEADERS += CORE/sa_log.h \
     CORE/colormap.h \
     CORE/adjlist.h \
     CORE/vector.h \
+    CORE/line.h \
     IO/io.h \
     IO/modules.h \
     IO/encoding.h \
@@ -59,6 +60,7 @@ SOURCES += \
     CORE/sa.cpp \
     CORE/vertex.cpp \
     CORE/colormap.cpp \
+    CORE/line.cpp \
     IO/modules.cpp \
     IO/encodings/koi8rcvt.cpp \
     IO/encodings/latin1cvt.cpp \
@@ -70,6 +72,7 @@ SOURCES += \
     IO/providers/ps.cpp \
     IO/providers/svg.cpp \
     IO/encodings/utf8cvt.cpp \
+    IO/io.cpp \
     GUI/main.cpp \
     GUI/vertexitem.cpp \
     GUI/edgeitem.cpp \

@@ -5,15 +5,16 @@
 #include <iomanip>
 #include "misc.h"
 
+
 class Coordinates
 {
 public:
 	Coordinates() {_x = 0; _y = 0;}
 	Coordinates(int x, int y) {_x = x; _y = y;}
-	int x() {return _x;}
-	int y() {return _y;}
-	int& rx() {return _x;}
-	int& ry() {return _y;}
+	Coordinates(const Coordinates &c) {_x = c.x(), _y = c.y();}
+
+	int x() const {return _x;}
+	int y() const {return _y;}
 	void setX(int x) {_x = x;}
 	void setY(int y) {_y = y;}
 
@@ -65,6 +66,44 @@ public:
 
 private:
 	int _x, _y;
+};
+
+
+class CoordinatesF
+{
+public:
+	CoordinatesF() {_x = 0; _y = 0;}
+	CoordinatesF(float x, float y) {_x = x; _y = y;}
+	CoordinatesF(const CoordinatesF &c) {_x = c.x(), _y = c.y();}
+	CoordinatesF(const Coordinates &c) {_x = c.x(); _y = c.y();}
+
+	float x() const {return _x;}
+	float y() const {return _y;}
+	void setX(float x) {_x = x;}
+	void setY(float y) {_y = y;}
+
+	CoordinatesF& operator+=(const CoordinatesF &b)
+	  {_x += b._x; _y += b._y; return *this;}
+	CoordinatesF& operator-=(const CoordinatesF &b)
+	  {_x -= b._x; _y -= b._y; return *this;}
+
+	friend const CoordinatesF operator+(const CoordinatesF &a,
+	  const CoordinatesF &b) {return CoordinatesF(a._x + b._x, a._y + b._y);}
+	friend const CoordinatesF operator-(const CoordinatesF &a,
+	  const CoordinatesF &b) {return CoordinatesF(a._x - b._x, a._y - b._y);}
+	friend const CoordinatesF operator*(const CoordinatesF &a, float factor)
+	  {return CoordinatesF(a._x * factor, a._y * factor);}
+	friend const CoordinatesF operator/(const CoordinatesF &a, float divisor)
+	  {return CoordinatesF(a._x / divisor, a._y / divisor);}
+
+	Coordinates toCoordinates()
+	  {return Coordinates(round(_x), round(_y));}
+
+private:
+	float _x, _y;
+
+	int round(float r)
+	  {return (r > 0.0) ? (int)(r + 0.5) : (int)(r - 0.5);}
 };
 
 #endif /* COORDINATES_H_ */

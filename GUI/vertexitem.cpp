@@ -1,7 +1,6 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
-#include <QStyleOption>
 #include "edgeitem.h"
 #include "vertexitem.h"
 #include "CORE/config.h"
@@ -11,23 +10,19 @@ VertexItem::VertexItem(int id)
 {
 	_id = id;
 
-	_color = QColor();
 	_size = 0;
 	_fontSize = 0;
 
-	_text = new QGraphicsSimpleTextItem(QString::null, this);
-	_text->setFont(QFont(FONT_FAMILY));
+	_text.setParentItem(this);
+	_text.setFont(QFont(FONT_FAMILY));
+
+	setPen(QPen(Qt::NoPen));
 
 	setFlag(ItemIsMovable);
 #if QT_VERSION >= 0x040600
 	setFlag(ItemSendsGeometryChanges);
 #endif
 	setCacheMode(DeviceCoordinateCache);
-}
-
-VertexItem::~VertexItem()
-{
-	delete _text;
 }
 
 void VertexItem::addEdge(EdgeItem *edge)
@@ -49,16 +44,15 @@ void VertexItem::setSize(qreal size)
 			setVisible(true);
 		moveBy(diff, diff);
 		setRect(QRectF(0, 0, size, size));
-		_text->setPos(size, size / 2);
+		_text.setPos(size, size / 2);
 	}
 }
 
 void VertexItem::setColor(const QColor &color)
 {
 	_color = color;
-	setPen(QPen(Qt::NoPen));
 	setBrush(QBrush(color));
-	_text->setBrush(QBrush(color));
+	_text.setBrush(QBrush(color));
 }
 
 void VertexItem::setFontSize(int size)
@@ -66,24 +60,26 @@ void VertexItem::setFontSize(int size)
 	_fontSize = size;
 
 	if (size <= 0) {
-		_text->setVisible(false);
+		_text.setVisible(false);
 	} else {
-		if (!_text->isVisible())
-			_text->setVisible(true);
-		QFont font = _text->font();
+		if (!_text.isVisible())
+			_text.setVisible(true);
+		QFont font = _text.font();
 		font.setPixelSize(size);
-		_text->setFont(font);
-		_text->setPos(_size, _size / 2);
+		_text.setFont(font);
+		_text.setPos(_size, _size / 2);
 	}
 
-	update(boundingRect());
+	update();
 }
 
 QVariant VertexItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-	if (change == ItemPositionHasChanged)
+	if (change == ItemPositionHasChanged) {
+		_coordinates = value.toPointF();
 		foreach (EdgeItem *edge, _edgeList)
 			edge->adjust();
+	}
 
 	return QGraphicsItem::itemChange(change, value);
 }

@@ -40,6 +40,7 @@ CLI::CLI(int argc, char *argv[])
 	_numSteps = NUM_STEPS;
 
 	_coloredEdges = false;
+	_directedGraph = false;
 }
 
 int CLI::exec()
@@ -154,6 +155,7 @@ void CLI::usage()
 	cout << " -es <size>       set edge size to <size>" << endl;
 	cout << " -vf <size>       set vertex font size to <size>" << endl;
 	cout << " -ef <size>       set edge font size to <size>" << endl;
+	cout << " -d               directed graph" << endl;
 	cout << " -c               asign a unique color to every uniqe edge value"
 		 << endl;
 	cout << endl;
@@ -211,6 +213,7 @@ int CLI::argument(int i)
 	ARG("-ns", _numSteps);
 
 	SWITCH("-c", _coloredEdges);
+	SWITCH("-d", _directedGraph);
 
 	return 0;
 }
@@ -258,6 +261,7 @@ void CLI::setGraphProperties()
 		_graph->colorize();
 	else
 		_graph->setEdgeColor(_edgeColor);
+	_graph->setDirected(_directedGraph);
 	_graph->setEdgeSize(_edgeSize);
 	_graph->setVertexFontSize(_vertexFontSize);
 	_graph->setEdgeFontSize(_edgeFontSize);

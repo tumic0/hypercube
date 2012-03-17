@@ -280,21 +280,15 @@ void GUI::createSAProperties()
 
 void GUI::createGraphProperties()
 {
-	_edgeValues = new QCheckBox(tr("Show edge values"), this);
-	_vertexIDs = new QCheckBox(tr("Show vertex IDs"), this);
-	_coloredEdges = new QCheckBox(tr("Colored edges"), this);
-
-	connect(_edgeValues, SIGNAL(stateChanged(int)),
-	  this, SLOT(showEdgeValues(int)));
-	connect(_vertexIDs, SIGNAL(stateChanged(int)),
-	  this, SLOT(showVertexIDs(int)));
-	connect(_coloredEdges, SIGNAL(stateChanged(int)),
-	  this, SLOT(colorizeEdges(int)));
+	_directedGraph = new QCheckBox(tr("Directed graph"), this);
 
 	_graphWidth = new QSpinBox();
 	_graphHeight = new QSpinBox();
 	_graphWidth->setMaximum(10000);
 	_graphHeight->setMaximum(10000);
+
+	connect(_directedGraph, SIGNAL(stateChanged(int)),
+	  this, SLOT(directGraph(int)));
 
 	connect(_graphWidth, SIGNAL(valueChanged(int)),
 	  this, SLOT(setGraphWidth(int)));
@@ -303,22 +297,10 @@ void GUI::createGraphProperties()
 
 	QGroupBox *graphBox = new QGroupBox(tr("Graph"));
 
-	QVBoxLayout *show = new QVBoxLayout;
-	show->addWidget(_vertexIDs);
-	show->addWidget(_edgeValues);
-	show->addWidget(_coloredEdges);
-
-	QFormLayout *dimensions = new QFormLayout;
-	dimensions->addRow(tr("Width:"), _graphWidth);
-	dimensions->addRow(tr("Height:"), _graphHeight);
-
-	QVBoxLayout *graphLayout = new QVBoxLayout;
-	graphLayout->setAlignment(Qt::AlignTop);
-
-	graphLayout->addLayout(dimensions);
-	graphLayout->addSpacing(10);
-	graphLayout->addLayout(show);
-
+	QFormLayout *graphLayout = new QFormLayout;
+	graphLayout->addRow(tr("Width:"), _graphWidth);
+	graphLayout->addRow(tr("Height:"), _graphHeight);
+	graphLayout->addWidget(_directedGraph);
 	graphBox->setLayout(graphLayout);
 
 
@@ -328,6 +310,9 @@ void GUI::createGraphProperties()
 	_vertexFontSize = new QSpinBox();
 	_edgeColor = new ColorComboBox();
 	_vertexColor = new ColorComboBox();
+	_vertexIDs = new QCheckBox(tr("Show vertex IDs"), this);
+	_edgeValues = new QCheckBox(tr("Show edge values"), this);
+	_coloredEdges = new QCheckBox(tr("Colored edges"), this);
 
 	_edgeFontSize->setMinimum(MIN_FONT_SIZE);
 	_vertexFontSize->setMinimum(MIN_FONT_SIZE);
@@ -340,11 +325,18 @@ void GUI::createGraphProperties()
 	  this, SLOT(setEdgeFontSize(int)));
 	connect(_vertexFontSize, SIGNAL(valueChanged(int)),
 	  this, SLOT(setVertexFontSize(int)));
+	connect(_coloredEdges, SIGNAL(stateChanged(int)),
+	  this, SLOT(colorizeEdges(int)));
 
 	connect(_edgeColor, SIGNAL(activated(const QColor&)),
 	  this, SLOT(setEdgeColor(const QColor&)));
 	connect(_vertexColor, SIGNAL(activated(const QColor&)),
 	  this, SLOT(setVertexColor(const QColor&)));
+
+	connect(_edgeValues, SIGNAL(stateChanged(int)),
+	  this, SLOT(showEdgeValues(int)));
+	connect(_vertexIDs, SIGNAL(stateChanged(int)),
+	  this, SLOT(showVertexIDs(int)));
 
 
 	QGroupBox *vertexBox = new QGroupBox(tr("Vertexes"));
@@ -356,11 +348,14 @@ void GUI::createGraphProperties()
 	edgeLayout->addRow(tr("Size:"), _edgeSize);
 	edgeLayout->addRow(tr("Font size:"), _edgeFontSize);
 	edgeLayout->addRow(tr("Color:"), _edgeColor);
+	edgeLayout->addWidget(_edgeValues);
+	edgeLayout->addWidget(_coloredEdges);
 	edgeBox->setLayout(edgeLayout);
 
 	vertexLayout->addRow(tr("Size:"), _vertexSize);
 	vertexLayout->addRow(tr("Font size:"), _vertexFontSize);
 	vertexLayout->addRow(tr("Color:"), _vertexColor);
+	vertexLayout->addWidget(_vertexIDs);
 	vertexBox->setLayout(vertexLayout);
 
 
@@ -677,6 +672,12 @@ void GUI::showVertexIDs(int state)
 		TAB()->showVertexIDs((state == Qt::Checked) ? true : false);
 }
 
+void GUI::directGraph(int state)
+{
+	if (TAB())
+		TAB()->setDirectedGraph((state == Qt::Checked) ? true : false);
+}
+
 void GUI::colorizeEdges(int state)
 {
 	if (TAB())
@@ -727,6 +728,8 @@ void GUI::setGraphProperties(GraphTab *tab)
 	  ? true : false);
 	tab->colorizeEdges((_coloredEdges->checkState() == Qt::Checked)
 	  ? true : false);
+	tab->setDirectedGraph((_directedGraph->checkState() == Qt::Checked)
+	  ? true : false);
 	tab->setDimensions(QPoint(_graphWidth->value(), _graphHeight->value()));
 	tab->setEdgeSize(_edgeSize->value());
 	tab->setVertexSize(_vertexSize->value());
@@ -775,6 +778,7 @@ void GUI::getGraphProperties(GraphTab *tab)
 	BLOCK(_vertexIDs, setChecked(tab->vertexIDs()));
 	BLOCK(_edgeValues, setChecked(tab->edgeValues()));
 	BLOCK(_coloredEdges, setChecked(tab->coloredEdges()));
+	BLOCK(_directedGraph, setChecked(tab->directedGraph()));
 
 	_edgeSize->setMaximum(tab->vertexSize());
 	_edgeColor->setEnabled(!tab->coloredEdges());
@@ -800,6 +804,7 @@ void GUI::writeSettings()
 	settings.setValue("edgeValues", _edgeValues->checkState());
 	settings.setValue("vertexIDs", _vertexIDs->checkState());
 	settings.setValue("coloredEdges", _coloredEdges->checkState());
+	settings.setValue("directedGraph", _directedGraph->checkState());
 	settings.setValue("edgeSize", _edgeSize->value());
 	settings.setValue("vertexSize", _vertexSize->value());
 	settings.setValue("edgeFontSize", _edgeFontSize->value());
@@ -842,6 +847,8 @@ void GUI::readSettings()
 	  Qt::Unchecked).toInt());
 	_coloredEdges->setCheckState((Qt::CheckState)settings.value("coloredEdges",
 	  Qt::Unchecked).toInt());
+	_directedGraph->setCheckState((Qt::CheckState)settings.value(
+	  "directedGraph", Qt::Unchecked).toInt());
 	_vertexSize->setValue(settings.value("vertexSize", VERTEX_SIZE).toInt());
 	_edgeSize->setValue(settings.value("edgeSize", EDGE_SIZE).toInt());
 	_edgeSize->setMaximum(_vertexSize->value());

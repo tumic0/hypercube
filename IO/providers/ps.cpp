@@ -9,25 +9,10 @@
 #include "IO/providers/ps/snippet.h"
 #include "ps.h"
 
-
 using namespace std;
 
+
 #define tr(val,dim) ((dim).y()-(val))
-
-static Coordinates edgeValuePos(Coordinates &p1, Coordinates &p2,
-  int size, int fontSize)
-{
-	Coordinates u, m;
-
-	u = p2 - p1;
-	m = p1 + (u / 2);
-
-	if ((u.x() > 0 && u.y() > 0) || (u.x() < 0 && u.y() < 0))
-		return Coordinates(m.x() + size / 2, m.y() - size / 2);
-	else
-		return Coordinates(m.x() + size / 2, m.y() + size / 2 + fontSize);
-}
-
 
 static void prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
 {
@@ -72,6 +57,7 @@ static void prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
 		fs << "/font /" << sn->font()->name() << " def" << endl << endl;
 
 	fs << "/e {newpath moveto lineto stroke} def" << endl
+	   << "/a {newpath moveto lineto lineto closepath fill} def" << endl
 	   << "/v {newpath arc closepath fill} def" << endl
 	   << "/d {moveto show} def" << endl
 	   << "/f {font findfont exch scalefont setfont} def" << endl
@@ -83,59 +69,59 @@ static void prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
 
 static void edges(Graph *graph, wofstream &fs)
 {
-	Coordinates c1, c2, t;
 	Color color;
 	int fontSize = -1, lineWidth = -1;
 	Coordinates dim = graph->dimensions();
-	Edge *e;
 
 
 	for (int zValue = -2; zValue < 0; zValue++ ) {
 		for (size_t i = 0; i < graph->edge_size(); i++) {
-			e = graph->edge(i);
+			Edge *e = graph->edge(i);
 			if (e->zValue() != zValue)
 				continue;
 
-			c1 = e->src()->coordinates() + Coordinates(
-			  e->src()->size() / 2, e->src()->size() / 2);
-			c2 = e->dst()->coordinates() + Coordinates(
-			  e->dst()->size() / 2, e->dst()->size() / 2);
+			LineF line(
+			  CoordinatesF(e->src()->size() / 2.0, e->src()->size() / 2.0)
+				+ e->src()->coordinates(),
+			  CoordinatesF(e->dst()->size() / 2.0, e->dst()->size() / 2.0)
+				+ e->dst()->coordinates()
+			);
 
 			if (color != e->color()) {
 				color = e->color();
 				fs << color.red() << " " << color.green() << " "
 				   << color.blue() << " c" << endl;
 			}
+
+			if (e->directed()) {
+				OutputProvider::Arrow arrow = OutputProvider::arrow(line,
+				  e->dst()->size());
+
+				fs << arrow.p[0].x() << " " << tr(arrow.p[0].y(), dim) << " "
+				   << arrow.p[1].x() << " " << tr(arrow.p[1].y(), dim) << " "
+				   << arrow.p[2].x() << " " << tr(arrow.p[2].y(), dim) << " a"
+				   << endl;
+			}
+
 			if (lineWidth != e->size()) {
 				lineWidth = e->size();
 				fs << lineWidth << " lw" << endl;
 			}
-			fs << c1.x() << " " << tr(c1.y(), dim) << " "
-			   << c2.x() << " " << tr(c2.y(), dim) << " e" << endl;
-		}
-		fs << endl;
+			fs << line.p1().x() << " " << tr(line.p1().y(), dim) << " "
+			   << line.p2().x() << " " << tr(line.p2().y(), dim) << " e"
+			   << endl;
 
-		for (size_t i = 0; i < graph->edge_size(); i++) {
-			e = graph->edge(i);
-			if (e->zValue() != zValue || e->fontSize() == 0)
+
+			if (e->fontSize() == 0)
 				continue;
-
-			c1 = e->src()->coordinates() + Coordinates(
-			  e->src()->size() / 2, e->src()->size() / 2);
-			c2 = e->dst()->coordinates() + Coordinates(
-			  e->dst()->size() / 2, e->dst()->size() / 2);
 
 			if (e->fontSize() != fontSize) {
 				fontSize = e->fontSize();
 				fs << fontSize << " f" << endl;
 			}
-			if (e->color() != color) {
-				color = e->color();
-				fs << color.red() << " " << color.green() << " "
-				   << color.blue() << " c" << endl;
-			}
 
-			t = edgeValuePos(c1, c2, e->size(), e->fontSize());
+			CoordinatesF t = OutputProvider::edgeTextPosition(
+			  line, e->size(), e->fontSize());
 			fs << "(" << e->text() << ") "
 			   << t.x() << " " << tr(t.y(), dim) << " d" << endl;
 		}
@@ -145,50 +131,38 @@ static void edges(Graph *graph, wofstream &fs)
 
 static void vertexes(Graph *graph, wofstream &fs)
 {
-	Coordinates c;
 	Color color;
 	int fontSize = -1;
 	Coordinates dim = graph->dimensions();
-	Vertex *v;
 
 
 	for (size_t i = 0; i < graph->vertex_size(); i++) {
-		v = graph->vertex(i);
+		Vertex *v = graph->vertex(i);
 
-		c = v->coordinates()
-		  + Coordinates(v->size() / 2, v->size() / 2);
+		CoordinatesF c(v->coordinates() + CoordinatesF(
+		  v->size() / 2.0, v->size() / 2.0));
 
 		if (v->color() != color) {
 			color = v->color();
 			fs << color.red() << " " << color.green() << " " << color.blue()
 			   << " c" << endl;
 		}
-		fs << c.x() << " " << tr(c.y(), dim) << " " << v->size() / 2
-		   << " 0 360 v" << endl;
-	}
-	fs << endl;
 
-	for (size_t i = 0; i < graph->vertex_size(); i++) {
-		v = graph->vertex(i);
+		fs << c.x() << " " << tr(c.y(), dim) << " " << v->size() / 2.0
+		   << " 0 360 v" << endl;
+
+
 		if (v->fontSize() == 0)
 			continue;
-
-		c = v->coordinates()
-		  + Coordinates(v->size() / 2, v->size() / 2);
 
 		if (v->fontSize() != fontSize) {
 			fontSize = v->fontSize();
 			fs << fontSize << " f" << endl;
 		}
-		if (v->color() != color) {
-			color = v->color();
-			fs << color.red() << " " << color.green() << " " << color.blue()
-			   << " c" << endl;
-		}
+
+		c = OutputProvider::vertexTextPosition(c, v->size());
 		fs << "(" << v->text() << ") "
-		   << c.x() + v->size() / 2 << " "
-		   << tr(c.y() + v->size(), dim)
-		   << " d" << endl;
+		   << c.x() << " " << tr(c.y(), dim) << " d" << endl;
 	}
 	fs << endl;
 }

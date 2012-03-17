@@ -2,6 +2,7 @@
 #define IO_H_
 
 #include "CORE/graph.h"
+#include "CORE/line.h"
 #include "encoding.h"
 
 class IO
@@ -30,6 +31,16 @@ public:
 	virtual Error writeGraph(Graph *graph, const char *fileName) = 0;
 	virtual const char* type() = 0;
 	virtual const char* description() = 0;
+
+	typedef struct {
+		CoordinatesF p[3];
+	} Arrow;
+
+	static CoordinatesF edgeTextPosition(const LineF &line, float size,
+	  float fontSize);
+	static CoordinatesF vertexTextPosition(const CoordinatesF &point,
+	  float size);
+	static Arrow arrow(LineF &line, float size);
 };
 
 #endif /* IO_H_ */
