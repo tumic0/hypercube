@@ -39,11 +39,6 @@ public:
 	friend const Coordinates operator/(const Coordinates &a, int divisor)
 	  {return Coordinates(a._x / divisor, a._y / divisor);}
 
-	friend const Coordinates max(const Coordinates &a, const Coordinates &b)
-	  {return Coordinates(MAX(a._x, b._x), MAX(a._y, b._y));}
-	friend const Coordinates min(const Coordinates &a, const Coordinates &b)
-	  {return Coordinates(MIN(a._x, b._x), MIN(a._y, b._y));}
-
 	template< typename charT, typename Traits > friend
 	  std::basic_ostream<charT, Traits>& operator<<(
 	  std::basic_ostream<charT, Traits>& str, const Coordinates &co)

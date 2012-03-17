@@ -8,6 +8,20 @@
 using namespace std;
 
 
+static const Coordinates max(const Coordinates &a, const Coordinates &b)
+{
+	return Coordinates(MAX(a.x(), b.x()), MAX(a.y(), b.y()));
+}
+static const Coordinates min(const Coordinates &a, const Coordinates &b)
+{
+	return Coordinates(MIN(a.x(), b.x()), MIN(a.y(), b.y()));
+}
+static const Margin max(const Margin &a, const Margin &b)
+{
+	return Margin(max(a.lt(), b.lt()), max(a.rb(), b.rb()));
+}
+
+
 void Graph::clear()
 {
 	_dimensions = Coordinates(0, 0);

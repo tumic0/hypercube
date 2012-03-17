@@ -36,11 +36,6 @@ public:
 	friend const Margin operator/(const Margin &a, int divisor)
 	  {return Margin(a._lt / divisor, a._rb / divisor);}
 
-	friend const Margin max(const Margin &a, const Margin &b)
-	  {return Margin(max(a._lt, b._lt), max(a._rb, b._rb));}
-	friend const Margin min(const Margin &a, const Margin &b)
-	  {return Margin(min(a._lt, b._lt), min(a._rb, b._rb));}
-
 private:
 	Coordinates _lt, _rb;
 };
