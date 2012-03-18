@@ -145,6 +145,8 @@ void CLI::usage()
 	cout << "Usage:    hypercube-cli [OPTIONS] FILE" << endl;
 	cout << endl;
 	cout << "OPTIONS:" << endl;
+	cout << " -v               print the program version" << endl;
+	cout << endl;
 	cout << " -s <dimensions>  set image size to <dimensions>" << endl;
 	cout << " -f <format>      set output format to <format>" << endl;
 	cout << " -e <encoding>    set input file encoding to <encoding>" << endl;
@@ -222,9 +224,19 @@ bool CLI::parseArguments()
 {
 	int inc, i;
 
-	if (_argc == 1 || (_argc == 2 && string(_argv[1]) == "-h")) {
+	if (_argc == 1) {
 		usage();
 		return false;
+	}
+	if (_argc == 2) {
+		if (string(_argv[1]) == "-h") {
+			usage();
+			return false;
+		}
+		if (string(_argv[1]) == "-v") {
+			cout << APP_VERSION << endl;
+			return false;
+		}
 	}
 
 	i = 1;
