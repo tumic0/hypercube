@@ -13,9 +13,9 @@ class Edge
 public:
 	Edge(Vertex *src, Vertex *dst, size_t id);
 
-	size_t id() {return _id;}
-	Vertex *src() {return _src;}
-	Vertex *dst() {return _dst;}
+	size_t id() const {return _id;}
+	Vertex *src() const {return _src;}
+	Vertex *dst() const {return _dst;}
 
 	Margin margin() const {return _margin;}
 
@@ -23,13 +23,13 @@ public:
 	void setText(const std::wstring &text);
 	Color color() const {return _color;}
 	void setColor(const Color &color) {_color = color;}
-	int size() {return _size;}
+	int size() const {return _size;}
 	void setSize(int size);
-	int fontSize() {return _fontSize;}
+	int fontSize() const {return _fontSize;}
 	void setFontSize(int size);
-	int zValue() {return _zValue;}
+	int zValue() const {return _zValue;}
 	void setZValue(int value) {_zValue = value;}
-	bool directed() {return _directed;}
+	bool directed() const {return _directed;}
 	void setDirected(bool state) {_directed = state;}
 
 private:

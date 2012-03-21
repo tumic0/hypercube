@@ -17,7 +17,7 @@ public:
 	int dx() const {return _p2.x() - _p1.x();}
 	int dy() const {return _p2.y() - _p1.y();}
 
-	bool crossing(const Line &line);
+	bool crossing(const Line &line) const;
 	int lengthSqr() const;
 
 private:

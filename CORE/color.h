@@ -11,12 +11,12 @@ public:
 	Color() {_data = ~RGB_MASK;}
 	Color(unsigned rgb) {_data = rgb & RGB_MASK;}
 
-	bool valid() {return (_data & ~RGB_MASK) ? true : false;}
-	unsigned rgb() {return _data;}
+	bool valid() const {return (_data & ~RGB_MASK) ? true : false;}
+	unsigned rgb() const {return _data;}
 
-	float red() {return ((float)(_data >> 16) / 255);}
-	float green() {return ((float)((_data & 0x0000FF00) >> 8) / 255);}
-	float blue() {return ((float)(_data & 0x000000FF) / 255);}
+	float red() const {return ((float)(_data >> 16) / 255);}
+	float green() const {return ((float)((_data & 0x0000FF00) >> 8) / 255);}
+	float blue() const {return ((float)(_data & 0x000000FF) / 255);}
 
 	bool operator==(const Color &color) {return (_data == color._data);}
 	bool operator!=(const Color &color) {return !(*this == color);}

@@ -13,8 +13,8 @@ class Vertex
 public:
 	Vertex(Graph *graph, size_t id);
 
-	size_t id() {return _id;}
-	Graph *graph() {return _graph;}
+	size_t id() const {return _id;}
+	Graph *graph() const {return _graph;}
 
 	Coordinates coordinates() const {return _coordinates;}
 	void setCoordinates(const Coordinates &c);
@@ -24,9 +24,9 @@ public:
 	void setText(const std::wstring &text);
 	Color color() const {return _color;}
 	void setColor(const Color &color) {_color = color;}
-	int size() {return _size;}
+	int size() const {return _size;}
 	void setSize(int size);
-	int fontSize() {return _fontSize;}
+	int fontSize() const {return _fontSize;}
 	void setFontSize(int size);
 
 private:

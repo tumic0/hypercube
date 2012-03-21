@@ -10,24 +10,24 @@ public:
 	SA();
 	void compute(Graph *graph);
 
-	float nodeDistribution(void) {return _nodeDistribution;};
+	float nodeDistribution(void) const {return _nodeDistribution;};
 	void setNodeDistribution(float value) {_nodeDistribution = value;};
-	float edgeLength(void) {return _edgeLength;};
+	float edgeLength(void) const {return _edgeLength;};
 	void setEdgeLength(float value) {_edgeLength = value;};
-	float edgeCrossings(void) {return _edgeCrossings;};
+	float edgeCrossings(void) const {return _edgeCrossings;};
 	void setEdgeCrossings(float value) {_edgeCrossings = value;};
 
-	float initTemp(void) {return _initTemp;};
+	float initTemp(void) const {return _initTemp;};
 	void setInitTemp(float value) {_initTemp = value;};
-	float finalTemp(void) {return _finalTemp;};
+	float finalTemp(void) const {return _finalTemp;};
 	void setFinalTemp(float value) {_finalTemp = value;};
-	float coolFactor(void) {return _coolFactor;};
+	float coolFactor(void) const {return _coolFactor;};
 	void setCoolFactor(float value) {_coolFactor = value;};
-	int numSteps(void) {return _numSteps;};
+	int numSteps(void) const {return _numSteps;};
 	void setNumSteps(int value) {_numSteps = value;};
 
 #ifdef SA_LOG_SUPPORT
-	bool logInfo(void) {return _logInfo;};
+	bool logInfo(void) const {return _logInfo;};
 	void setLogInfo(bool value) {_logInfo = value;};
 #endif
 

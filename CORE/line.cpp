@@ -12,7 +12,7 @@ int Line::lengthSqr() const
 	return abs(x*x + y*y);
 }
 
-bool Line::crossing(const Line &line)
+bool Line::crossing(const Line &line) const
 {
 	int ua_t, ub_t, u_b;
 

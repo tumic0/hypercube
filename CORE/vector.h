@@ -17,7 +17,7 @@ public:
 		_data.clear();
 	}
 	void push_back(const T& val) {_data.push_back(val);}
-	size_t size() {return _data.size();}
+	size_t size() const {return _data.size();}
 
 	T& operator[](size_t pos) {return _data[pos];}
 
