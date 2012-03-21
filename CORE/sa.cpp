@@ -13,14 +13,14 @@ static inline int crop(int x, int min, int max);
 
 SA::SA()
 {
-	_nodeDistribution = 8000000;
-	_edgeLength = 4;
-	_edgeCrossings = 100000;
+	_nodeDistribution = NODE_DISTRIBUTION;
+	_edgeLength = EDGE_LENGTH;
+	_edgeCrossings = EDGE_CROSSINGS;
 
-	_initTemp = 10000;
-	_finalTemp = 100;
-	_coolFactor = 0.75;
-	_numSteps = 800;
+	_initTemp = INIT_TEMP;
+	_finalTemp = FINAL_TEMP;
+	_coolFactor = COOL_FACTOR;
+	_numSteps = NUM_STEPS;
 
 	LOG_INIT();
 }
