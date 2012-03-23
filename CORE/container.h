@@ -18,7 +18,7 @@ public:
 		_sum += val;
 	}
 
-	T sum() {return _sum;}
+	T sum() const {return _sum;}
 
 private:
 	std::vector<T> _data;
@@ -61,7 +61,7 @@ public:
 		_sum += val;
 	}
 
-	T sum() {return _sum;}
+	T sum() const {return _sum;}
 
 private:
 	std::vector<std::vector<T> > _data;

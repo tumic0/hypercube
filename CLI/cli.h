@@ -14,6 +14,7 @@ class CLI
 {
 public:
 	CLI(int argc, char *argv[]);
+	~CLI();
 	int exec();
 
 private:

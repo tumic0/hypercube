@@ -10,31 +10,31 @@ public:
 	SA();
 	void compute(Graph *graph);
 
-	float nodeDistribution(void) const {return _nodeDistribution;};
-	void setNodeDistribution(float value) {_nodeDistribution = value;};
-	float edgeLength(void) const {return _edgeLength;};
-	void setEdgeLength(float value) {_edgeLength = value;};
-	float edgeCrossings(void) const {return _edgeCrossings;};
-	void setEdgeCrossings(float value) {_edgeCrossings = value;};
+	float nodeDistribution(void) const {return _nodeDistribution;}
+	void setNodeDistribution(float value) {_nodeDistribution = value;}
+	float edgeLength(void) const {return _edgeLength;}
+	void setEdgeLength(float value) {_edgeLength = value;}
+	float edgeCrossings(void) const {return _edgeCrossings;}
+	void setEdgeCrossings(float value) {_edgeCrossings = value;}
 
-	float initTemp(void) const {return _initTemp;};
-	void setInitTemp(float value) {_initTemp = value;};
-	float finalTemp(void) const {return _finalTemp;};
-	void setFinalTemp(float value) {_finalTemp = value;};
-	float coolFactor(void) const {return _coolFactor;};
-	void setCoolFactor(float value) {_coolFactor = value;};
-	int numSteps(void) const {return _numSteps;};
-	void setNumSteps(int value) {_numSteps = value;};
+	float initTemp(void) const {return _initTemp;}
+	void setInitTemp(float value) {_initTemp = value;}
+	float finalTemp(void) const {return _finalTemp;}
+	void setFinalTemp(float value) {_finalTemp = value;}
+	float coolFactor(void) const {return _coolFactor;}
+	void setCoolFactor(float value) {_coolFactor = value;}
+	int numSteps(void) const {return _numSteps;}
+	void setNumSteps(int value) {_numSteps = value;}
 
 #ifdef SA_LOG_SUPPORT
-	bool logInfo(void) const {return _logInfo;};
-	void setLogInfo(bool value) {_logInfo = value;};
+	bool logInfo(void) const {return _logInfo;}
+	void setLogInfo(bool value) {_logInfo = value;}
 #endif
 
 private:
 	float evaluateState(Graph *g);
 	void newState(Graph *g, float temp);
-	Coordinates newVertexLocation(Graph *g, int v, float temp);
+	Coordinates newVertexLocation(Graph *g, size_t v, float temp);
 
 	float _nodeDistribution, _edgeLength, _edgeCrossings;
 	float _initTemp, _finalTemp, _coolFactor;

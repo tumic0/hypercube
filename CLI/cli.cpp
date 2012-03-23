@@ -43,6 +43,12 @@ CLI::CLI(int argc, char *argv[])
 	_directedGraph = false;
 }
 
+CLI::~CLI()
+{
+	delete _graph;
+	delete _sa;
+}
+
 int CLI::exec()
 {
 	if (!parseArguments())

@@ -25,7 +25,7 @@ SA::SA()
 	LOG_INIT();
 }
 
-inline Coordinates SA::newVertexLocation(Graph *g, int v, float temp)
+inline Coordinates SA::newVertexLocation(Graph *g, size_t v, float temp)
 {
 	Coordinates offset, location;
 	Coordinates bounds = g->dimensions();
@@ -53,7 +53,7 @@ inline float SA::evaluateState(Graph *g)
 
 inline void SA::newState(Graph *g, float temp)
 {
-	int id;
+	size_t id;
 	float cost, new_cost, delta, ex, acc;
 
 	cost = evaluateState(g);

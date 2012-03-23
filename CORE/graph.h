@@ -20,10 +20,10 @@ public:
 	Vertex *addVertex();
 	Edge *addEdge(Vertex *src, Vertex *dst);
 
-	size_t vertex_size() {return _vertexes.size();}
-	size_t edge_size() {return _edges.size();}
-	Vertex *vertex(size_t id) {return _vertexes[id];}
-	Edge *edge(size_t id) {return _edges[id];}
+	size_t vertex_size() const {return _vertexes.size();}
+	size_t edge_size() const {return _edges.size();}
+	Vertex *vertex(size_t id) const {return _vertexes[id];}
+	Edge *edge(size_t id) const {return _edges[id];}
 
 	Coordinates dimensions() const {return _dimensions;}
 	void setDimensions(const Coordinates &dimensions)
@@ -33,9 +33,9 @@ public:
 	void updateMargins(size_t vid);
 
 	Margin margin(size_t vid) const {return _margins[vid];}
-	unsigned crossings() {return _crossings.sum();}
-	float distance() {return _distances.sum();}
-	float length() {return _lengths.sum();}
+	unsigned crossings() const {return _crossings.sum();}
+	float distance() const {return _distances.sum();}
+	float length() const {return _lengths.sum();}
 
 	void clear();
 	void center();
