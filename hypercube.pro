@@ -53,7 +53,8 @@ HEADERS += CORE/sa_log.h \
     GUI/colorcombobox.h \
     GUI/gui.h \
     GUI/graphtab.h \
-    GUI/edgeitem.h
+    GUI/edgeitem.h \
+    GUI/settings.h
 SOURCES += \
     CORE/edge.cpp \
     CORE/graph.cpp \

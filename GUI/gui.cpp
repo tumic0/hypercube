@@ -1,12 +1,13 @@
-#include "GUI/gui.h"
-#include "GUI/colorcombobox.h"
-#include "GUI/numericedit.h"
-#include "GUI/graphtab.h"
+#include "gui.h"
+#include "colorcombobox.h"
+#include "numericedit.h"
+#include "graphtab.h"
+#include "icons.h"
+#include "settings.h"
+#include "CORE/config.h"
 #include "IO/io.h"
 #include "IO/encoding.h"
 #include "IO/modules.h"
-#include "CORE/config.h"
-#include "GUI/icons.h"
 
 
 #define TAB() ((GraphTab*) _viewTab->currentWidget())
@@ -186,8 +187,11 @@ void GUI::createMiscProperties()
 	connect(_inputEncoding, SIGNAL(activated(int)), this,
 	  SLOT(setInputEncoding(int)));
 
-	QFormLayout *encodingLayout = new QFormLayout;
-	encodingLayout->addRow(tr("Input encoding:"), _inputEncoding);
+	QVBoxLayout *encodingLayout = new QVBoxLayout;
+	QFormLayout *encodingFormLayout = new QFormLayout;
+	encodingFormLayout->addRow(tr("Input encoding:"), _inputEncoding);
+	encodingLayout->addLayout(encodingFormLayout);
+	encodingLayout->addStretch();
 	encodingBox->setLayout(encodingLayout);
 
 
@@ -195,7 +199,8 @@ void GUI::createMiscProperties()
 
 	_antialiasing = new QCheckBox(tr("Use antialiasing"), this);
 	QVBoxLayout *displayLayout = new QVBoxLayout;
-	displayLayout->addWidget(_antialiasing, 0, Qt::AlignTop);
+	displayLayout->addWidget(_antialiasing);
+	displayLayout->addStretch();
 	displayBox->setLayout(displayLayout);
 
 	connect(_antialiasing, SIGNAL(stateChanged(int)),
@@ -204,13 +209,21 @@ void GUI::createMiscProperties()
 
 	QGroupBox *argumentsBox = new QGroupBox(tr("CLI arguments"));
 
-	_arguments = new QLabel("lorem ipsum...", this);
+	_arguments = new QLabel(this);
 	_arguments->setTextInteractionFlags(Qt::TextSelectableByMouse
 	  | Qt::TextSelectableByKeyboard);
 	_arguments->setWordWrap(true);
+
+	_argumentsEscape = new QCheckBox(tr("Escape special characters"));
+
 	QVBoxLayout *argumentsLayout = new QVBoxLayout;
-	argumentsLayout->addWidget(_arguments, 0, Qt::AlignTop);
+	argumentsLayout->addWidget(_arguments);
+	argumentsLayout->addWidget(_argumentsEscape);
+	argumentsLayout->addStretch();
 	argumentsBox->setLayout(argumentsLayout);
+
+	connect(_argumentsEscape, SIGNAL(stateChanged(int)),
+	  this, SLOT(setSpecialsEscaping()));
 
 
 	QVBoxLayout *layout = new QVBoxLayout;
@@ -729,6 +742,11 @@ void GUI::setAntialiasing(int state)
 		TAB()->setAntialiasing((state == Qt::Checked) ? true : false);
 }
 
+void GUI::setSpecialsEscaping()
+{
+	getArguments();
+}
+
 
 void GUI::setMiscProperties(GraphTab *tab)
 {
@@ -789,9 +807,9 @@ void GUI::getArguments()
 	if (_vertexSize->value() != VERTEX_SIZE)
 		args.append(QString(" -vs %1").arg(_vertexSize->value()));
 	if (_edgeColor->isEnabled() && _edgeColor->color() != EDGE_COLOR)
-		args.append(QString(" -ec \\%1").arg(_edgeColor->color().name()));
+		args.append(QString(" -ec %1").arg(_edgeColor->color().name()));
 	if (_vertexColor->color() != VERTEX_COLOR)
-		args.append(QString(" -vc \\%1").arg(_vertexColor->color().name()));
+		args.append(QString(" -vc %1").arg(_vertexColor->color().name()));
 	if (ef != EDGE_FONT_SIZE)
 		args.append(QString(" -ef %1").arg(ef));
 	if (vf != VERTEX_FONT_SIZE)
@@ -819,6 +837,9 @@ void GUI::getArguments()
 	if (_inputEncoding->currentIndex())
 		args.append(QString(" -e %1").arg(_inputEncoding->itemText(
 		  _inputEncoding->currentIndex())));
+
+	if (_argumentsEscape->isChecked())
+		args = args.replace("#", "\\#");
 
 	_arguments->setText(args);
 }
@@ -877,93 +898,99 @@ void GUI::zoom(qreal zoom)
 
 void GUI::writeSettings()
 {
-	QSettings settings("Hypercube", "Hypercube");
+	QSettings settings(ORGANIZATION, APPLICATION);
 
-	settings.beginGroup("MainWindow");
-	settings.setValue("size", size());
-	settings.setValue("pos", pos());
+	settings.beginGroup(WINDOW_GROUP);
+	settings.setValue(WINDOW_SIZE_SETTING, size());
+	settings.setValue(WINDOW_POSITION_SETTING, pos());
 	settings.endGroup();
 
-	settings.beginGroup("Graph");
-	settings.setValue("width", _graphWidth->value());
-	settings.setValue("height", _graphHeight->value());
-	settings.setValue("edgeValues", _edgeValues->checkState());
-	settings.setValue("vertexIDs", _vertexIDs->checkState());
-	settings.setValue("coloredEdges", _coloredEdges->checkState());
-	settings.setValue("directedGraph", _directedGraph->checkState());
-	settings.setValue("edgeSize", _edgeSize->value());
-	settings.setValue("vertexSize", _vertexSize->value());
-	settings.setValue("edgeFontSize", _edgeFontSize->value());
-	settings.setValue("vertexFontSize", _vertexFontSize->value());
-	settings.setValue("edgeColor", _edgeColor->color());
-	settings.setValue("vertexColor", _vertexColor->color());
+	settings.beginGroup(GRAPH_GROUP);
+	settings.setValue(GRAPH_WIDTH_SETTING, _graphWidth->value());
+	settings.setValue(GRAPH_HEIGHT_SETTING, _graphHeight->value());
+	settings.setValue(EDGE_VALUES_SETTING, _edgeValues->checkState());
+	settings.setValue(VERTEX_IDS_SETTING, _vertexIDs->checkState());
+	settings.setValue(COLORED_EDGES_SETTING, _coloredEdges->checkState());
+	settings.setValue(DIRECTED_GRAPH_SETTING, _directedGraph->checkState());
+	settings.setValue(EDGE_SIZE_SETTING, _edgeSize->value());
+	settings.setValue(VERTEX_SIZE_SETTING, _vertexSize->value());
+	settings.setValue(EDGE_FONT_SIZE_SETTING, _edgeFontSize->value());
+	settings.setValue(VERTEX_FONT_SIZE_SETTING, _vertexFontSize->value());
+	settings.setValue(EDGE_COLOR_SETTING, _edgeColor->color());
+	settings.setValue(VERTEX_COLOR_SETTING, _vertexColor->color());
 	settings.endGroup();
 
-	settings.beginGroup("Algorithm");
-	settings.setValue("nodeDistribution", _nodeDistribution->value());
-	settings.setValue("edgeLength", _edgeLength->value());
-	settings.setValue("edgeCrossings", _edgeCrossings->value());
-	settings.setValue("initTemp", _initTemp->value());
-	settings.setValue("finalTemp", _finalTemp->value());
-	settings.setValue("coolFactor", _coolFactor->value());
-	settings.setValue("numSteps", _numSteps->value());
+	settings.beginGroup(ALGORITHM_GROUP);
+	settings.setValue(NODE_DISTRIBUTION_SETTING, _nodeDistribution->value());
+	settings.setValue(EDGE_LENGTH_SETTING, _edgeLength->value());
+	settings.setValue(EDGE_CROSSINGS_SETTING, _edgeCrossings->value());
+	settings.setValue(INIT_TEMP_SETTING, _initTemp->value());
+	settings.setValue(FINAL_TEMP_SETTING, _finalTemp->value());
+	settings.setValue(COOL_FACTOR_SETTING, _coolFactor->value());
+	settings.setValue(NUM_STEPS_SETTING, _numSteps->value());
 	settings.endGroup();
 
-	settings.beginGroup("Misc");
-	settings.setValue("inputEncoding", _inputEncoding->currentText());
-	settings.setValue("antialiasing", _antialiasing->checkState());
+	settings.beginGroup(MISC_GROUP);
+	settings.setValue(INPUT_ENCODING_SETTING, _inputEncoding->currentText());
+	settings.setValue(ANTIALIASING_SETTING, _antialiasing->checkState());
+	settings.setValue(ESCAPE_SPECIALS_SETTING, _argumentsEscape->checkState());
 	settings.endGroup();
 }
 
 void GUI::readSettings()
 {
-	QSettings settings("Hypercube", "Hypercube");
+	QSettings settings(ORGANIZATION, APPLICATION);
 
-	settings.beginGroup("MainWindow");
-	resize(settings.value("size", QSize(800, 600)).toSize());
-	move(settings.value("pos", QPoint(100, 100)).toPoint());
+	settings.beginGroup(WINDOW_GROUP);
+	resize(settings.value(WINDOW_SIZE_SETTING, QSize(800, 600)).toSize());
+	move(settings.value(WINDOW_POSITION_SETTING, QPoint(100, 100)).toPoint());
 	settings.endGroup();
 
-	settings.beginGroup("Graph");
-	_graphWidth->setValue(settings.value("width", GRAPH_WIDTH).toInt());
-	_graphHeight->setValue(settings.value("height", GRAPH_HEIGHT).toInt());
-	_vertexIDs->setCheckState((Qt::CheckState)settings.value("vertexIDs",
-	  Qt::Checked).toInt());
-	_edgeValues->setCheckState((Qt::CheckState)settings.value("edgeValues",
-	  Qt::Unchecked).toInt());
-	_coloredEdges->setCheckState((Qt::CheckState)settings.value("coloredEdges",
-	  Qt::Unchecked).toInt());
+	settings.beginGroup(GRAPH_GROUP);
+	_graphWidth->setValue(settings.value(GRAPH_WIDTH_SETTING,
+	  GRAPH_WIDTH).toInt());
+	_graphHeight->setValue(settings.value(GRAPH_HEIGHT_SETTING,
+	  GRAPH_HEIGHT).toInt());
+	_vertexIDs->setCheckState((Qt::CheckState)settings.value(
+	  VERTEX_IDS_SETTING, Qt::Checked).toInt());
+	_edgeValues->setCheckState((Qt::CheckState)settings.value(
+	  EDGE_VALUES_SETTING, Qt::Unchecked).toInt());
+	_coloredEdges->setCheckState((Qt::CheckState)settings.value(
+	  COLORED_EDGES_SETTING, Qt::Unchecked).toInt());
 	_directedGraph->setCheckState((Qt::CheckState)settings.value(
-	  "directedGraph", Qt::Unchecked).toInt());
-	_vertexSize->setValue(settings.value("vertexSize", VERTEX_SIZE).toInt());
-	_edgeSize->setValue(settings.value("edgeSize", EDGE_SIZE).toInt());
+	  DIRECTED_GRAPH_SETTING, Qt::Unchecked).toInt());
+	_vertexSize->setValue(settings.value(VERTEX_SIZE_SETTING,
+	  VERTEX_SIZE).toInt());
+	_edgeSize->setValue(settings.value(EDGE_SIZE_SETTING, EDGE_SIZE).toInt());
 	_edgeSize->setMaximum(_vertexSize->value());
-	_edgeFontSize->setValue(settings.value("edgeFontSize",
+	_edgeFontSize->setValue(settings.value(EDGE_FONT_SIZE_SETTING,
 	  EDGE_FONT_SIZE).toInt());
-	_vertexFontSize->setValue(settings.value("vertexFontSize",
+	_vertexFontSize->setValue(settings.value(VERTEX_FONT_SIZE_SETTING,
 	  VERTEX_FONT_SIZE).toInt());
-	_edgeColor->setColor(settings.value("edgeColor",
+	_edgeColor->setColor(settings.value(EDGE_COLOR_SETTING,
 	  QColor(EDGE_COLOR)).value<QColor>());
-	_vertexColor->setColor(settings.value("vertexColor",
+	_vertexColor->setColor(settings.value(VERTEX_COLOR_SETTING,
 	  QColor(VERTEX_COLOR)).value<QColor>());
 	settings.endGroup();
 
-	settings.beginGroup("Algorithm");
-	_nodeDistribution->setValue(settings.value("nodeDistribution",
+	settings.beginGroup(ALGORITHM_GROUP);
+	_nodeDistribution->setValue(settings.value(NODE_DISTRIBUTION_SETTING,
 	  NODE_DISTRIBUTION).toFloat());
-	_edgeLength->setValue(settings.value("edgeLength",
+	_edgeLength->setValue(settings.value(EDGE_LENGTH_SETTING,
 	  EDGE_LENGTH).toFloat());
-	_edgeCrossings->setValue(settings.value("edgeCrossings",
+	_edgeCrossings->setValue(settings.value(EDGE_CROSSINGS_SETTING,
 	  EDGE_CROSSINGS).toFloat());
-	_initTemp->setValue(settings.value("initTemp", INIT_TEMP).toFloat());
-	_finalTemp->setValue(settings.value("finalTemp", FINAL_TEMP).toFloat());
-	_coolFactor->setValue(settings.value("coolFactor", COOL_FACTOR).toFloat());
-	_numSteps->setValue(settings.value("numSteps", NUM_STEPS).toInt());
+	_initTemp->setValue(settings.value(INIT_TEMP_SETTING, INIT_TEMP).toFloat());
+	_finalTemp->setValue(settings.value(FINAL_TEMP_SETTING,
+	  FINAL_TEMP).toFloat());
+	_coolFactor->setValue(settings.value(COOL_FACTOR_SETTING,
+	  COOL_FACTOR).toFloat());
+	_numSteps->setValue(settings.value(NUM_STEPS_SETTING, NUM_STEPS).toInt());
 	settings.endGroup();
 
-	settings.beginGroup("Misc");
+	settings.beginGroup(MISC_GROUP);
 	int index = 0;
-	QString ie = settings.value("inputEncoding",
+	QString ie = settings.value(INPUT_ENCODING_SETTING,
 	  (*encodings)->name()).toString();
 	for (Encoding **ep = encodings; *ep; ep++, index++) {
 		if (!strcmp((*ep)->name(), ie.toAscii().constData())) {
@@ -971,8 +998,10 @@ void GUI::readSettings()
 			break;
 		}
 	}
-	_antialiasing->setChecked((Qt::CheckState)settings.value("antialiasing",
-	  Qt::Unchecked).toBool());
+	_antialiasing->setChecked((Qt::CheckState)settings.value(
+	  ANTIALIASING_SETTING, Qt::Unchecked).toBool());
+	_argumentsEscape->setChecked((Qt::CheckState)settings.value(
+	  ESCAPE_SPECIALS_SETTING, Qt::Unchecked).toBool());
 	settings.endGroup();
 }
 

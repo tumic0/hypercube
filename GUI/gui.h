@@ -56,6 +56,7 @@ private slots:
 
 	void setInputEncoding(int index);
 	void setAntialiasing(int state);
+	void setSpecialsEscaping();
 
 	void tabChanged(int current);
 	void zoom(qreal zoom);
@@ -143,6 +144,7 @@ private:
 	QComboBox *_inputEncoding;
 	QCheckBox *_antialiasing;
 	QLabel *_arguments;
+	QCheckBox *_argumentsEscape;
 
 	QLabel *_fileName;
 	QLabel *_zoom;
