@@ -9,7 +9,7 @@ class FloatEdit : public QLineEdit
 
 public:
 	FloatEdit(int digits, QWidget *parent = 0);
-	float value(void);
+	float value() const {return _value;}
 	void setValue(float value);
 
 signals:
@@ -29,7 +29,7 @@ class IntEdit : public QLineEdit
 
 public:
 	IntEdit(int digits, QWidget *parent = 0);
-	int value(void);
+	int value() const {return _value;}
 	void setValue(int value);
 
 signals:

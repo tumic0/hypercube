@@ -70,15 +70,16 @@ private:
 	void createProperties();
 	void createSAProperties();
 	void createGraphProperties();
-	void createIOProperties();
+	void createMiscProperties();
 
-	void getIOProperties(GraphTab *tab);
+	void getMiscProperties(GraphTab *tab);
 	void getSAProperties(GraphTab *tab);
 	void getGraphProperties(GraphTab *tab);
 	void setSAProperties(GraphTab *tab);
 	void setGraphProperties(GraphTab *tab);
-	void setIOProperties(GraphTab *tab);
+	void setMiscProperties(GraphTab *tab);
 
+	void getArguments();
 	void closeEvent(QCloseEvent *event);
 	void readSettings();
 	void writeSettings();
@@ -95,7 +96,7 @@ private:
 
 	QWidget *_graphProperties;
 	QWidget *_SAProperties;
-	QWidget *_IOProperties;
+	QWidget *_MiscProperties;
 
 	QActionGroup *_fileActionGroup;
 	QActionGroup *_graphActionGroup;
@@ -141,6 +142,7 @@ private:
 
 	QComboBox *_inputEncoding;
 	QCheckBox *_antialiasing;
+	QLabel *_arguments;
 
 	QLabel *_fileName;
 	QLabel *_zoom;

@@ -159,22 +159,22 @@ void GUI::createProperties()
 {
 	createGraphProperties();
 	createSAProperties();
-	createIOProperties();
+	createMiscProperties();
 
 	_properties = new QToolBox;
 
 	_properties->setSizePolicy(QSizePolicy(QSizePolicy::Maximum,
 	  QSizePolicy::Ignored));
-	_properties->setMinimumWidth(qMax(_IOProperties->sizeHint().width(),
+	_properties->setMinimumWidth(qMax(_MiscProperties->sizeHint().width(),
 	  qMax(_graphProperties->sizeHint().width(),
 	  _SAProperties->sizeHint().width())));
 
 	_properties->addItem(_graphProperties, tr("Graph settings"));
 	_properties->addItem(_SAProperties, tr("Algorithm settings"));
-	_properties->addItem(_IOProperties, tr("I/O settings"));
+	_properties->addItem(_MiscProperties, tr("Miscellaneous"));
 }
 
-void GUI::createIOProperties()
+void GUI::createMiscProperties()
 {
 	QGroupBox *encodingBox = new QGroupBox(tr("Encoding"));
 
@@ -202,12 +202,24 @@ void GUI::createIOProperties()
 	  this, SLOT(setAntialiasing(int)));
 
 
+	QGroupBox *argumentsBox = new QGroupBox(tr("CLI arguments"));
+
+	_arguments = new QLabel("lorem ipsum...", this);
+	_arguments->setTextInteractionFlags(Qt::TextSelectableByMouse
+	  | Qt::TextSelectableByKeyboard);
+	_arguments->setWordWrap(true);
+	QVBoxLayout *argumentsLayout = new QVBoxLayout;
+	argumentsLayout->addWidget(_arguments, 0, Qt::AlignTop);
+	argumentsBox->setLayout(argumentsLayout);
+
+
 	QVBoxLayout *layout = new QVBoxLayout;
 	layout->addWidget(encodingBox);
 	layout->addWidget(displayBox);
+	layout->addWidget(argumentsBox);
 
-	_IOProperties = new QWidget;
-	_IOProperties->setLayout(layout);
+	_MiscProperties = new QWidget;
+	_MiscProperties->setLayout(layout);
 }
 
 void GUI::createSAProperties()
@@ -401,7 +413,7 @@ void GUI::tabChanged(int current)
 
 	getSAProperties(tab);
 	getGraphProperties(tab);
-	getIOProperties(tab);
+	getMiscProperties(tab);
 
 	_zoom->setText(ZOOM_STRING(tab->view()->zoom()));
 	_fileName->setText(tab->fileName());
@@ -428,7 +440,7 @@ void GUI::openFile()
 
 	setSAProperties(tab);
 	setGraphProperties(tab);
-	setIOProperties(tab);
+	setMiscProperties(tab);
 	IO::Error error = tab->readGraph(fileName);
 
 	if (error) {
@@ -565,42 +577,49 @@ void GUI::setNodeDistribution(float value)
 {
 	if (TAB())
 		TAB()->setNodeDistribution(value);
+	getArguments();
 }
 
 void GUI::setEdgeLength(float value)
 {
 	if (TAB())
 		TAB()->setEdgeLength(value);
+	getArguments();
 }
 
 void GUI::setEdgeCrossings(float value)
 {
 	if (TAB())
 		TAB()->setEdgeCrossings(value);
+	getArguments();
 }
 
 void GUI::setInitTemp(float value)
 {
 	if (TAB())
 		TAB()->setInitTemp(value);
+	getArguments();
 }
 
 void GUI::setFinalTemp(float value)
 {
 	if (TAB())
 		TAB()->setFinalTemp(value);
+	getArguments();
 }
 
 void GUI::setCoolFactor(float value)
 {
 	if (TAB())
 		TAB()->setCoolFactor(value);
+	getArguments();
 }
 
 void GUI::setNumSteps(int value)
 {
 	if (TAB())
 		TAB()->setNumSteps(value);
+	getArguments();
 }
 
 #ifdef SA_LOG_SUPPORT
@@ -615,24 +634,28 @@ void GUI::setGraphWidth(int width)
 {
 	if (TAB())
 		TAB()->setDimensions(QPoint(width, TAB()->dimensions().y()));
+	getArguments();
 }
 
 void GUI::setGraphHeight(int height)
 {
 	if (TAB())
 		TAB()->setDimensions(QPoint(TAB()->dimensions().x(), height));
+	getArguments();
 }
 
 void GUI::setVertexColor(const QColor &color)
 {
 	if (TAB())
 		TAB()->setVertexColor(color);
+	getArguments();
 }
 
 void GUI::setEdgeColor(const QColor &color)
 {
 	if (TAB())
 		TAB()->setEdgeColor(color);
+	getArguments();
 }
 
 void GUI::setVertexSize(int size)
@@ -640,42 +663,49 @@ void GUI::setVertexSize(int size)
 	if (TAB())
 		TAB()->setVertexSize(size);
 	_edgeSize->setMaximum(size);
+	getArguments();
 }
 
 void GUI::setEdgeSize(int size)
 {
 	if (TAB())
 		TAB()->setEdgeSize(size);
+	getArguments();
 }
 
 void GUI::setEdgeFontSize(int size)
 {
 	if (TAB())
 		TAB()->setEdgeFontSize(size);
+	getArguments();
 }
 
 void GUI::setVertexFontSize(int size)
 {
 	if (TAB())
 		TAB()->setVertexFontSize(size);
+	getArguments();
 }
 
 void GUI::showEdgeValues(int state)
 {
 	if (TAB())
 		TAB()->showEdgeValues((state == Qt::Checked) ? true : false);
+	getArguments();
 }
 
 void GUI::showVertexIDs(int state)
 {
 	if (TAB())
 		TAB()->showVertexIDs((state == Qt::Checked) ? true : false);
+	getArguments();
 }
 
 void GUI::directGraph(int state)
 {
 	if (TAB())
 		TAB()->setDirectedGraph((state == Qt::Checked) ? true : false);
+	getArguments();
 }
 
 void GUI::colorizeEdges(int state)
@@ -683,12 +713,14 @@ void GUI::colorizeEdges(int state)
 	if (TAB())
 		TAB()->colorizeEdges((state == Qt::Checked) ? true : false);
 	_edgeColor->setEnabled((state == Qt::Checked) ? false : true);
+	getArguments();
 }
 
 void GUI::setInputEncoding(int index)
 {
 	if (TAB())
 		TAB()->setInputEncoding(*(encodings + index));
+	getArguments();
 }
 
 void GUI::setAntialiasing(int state)
@@ -697,7 +729,8 @@ void GUI::setAntialiasing(int state)
 		TAB()->setAntialiasing((state == Qt::Checked) ? true : false);
 }
 
-void GUI::setIOProperties(GraphTab *tab)
+
+void GUI::setMiscProperties(GraphTab *tab)
 {
 	Encoding* encoding = *(encodings + _inputEncoding->currentIndex());
 
@@ -739,7 +772,58 @@ void GUI::setGraphProperties(GraphTab *tab)
 	tab->setEdgeFontSize(_edgeFontSize->value());
 }
 
-void GUI::getIOProperties(GraphTab *tab)
+void GUI::getArguments()
+{
+	QString args;
+	int ef, vf;
+
+	ef = _edgeValues->checkState() ? _edgeFontSize->value() : 0;
+	vf = _vertexIDs->checkState() ? _vertexFontSize->value() : 0;
+
+	if (_graphWidth->value() != GRAPH_WIDTH
+	  || _graphHeight->value() != GRAPH_HEIGHT)
+		args.append(QString(" -s %1,%2").arg(_graphWidth->value())
+		  .arg(_graphHeight->value()));
+	if (_edgeSize->value() != EDGE_SIZE)
+		args.append(QString(" -es %1").arg(_edgeSize->value()));
+	if (_vertexSize->value() != VERTEX_SIZE)
+		args.append(QString(" -vs %1").arg(_vertexSize->value()));
+	if (_edgeColor->isEnabled() && _edgeColor->color() != EDGE_COLOR)
+		args.append(QString(" -ec \\%1").arg(_edgeColor->color().name()));
+	if (_vertexColor->color() != VERTEX_COLOR)
+		args.append(QString(" -vc \\%1").arg(_vertexColor->color().name()));
+	if (ef != EDGE_FONT_SIZE)
+		args.append(QString(" -ef %1").arg(ef));
+	if (vf != VERTEX_FONT_SIZE)
+		args.append(QString(" -vf %1").arg(vf));
+	if (_coloredEdges->checkState())
+		args.append(QString(" -c"));
+	if (_directedGraph->checkState())
+		args.append(QString(" -d"));
+
+	if (_nodeDistribution->value() != NODE_DISTRIBUTION)
+		args.append(QString(" -nd %1").arg(_nodeDistribution->value()));
+	if (_edgeLength->value() != EDGE_LENGTH)
+		args.append(QString(" -el %1").arg(_edgeLength->value()));
+	if (_edgeCrossings->value() != EDGE_CROSSINGS)
+		args.append(QString(" -cr %1").arg(_edgeCrossings->value()));
+	if (_initTemp->value() != INIT_TEMP)
+		args.append(QString(" -it %1").arg(_initTemp->value()));
+	if (_finalTemp->value() != FINAL_TEMP)
+		args.append(QString(" -ft %1").arg(_finalTemp->value()));
+	if (_coolFactor->value() != COOL_FACTOR)
+		args.append(QString(" -cf %1").arg(_coolFactor->value()));
+	if (_numSteps->value() != NUM_STEPS)
+		args.append(QString(" -ns %1").arg(_numSteps->value()));
+
+	if (_inputEncoding->currentIndex())
+		args.append(QString(" -e %1").arg(_inputEncoding->itemText(
+		  _inputEncoding->currentIndex())));
+
+	_arguments->setText(args);
+}
+
+void GUI::getMiscProperties(GraphTab *tab)
 {
 	int index = 0;
 
@@ -749,17 +833,19 @@ void GUI::getIOProperties(GraphTab *tab)
 
 	BLOCK(_inputEncoding, setCurrentIndex(index));
 	BLOCK(_antialiasing, setChecked(tab->antialiasing()));
+
+	getArguments();
 }
 
 void GUI::getSAProperties(GraphTab *tab)
 {
-	_nodeDistribution->setValue(tab->nodeDistribution());
-	_edgeLength->setValue(tab->edgeLength());
-	_edgeCrossings->setValue(tab->edgeCrossings());
-	_initTemp->setValue(tab->initTemp());
-	_finalTemp->setValue(tab->finalTemp());
-	_coolFactor->setValue(tab->coolFactor());
-	_numSteps->setValue(tab->numSteps());
+	BLOCK(_nodeDistribution, setValue(tab->nodeDistribution()));
+	BLOCK(_edgeLength, setValue(tab->edgeLength()));
+	BLOCK(_edgeCrossings, setValue(tab->edgeCrossings()));
+	BLOCK(_initTemp, setValue(tab->initTemp()));
+	BLOCK(_finalTemp, setValue(tab->finalTemp()));
+	BLOCK(_coolFactor, setValue(tab->coolFactor()));
+	BLOCK(_numSteps, setValue(tab->numSteps()));
 #ifdef SA_LOG_SUPPORT
 	BLOCK(_debug, setChecked(tab->logInfo()));
 #endif
@@ -823,7 +909,7 @@ void GUI::writeSettings()
 	settings.setValue("numSteps", _numSteps->value());
 	settings.endGroup();
 
-	settings.beginGroup("IO");
+	settings.beginGroup("Misc");
 	settings.setValue("inputEncoding", _inputEncoding->currentText());
 	settings.setValue("antialiasing", _antialiasing->checkState());
 	settings.endGroup();
@@ -875,7 +961,7 @@ void GUI::readSettings()
 	_numSteps->setValue(settings.value("numSteps", NUM_STEPS).toInt());
 	settings.endGroup();
 
-	settings.beginGroup("IO");
+	settings.beginGroup("Misc");
 	int index = 0;
 	QString ie = settings.value("inputEncoding",
 	  (*encodings)->name()).toString();

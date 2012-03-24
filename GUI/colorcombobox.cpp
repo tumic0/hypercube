@@ -67,30 +67,27 @@ QSize ColorComboBox::sizeHint() const
 
 void ColorComboBox::emitActivatedColor(int index)
 {
+	QColor color;
 	int currentIndex;
 
 	if (index == colorCount()) {
-		QColor col = QColorDialog::getColor();
+		color = QColorDialog::getColor();
 
-		if (col.isValid()) {
-			if ((currentIndex = findData(col)) < 0) {
-				addColor(col, col.name());
+		if (color.isValid()) {
+			if ((currentIndex = findData(color)) < 0) {
+				addColor(color, color.name());
 				setCurrentIndex(index);
 			} else {
 				setCurrentIndex(currentIndex);
 			}
 		} else {
 			setColor(lastActivated);
-			col = lastActivated;
+			color = lastActivated;
 		}
+	} else
+		color = qVariantValue<QColor>(itemData(index));
 
-		update();
-		lastActivated = col;
-		emit activated(col);
-	} else {
-		QColor col = qVariantValue<QColor>(itemData(index));
-		update();
-		lastActivated = col;
-		emit activated(col);
-	}
+	update();
+	lastActivated = color;
+	emit activated(color);
 }

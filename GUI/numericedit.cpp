@@ -17,14 +17,11 @@ FloatEdit::FloatEdit(int digits, QWidget *parent)
 	_value = 0;
 }
 
-float FloatEdit::value(void) {
-	return _value;
-}
-
 void FloatEdit::setValue(float value)
 {
 	_value = value;
 	setText(QString("%1").arg(value));
+	emit valueChanged(_value);
 }
 
 void FloatEdit::emitEditedValue(const QString &text)
@@ -32,6 +29,7 @@ void FloatEdit::emitEditedValue(const QString &text)
 	_value = text.toFloat();
 	emit valueChanged(_value);
 }
+
 
 IntEdit::IntEdit(int digits, QWidget *parent)
 	: QLineEdit(parent)
@@ -47,14 +45,11 @@ IntEdit::IntEdit(int digits, QWidget *parent)
 	_value = 0;
 }
 
-int IntEdit::value(void) {
-	return _value;
-}
-
 void IntEdit::setValue(int value)
 {
 	_value = value;
 	setText(QString("%1").arg(value));
+	emit valueChanged(_value);
 }
 
 void IntEdit::emitEditedValue(const QString &text)
