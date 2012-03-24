@@ -18,21 +18,19 @@ public:
 	virtual ~GraphView();
 
 	void setDimensions(const QPoint dimensions);
-	QPoint dimensions(void) const;
-	void setDirectedGraph(bool state);
-	bool directedGraph() {return _directed;}
+	QPoint dimensions(void) const {return _dimensions;}
 
 	VertexItem* addVertex();
 	EdgeItem* addEdge(VertexItem *src, VertexItem *dst);
 
-	int vertex_size() {return _vertexes.size();}
-	int edge_size() {return _edges.size();}
-	VertexItem* vertex(int id) {return _vertexes.at(id);}
-	EdgeItem* edge(int id) {return _edges.at(id);}
-
+	int vertex_size() const {return _vertexes.size();}
+	int edge_size() const {return _edges.size();}
+	VertexItem* vertex(int id) const {return _vertexes.at(id);}
+	EdgeItem* edge(int id) const {return _edges.at(id);}
 
 	void clear();
 
+	void setDirectedGraph(bool state);
 	void showEdgeValues(bool visible);
 	void showVertexIDs(bool visible);
 	void setVertexColor(const QColor &color);
@@ -59,7 +57,6 @@ private:
 	QVector<EdgeItem*> _edges;
 
 	QPoint _dimensions;
-	bool _directed;
 };
 
 #endif /* GRAPHSCENE_H_ */

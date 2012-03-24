@@ -68,11 +68,6 @@ EdgeItem* GraphView::addEdge(VertexItem *src, VertexItem *dst)
 	return e;
 }
 
-QPoint GraphView::dimensions(void) const
-{
-	return _dimensions;
-}
-
 void GraphView::setDimensions(const QPoint dimensions)
 {
 	QPoint offset = ((dimensions / 2) - (_dimensions / 2));
@@ -139,7 +134,6 @@ void GraphView::setDirectedGraph(bool state)
 {
 	for (int i = 0; i < _edges.size(); i++)
 		_edges.at(i)->setDirected(state);
-	_directed = state;
 }
 
 
