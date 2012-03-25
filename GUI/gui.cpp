@@ -184,7 +184,7 @@ void GUI::createMiscProperties()
 	for (Encoding **ep = encodings; *ep; ep++)
 		_inputEncoding->addItem((*ep)->name());
 
-	connect(_inputEncoding, SIGNAL(activated(int)), this,
+	connect(_inputEncoding, SIGNAL(currentIndexChanged(int)), this,
 	  SLOT(setInputEncoding(int)));
 
 	QVBoxLayout *encodingLayout = new QVBoxLayout;
@@ -834,7 +834,7 @@ void GUI::getArguments()
 	if (_numSteps->value() != NUM_STEPS)
 		args.append(QString(" -ns %1").arg(_numSteps->value()));
 
-	if (_inputEncoding->currentIndex())
+	if (_inputEncoding->currentIndex() > 0)
 		args.append(QString(" -e %1").arg(_inputEncoding->itemText(
 		  _inputEncoding->currentIndex())));
 
