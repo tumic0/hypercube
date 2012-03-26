@@ -18,11 +18,14 @@ public:
 void BoundingRectItem::paint(QPainter *painter,
   const QStyleOptionGraphicsItem *option, QWidget *widget = 0)
 {
-	bool orig = painter->testRenderHint(QPainter::Antialiasing);
+	bool antialiasing = painter->testRenderHint(QPainter::Antialiasing);
 
-	painter->setRenderHint(QPainter::Antialiasing, false);
-	QGraphicsRectItem::paint(painter, option, widget);
-	painter->setRenderHint(QPainter::Antialiasing, orig);
+	if (antialiasing) {
+		painter->setRenderHint(QPainter::Antialiasing, false);
+		QGraphicsRectItem::paint(painter, option, widget);
+		painter->setRenderHint(QPainter::Antialiasing, true);
+	} else
+		QGraphicsRectItem::paint(painter, option, widget);
 }
 
 

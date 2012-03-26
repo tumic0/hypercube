@@ -27,8 +27,6 @@ EdgeItem::EdgeItem(VertexItem *src, VertexItem *dst)
 	_dst->addEdge(this);
 
 	adjust();
-
-	setCacheMode(DeviceCoordinateCache);
 }
 
 void EdgeItem::adjust()

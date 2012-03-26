@@ -20,16 +20,17 @@ public:
 	IO::Error readGraph();
 	IO::Error writeGraph(const QString &fileName, OutputProvider *provider);
 	IO::Error writeGraph();
+
 	void transformGraph();
 	void bindTo(Graph *graph);
 	void project(Graph *graph);
 
 	Graph *graph();
-	GraphView *view() {return _view;}
+	GraphView *view() const {return _view;}
 
-	Encoding *inputEncoding() {return _inputEncoding;}
+	Encoding *inputEncoding() const {return _inputEncoding;}
 	void setInputEncoding(Encoding *encoding);
-	bool antialiasing();
+	bool antialiasing() const;
 	void setAntialiasing(bool value);
 
 	QPoint dimensions() const {return _dimensions;}
@@ -38,44 +39,44 @@ public:
 	void setVertexColor(const QColor &color);
 	QColor edgeColor() const {return _edgeColor;}
 	void setEdgeColor(const QColor &color);
-	int vertexSize() {return _vertexSize;}
+	int vertexSize() const {return _vertexSize;}
 	void setVertexSize(int size);
-	int edgeSize() {return _edgeSize;}
+	int edgeSize() const {return _edgeSize;}
 	void setEdgeSize(int size);
-	int vertexFontSize() {return _vertexFontSize;}
-	int edgeFontSize() {return _edgeFontSize;}
+	int vertexFontSize() const {return _vertexFontSize;}
+	int edgeFontSize() const {return _edgeFontSize;}
 	void setVertexFontSize(int size);
 	void setEdgeFontSize(int size);
-	bool vertexIDs() {return _showVertexIDs;}
-	bool edgeValues() {return _showEdgeValues;}
-	bool coloredEdges() {return _coloredEdges;}
-	bool directedGraph() {return _directedGraph;}
+	bool vertexIDs() const {return _showVertexIDs;}
+	bool edgeValues() const {return _showEdgeValues;}
+	bool coloredEdges() const {return _coloredEdges;}
+	bool directedGraph() const {return _directedGraph;}
 	void setDirectedGraph(bool state);
 	void showVertexIDs(bool show);
 	void showEdgeValues(bool show);
 	void colorizeEdges(bool colorize);
 	void setEdgeZValue(int value);
 
-	float nodeDistribution() {return _sa->nodeDistribution();}
+	float nodeDistribution() const {return _sa->nodeDistribution();}
 	void setNodeDistribution(float value) {_sa->setNodeDistribution(value);}
-	float edgeLength() {return _sa->edgeLength();}
+	float edgeLength() const {return _sa->edgeLength();}
 	void setEdgeLength(float value) {_sa->setEdgeLength(value);}
-	float edgeCrossings() {return _sa->edgeCrossings();}
+	float edgeCrossings() const {return _sa->edgeCrossings();}
 	void setEdgeCrossings(float value) {_sa->setEdgeCrossings(value);}
-	float initTemp() {return _sa->initTemp();}
+	float initTemp() const {return _sa->initTemp();}
 	void setInitTemp(float value) {_sa->setInitTemp(value);}
-	float finalTemp() {return _sa->finalTemp();}
+	float finalTemp() const {return _sa->finalTemp();}
 	void setFinalTemp(float value) {_sa->setFinalTemp(value);}
-	float coolFactor() {return _sa->coolFactor();}
+	float coolFactor() const {return _sa->coolFactor();}
 	void setCoolFactor(float value) {_sa->setCoolFactor(value);}
-	int numSteps() {return _sa->numSteps();}
+	int numSteps() const {return _sa->numSteps();}
 	void setNumSteps(int value) {_sa->setNumSteps(value);}
 #ifdef SA_LOG_SUPPORT
-	bool logInfo() {return _sa->logInfo();}
+	bool logInfo() const {return _sa->logInfo();}
 	void setLogInfo(bool value) {_sa->setLogInfo(value);}
 #endif
 
-	QString& fileName() {return _inputFileName;}
+	const QString& fileName() const {return _inputFileName;}
 
 private:
 	void loadGraph();

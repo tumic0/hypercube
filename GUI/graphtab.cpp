@@ -208,7 +208,7 @@ void GraphTab::setInputEncoding(Encoding *encoding)
 		readGraph();
 }
 
-bool GraphTab::antialiasing()
+bool GraphTab::antialiasing() const
 {
 	return (_view->renderHints() & QPainter::Antialiasing)
 	  ? true : false;
@@ -216,11 +216,8 @@ bool GraphTab::antialiasing()
 
 void GraphTab::setAntialiasing(bool value)
 {
-	QPainter::RenderHints hints = _view->renderHints();
-	hints = (value) ? hints | QPainter::Antialiasing
-	  : hints & ~QPainter::Antialiasing;
-
-	_view->setRenderHints(hints);
+	_view->setRenderHint(QPainter::Antialiasing, value);
+	_view->update();
 }
 
 

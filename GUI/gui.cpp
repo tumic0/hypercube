@@ -217,8 +217,8 @@ void GUI::createMiscProperties()
 	_argumentsEscape = new QCheckBox(tr("Escape special characters"));
 
 	QVBoxLayout *argumentsLayout = new QVBoxLayout;
-	argumentsLayout->addWidget(_arguments);
 	argumentsLayout->addWidget(_argumentsEscape);
+	argumentsLayout->addWidget(_arguments);
 	argumentsLayout->addStretch();
 	argumentsBox->setLayout(argumentsLayout);
 

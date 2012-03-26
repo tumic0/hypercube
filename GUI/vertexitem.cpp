@@ -22,7 +22,6 @@ VertexItem::VertexItem(int id)
 #if QT_VERSION >= 0x040600
 	setFlag(ItemSendsGeometryChanges);
 #endif
-	setCacheMode(DeviceCoordinateCache);
 }
 
 void VertexItem::addEdge(EdgeItem *edge)
