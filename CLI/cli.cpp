@@ -12,7 +12,15 @@
 using namespace std;
 
 
-static string replaceExtension(string &fileName, string &extension);
+static string replaceExtension(string const &fileName, string const &extension)
+{
+	size_t len;
+
+	if ((len = fileName.rfind('.')) == string::npos)
+		return fileName + string(".") + extension;
+	else
+		return fileName.substr(0, len + 1) + extension;
+}
 
 
 CLI::CLI(int argc, char *argv[])
@@ -151,7 +159,7 @@ void CLI::usage()
 	cout << "Usage:    hypercube-cli [OPTIONS] FILE" << endl;
 	cout << endl;
 	cout << "OPTIONS:" << endl;
-	cout << " -v               print the program version" << endl;
+	cout << " -v               print the program version and exit" << endl;
 	cout << endl;
 	cout << " -s <dimensions>  set image size to <dimensions>" << endl;
 	cout << " -f <format>      set output format to <format>" << endl;
@@ -234,19 +242,19 @@ bool CLI::parseArguments()
 		usage();
 		return false;
 	}
-	if (_argc == 2) {
-		if (string(_argv[1]) == "-h") {
+
+	for (i = 1; i < _argc; i++) {
+		if (string(_argv[i]) == "-h" || string(_argv[i]) == "-help") {
 			usage();
 			return false;
 		}
-		if (string(_argv[1]) == "-v") {
+		if (string(_argv[i]) == "-v") {
 			cout << APP_VERSION << endl;
 			return false;
 		}
 	}
 
-	i = 1;
-	while (i < _argc) {
+	for (i = 1; i < _argc; i += inc) {
 		inc = argument(i);
 		if (inc < 0) {
 			if (i + 1 == _argc)
@@ -256,7 +264,6 @@ bool CLI::parseArguments()
 			return false;
 		} else if (inc == 0)
 			break;
-		i += inc;
 	}
 
 	if (i != _argc - 1) {
@@ -294,14 +301,4 @@ void CLI::setSAProperties()
 	_sa->setFinalTemp(_finalTemp);
 	_sa->setCoolFactor(_coolFactor);
 	_sa->setNumSteps(_numSteps);
-}
-
-string replaceExtension(string &fileName, string &extension)
-{
-	size_t len;
-
-	if ((len = fileName.rfind('.')) == string::npos)
-		return fileName + string(".") + extension;
-	else
-		return fileName.substr(0, len + 1) + extension;
 }
