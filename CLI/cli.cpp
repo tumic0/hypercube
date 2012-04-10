@@ -86,7 +86,7 @@ bool CLI::readGraph()
 	int found = 0;
 
 	if (_encoding == string())
-		_encoding = (char *)(*e)->name();
+		_encoding = (*e)->name();
 
 	while (*e) {
 		if ((found = !_encoding.compare((*e)->name())))
@@ -126,7 +126,7 @@ bool CLI::writeGraph()
 	int found = 0;
 
 	if (_format == string())
-		_format = (char *)(*p)->type();
+		_format = (*p)->type();
 	if (_outputFileName == string())
 		_outputFileName = replaceExtension(_inputFileName, _format);
 
