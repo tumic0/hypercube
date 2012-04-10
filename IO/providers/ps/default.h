@@ -12,7 +12,6 @@ class Default : public PsSnippet
 
 public:
 	Default() {_encoding = new PsLatin1; _font = new Helvetica;}
-	~Default() {delete _encoding; delete _font;}
 	virtual PsEncoding *encoding() {return _encoding;}
 	virtual PsFont *font() {return _font;}
 };

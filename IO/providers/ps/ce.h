@@ -12,7 +12,6 @@ class CE : public PsSnippet
 
 public:
 	CE() {_encoding = new PsLatin2; _font = new HelveticaCE;}
-	~CE() {delete _encoding; delete _font;}
 	virtual PsEncoding *encoding() {return _encoding;}
 	virtual PsFont *font() {return _font;}
 };
