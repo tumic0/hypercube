@@ -46,14 +46,14 @@ struct Tab {
 	unsigned char char_mask;
 	unsigned char char_value;
 	int shift;
-	unsigned long wide_mask;
+	wchar_t wide_mask;
 };
 
 static const Tab tab[] = {
-	{char(0x80),  char(0x00),   0*6,    0x7F,   },
-	{char(0xE0),  char(0xC0),   1*6,    0x7FF,  },
-	{char(0xF0),  char(0xE0),   2*6,    0xFFFF, },
-	{0,           0,            0,      0,      }
+	{0x80,  0x00,   0*6,    0x7F,   },
+	{0xE0,  0xC0,   1*6,    0x7FF,  },
+	{0xF0,  0xE0,   2*6,    0xFFFF, },
+	{0,     0,      0,      0,      }
 };
 
 
@@ -67,13 +67,13 @@ int utf8cvt::do_length(mbstate_t&, const char* from,
 		if (!(*next & 0x80)) {
 			++count;
 			++next;
-		} else if ((*next & 0xc0) == 0xc0) {
+		} else if ((*next & 0xC0) == 0xC0) {
 			if (next + 2 < end) {
 				++count;
 				next += 2;
 			} else
 				break;
-		} else if ((*next & 0xe0) == 0xe0) {
+		} else if ((*next & 0xE0) == 0xE0) {
 			if (next + 3 < end) {
 				++count;
 				next += 3;
@@ -104,12 +104,12 @@ codecvt_base::result utf8cvt::do_in(mbstate_t&, const char* from,
 		if ((from_next + (t - tab)) >= from_end)
 			break;
 
-		unsigned long wide_mask = t->wide_mask;
+		wchar_t wide_mask = t->wide_mask;
 
 		*to_next = start;
 		for (; t != tab; --t) {
 			from_next++;
-			*to_next = (*to_next << 6) | ((*from_next ^ 0x80) & 0xff);
+			*to_next = (*to_next << 6) | ((*from_next ^ 0x80) & 0xFF);
 		}
 		*to_next &= wide_mask;
 
@@ -129,7 +129,7 @@ codecvt_base::result utf8cvt::do_out(mbstate_t&, const wchar_t* from,
 	to_next = to;
 
 	while (from_next < from_end) {
-		unsigned long fn = static_cast<unsigned long >(*from_next);
+		wchar_t fn = static_cast<wchar_t>(*from_next);
 
 		for (const Tab *t = tab; t->char_mask; t++) {
 			if (fn > t->wide_mask )
