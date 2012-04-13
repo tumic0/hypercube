@@ -1,7 +1,10 @@
+#include <cmath>
 #include "vertex.h"
 #include "misc.h"
 #include "config.h"
 #include "graph.h"
+
+using namespace std;
 
 
 Vertex::Vertex(Graph *graph, size_t id)
@@ -34,8 +37,10 @@ void Vertex::setFontSize(int size)
 void Vertex::computeMargin()
 {
 	_margin.setRb(
-		Coordinates(_size + (int)(AVG_CHAR_WIDTH * _fontSize)
-	  * _text.length(), MAX(_size, _size / 2 + _fontSize)));
+	  Coordinates(
+		_size + ceil(AVG_CHAR_WIDTH * _fontSize) * _text.length(),
+		MAX(_size, _size / 2 + _fontSize))
+	  );
 	_graph->updateMargins(_id);
 }
 
