@@ -445,7 +445,7 @@ void GUI::about()
 
 void GUI::openFile()
 {
-	QString fileName = QFileDialog::getOpenFileName(this);
+	QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"));
 	if (fileName.isEmpty())
 		return;
 
@@ -496,7 +496,7 @@ void GUI::saveAs()
 	}
 
 	QString fileName = QFileDialog::getSaveFileName(this,
-	  QString::null, QString::null, filter, &selectedFilter);
+	  tr("Save file"), QString::null, filter, &selectedFilter);
 	if (!fileName.isEmpty()) {
 		provider = outputProviders;
 		while (*provider) {

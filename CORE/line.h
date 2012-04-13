@@ -1,6 +1,7 @@
 #ifndef LINE_H_
 #define LINE_H_
 
+#include <cmath>
 #include "coordinates.h"
 
 class Line
@@ -18,7 +19,7 @@ public:
 	int dy() const {return _p2.y() - _p1.y();}
 
 	bool crossing(const Line &line) const;
-	int lengthSqr() const;
+	int lengthSqr() const {return (dx() * dx() + dy() * dy());}
 
 private:
 	Coordinates _p1, _p2;
@@ -39,9 +40,20 @@ public:
 	float dx() const {return _p2.x() - _p1.x();}
 	float dy() const {return _p2.y() - _p1.y();}
 
-	float length() const;
-	CoordinatesF pointAt(float t) const;
+	LineF unitVector() const
+	  {return LineF(_p1, CoordinatesF(_p1.x() + dx() / length(),
+	   _p1.y() + dy() / length()));}
+	LineF normalVector() const
+	  {return LineF(p1(), p1() + CoordinatesF(dy(), -dx()));}
+	float length() const
+	  {return sqrt(dx() * dx() + dy() * dy());}
+	float angle() const
+	  {return std::abs(std::atan(dy() / dx()));}
 
+	CoordinatesF pointAt(float t) const
+	  {return CoordinatesF(_p1.x() + dx() * t, _p1.y() + dy() * t);}
+
+	void setLength(float length);
 private:
 	CoordinatesF _p1, _p2;
 };

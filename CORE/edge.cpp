@@ -1,7 +1,10 @@
+#include <cmath>
 #include "config.h"
 #include "graph.h"
 #include "vertex.h"
 #include "edge.h"
+
+using namespace std;
 
 
 Edge::Edge(Vertex *src, Vertex *dst, size_t id)
@@ -37,11 +40,12 @@ void Edge::setFontSize(int size)
 void Edge::computeMargin()
 {
 	if (_fontSize) {
-		_margin.setRb(
-		  Coordinates(_size + (int)(AVG_CHAR_WIDTH * _fontSize)
-		  * _text.length(), _size / 2 + _fontSize));
-		_margin.setLt(
-		  Coordinates(0, _size / 2 + _fontSize));
+		Coordinates tm(
+		  _size + ceil(AVG_CHAR_WIDTH * _fontSize) * _text.length(),
+		  _size / 2 + _fontSize
+		);
+		_margin.setRb(tm);
+		_margin.setLt(tm);
 	} else
 		_margin = Margin();
 

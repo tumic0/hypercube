@@ -1,5 +1,5 @@
 #include <QPainter>
-#include <cmath>
+#include <QtCore/qmath.h>
 #include "CORE/misc.h"
 #include "CORE/config.h"
 #include "vertexitem.h"
@@ -8,6 +8,7 @@
 
 const float Pi = 3.141592f;
 const float C1 = 0.866025f; /* sqrt(3)/2 */
+
 
 EdgeItem::EdgeItem(VertexItem *src, VertexItem *dst)
 {
@@ -95,11 +96,18 @@ QPointF EdgeItem::textPos()
 {
 	QLineF line = edgeLine();
 
-	if ((line.dx() > 0 && line.dy() > 0) || (line.dx() < 0 && line.dy() < 0))
-		return (line.pointAt(0.5) + QPointF(_size / 2, - _size / 2)
-		  - QPointF(0, _text.font().pixelSize()));
-	else
-		return (line.pointAt(0.5) + QPointF(_size / 2, _size / 2));
+	qreal angle = qAbs(qAtan(line.dy() / line.dx()));
+	qreal h = _text.boundingRect().height() / 2;
+	qreal w = _text.boundingRect().width() / 2;
+	qreal hyp = qSqrt(h*h + w*w);
+	qreal dist = hyp * qSin(angle + qAsin(h / hyp));
+
+	QLineF l(line);
+	l.setP1(l.pointAt(0.5));
+	l = l.normalVector();
+	l.setLength((_size / 2) + dist);
+
+	return l.p2() - QPointF(w, h);
 }
 
 

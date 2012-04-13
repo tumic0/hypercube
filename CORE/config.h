@@ -5,7 +5,7 @@
 #define APP_VERSION				"0.9.0"
 
 #define FONT_FAMILY				"Helvetica"
-#define AVG_CHAR_WIDTH			0.66f
+#define AVG_CHAR_WIDTH			0.58f
 
 #ifdef SA_LOG_SUPPORT
 #define SA_PROGRESS_LOG			"progress.log"

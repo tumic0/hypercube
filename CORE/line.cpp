@@ -1,16 +1,6 @@
-#include <cstdlib>
-#include <cmath>
 #include "misc.h"
 #include "line.h"
 
-
-int Line::lengthSqr() const
-{
-	int x = _p2.x() - _p1.x();
-	int y = _p2.y() - _p1.y();
-
-	return abs(x*x + y*y);
-}
 
 bool Line::crossing(const Line &line) const
 {
@@ -47,19 +37,8 @@ bool Line::crossing(const Line &line) const
 	return false;
 }
 
-
-float LineF::length() const
+void LineF::setLength(float length)
 {
-	float x = _p2.x() - _p1.x();
-	float y = _p2.y() - _p1.y();
-
-	return sqrt(x*x + y*y);
-}
-
-CoordinatesF LineF::pointAt(float t) const
-{
-	float x = _p2.x() - _p1.x();
-	float y = _p2.y() - _p1.y();
-
-	return CoordinatesF(_p1.x() + x * t, _p1.y() + y * t);
+	LineF u = unitVector();
+	_p2 = CoordinatesF(_p1.x() + u.dx() * length, _p1.y() + u.dy() * length);
 }

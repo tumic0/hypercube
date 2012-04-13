@@ -37,7 +37,7 @@ public:
 	} Arrow;
 
 	static CoordinatesF edgeTextPosition(const LineF &line, float size,
-	  float fontSize);
+	  float fontSize, size_t textLength);
 	static CoordinatesF vertexTextPosition(const CoordinatesF &point,
 	  float size);
 	static Arrow arrow(LineF &line, float size);

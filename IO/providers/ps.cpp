@@ -93,6 +93,19 @@ static void edges(Graph *graph, wofstream &fs)
 				   << color.blue() << " c" << endl;
 			}
 
+			if (e->fontSize()) {
+				if (e->fontSize() != fontSize) {
+					fontSize = e->fontSize();
+					fs << fontSize << " f" << endl;
+				}
+
+				CoordinatesF t = OutputProvider::edgeTextPosition(
+				  line, (float)e->size(), (float)e->fontSize(),
+				  e->text().length());
+				fs << "(" << e->text() << ") "
+				   << t.x() << " " << tr(t.y(), dim) << " d" << endl;
+			}
+
 			if (e->directed()) {
 				OutputProvider::Arrow arrow = OutputProvider::arrow(line,
 				  (float)e->dst()->size());
@@ -110,20 +123,6 @@ static void edges(Graph *graph, wofstream &fs)
 			fs << line.p1().x() << " " << tr(line.p1().y(), dim) << " "
 			   << line.p2().x() << " " << tr(line.p2().y(), dim) << " e"
 			   << endl;
-
-
-			if (e->fontSize() == 0)
-				continue;
-
-			if (e->fontSize() != fontSize) {
-				fontSize = e->fontSize();
-				fs << fontSize << " f" << endl;
-			}
-
-			CoordinatesF t = OutputProvider::edgeTextPosition(
-			  line, (float)e->size(), (float)e->fontSize());
-			fs << "(" << e->text() << ") "
-			   << t.x() << " " << tr(t.y(), dim) << " d" << endl;
 		}
 		fs << endl;
 	}

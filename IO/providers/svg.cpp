@@ -45,7 +45,8 @@ static void edges(Graph *graph, wofstream &fs)
 
 			if (e->fontSize() > 0) {
 				CoordinatesF t = OutputProvider::edgeTextPosition(
-				  line, (float)e->size(), (float)e->fontSize());
+				  line, (float)e->size(), (float)e->fontSize(),
+				  e->text().length());
 
 				fs << "\t<text x=\"" << t.toCoordinates().x()
 				   << "\" y=\"" << t.toCoordinates().y()
