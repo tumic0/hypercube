@@ -96,7 +96,7 @@ QPointF EdgeItem::textPos()
 {
 	QLineF line = edgeLine();
 
-	qreal angle = qAbs(qAtan(line.dy() / line.dx()));
+	qreal angle = qAtan2(qAbs(line.dy()), qAbs(line.dx()));
 	qreal h = _text.boundingRect().height() / 2;
 	qreal w = _text.boundingRect().width() / 2;
 	qreal hyp = qSqrt(h*h + w*w);
@@ -128,15 +128,15 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 		QPointF arrow[3];
 		float angle;
 
-		angle = acos(line.dx() / line.length());
+		angle = qAtan2(-line.dy(), line.dx());
 		if (line.dy() >= 0)
-			angle = 2.0 * Pi - angle;
+			angle = 2.0 * Pi + angle;
 
 		arrow[0] = line.pointAt(1 - ((_dst->size() / 2.0) / line.length()));
-		arrow[1] = arrow[0] + QPointF(sin(angle - Pi / 3) * _dst->size(),
-		  cos(angle - Pi / 3) * _dst->size());
-		arrow[2] = arrow[0] + QPointF(sin(angle - Pi + Pi / 3) * _dst->size(),
-		  cos(angle - Pi + Pi / 3) * _dst->size());
+		arrow[1] = arrow[0] + QPointF(qSin(angle - Pi / 3) * _dst->size(),
+		  qCos(angle - Pi / 3) * _dst->size());
+		arrow[2] = arrow[0] + QPointF(qSin(angle - Pi + Pi / 3) * _dst->size(),
+		  qCos(angle - Pi + Pi / 3) * _dst->size());
 
 		line.setP2(line.pointAt(1 - ((_dst->size() * C1 * 1.5) / line.length())));
 

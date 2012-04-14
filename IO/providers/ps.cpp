@@ -99,9 +99,12 @@ static void edges(Graph *graph, wofstream &fs)
 					fs << fontSize << " f" << endl;
 				}
 
+				CoordinatesF textBox(
+				  e->text().length() * AVG_CHAR_WIDTH * e->fontSize(),
+				  (float)e->fontSize());
 				CoordinatesF t = OutputProvider::edgeTextPosition(
-				  line, (float)e->size(), (float)e->fontSize(),
-				  e->text().length());
+				  line, (float)e->size(), textBox);
+
 				fs << "(" << e->text() << ") "
 				   << t.x() << " " << tr(t.y(), dim) << " d" << endl;
 			}

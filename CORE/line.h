@@ -47,8 +47,6 @@ public:
 	  {return LineF(p1(), p1() + CoordinatesF(dy(), -dx()));}
 	float length() const
 	  {return sqrt(dx() * dx() + dy() * dy());}
-	float angle() const
-	  {return std::abs(std::atan(dy() / dx()));}
 
 	CoordinatesF pointAt(float t) const
 	  {return CoordinatesF(_p1.x() + dx() * t, _p1.y() + dy() * t);}

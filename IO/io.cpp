@@ -8,12 +8,13 @@ const float Pi = 3.141592f;
 const float C1 = 0.866025f; /* sqrt(3)/2 */
 
 CoordinatesF OutputProvider::edgeTextPosition(const LineF &line, float size,
-  float fontSize, size_t textLength)
+  const CoordinatesF &textBox)
 {
-	float h = fontSize / 2;
-	float w = (textLength * AVG_CHAR_WIDTH * fontSize) / 2;
+	float angle = atan2(abs(line.dy()), abs(line.dx()));
+	float h = textBox.y() / 2;
+	float w = textBox.x() / 2;
 	float hyp = sqrt(h*h + w*w);
-	float dist = hyp * sin(line.angle() + asin(h / hyp));
+	float dist = hyp * sin(angle + asin(h / hyp));
 
 	LineF l(line);
 	l.setP1(l.pointAt(0.5));
@@ -34,9 +35,9 @@ OutputProvider::Arrow OutputProvider::arrow(LineF &line, float size)
 	Arrow arrow;
 	float angle;
 
-	angle = acos(line.dx() / line.length());
-	if (line.dy() >= 0)
-		angle = 2 * Pi - angle;
+	angle = atan2(-line.dy(), line.dx());
+	if (angle < 0)
+		angle = 2 * Pi + angle;
 
 	arrow.p[0] = line.pointAt(1 - ((size / 2) / line.length()));
 	arrow.p[1] = CoordinatesF(sin(angle - Pi / 3) * size,
