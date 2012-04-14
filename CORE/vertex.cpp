@@ -38,7 +38,7 @@ void Vertex::computeMargin()
 {
 	_margin.setRb(
 	  Coordinates(
-		_size + ceil(AVG_CHAR_WIDTH * _fontSize) * _text.length(),
+		_size + ceil(AVG_CHAR_WIDTH * _fontSize * _text.length()),
 		MAX(_size, _size / 2 + _fontSize))
 	  );
 	_graph->updateMargins(_id);

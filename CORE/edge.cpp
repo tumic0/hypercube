@@ -41,7 +41,7 @@ void Edge::computeMargin()
 {
 	if (_fontSize) {
 		Coordinates tm(
-		  _size + ceil(AVG_CHAR_WIDTH * _fontSize) * _text.length(),
+		  _size + ceil(AVG_CHAR_WIDTH * _fontSize * _text.length()),
 		  _size / 2 + _fontSize
 		);
 		_margin.setRb(tm);
