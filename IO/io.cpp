@@ -10,11 +10,10 @@ const float C1 = 0.866025f; /* sqrt(3)/2 */
 CoordinatesF OutputProvider::edgeTextPosition(const LineF &line, float size,
   float fontSize, size_t textLength)
 {
-	float angle = abs(atan(line.dy() / line.dx()));
 	float h = fontSize / 2;
 	float w = (textLength * AVG_CHAR_WIDTH * fontSize) / 2;
 	float hyp = sqrt(h*h + w*w);
-	float dist = hyp * sin(angle + sin(h / hyp));
+	float dist = hyp * sin(line.angle() + asin(h / hyp));
 
 	LineF l(line);
 	l.setP1(l.pointAt(0.5));
