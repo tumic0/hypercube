@@ -31,6 +31,8 @@ public:
 	void setZValue(int value) {_zValue = value;}
 	bool directed() const {return _directed;}
 	void setDirected(bool state) {_directed = state;}
+	bool twin() const {return _twin;}
+	void setTwin(bool state) {_twin = state;}
 
 private:
 	void computeMargin();
@@ -46,6 +48,7 @@ private:
 	int _fontSize;
 	int _zValue;
 	bool _directed;
+	bool _twin;
 };
 
 #endif /* EDGE_H_ */

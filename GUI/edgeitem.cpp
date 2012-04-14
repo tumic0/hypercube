@@ -128,6 +128,9 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 		QPointF arrow[3];
 		float angle;
 
+		if (_twin)
+			line.setP1(line.pointAt(0.5));
+
 		angle = qAtan2(-line.dy(), line.dx());
 		if (line.dy() >= 0)
 			angle = 2.0 * Pi + angle;

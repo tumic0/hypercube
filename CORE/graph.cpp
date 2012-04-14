@@ -55,6 +55,8 @@ Vertex* Graph::addVertex()
 Edge* Graph::addEdge(Vertex *src, Vertex *dst)
 {
 	Edge *e = new Edge(src, dst, _edges.size());
+
+	checkTwin(e);
 	_edges.push_back(e);
 	_neighbours.addEdge(e);
 
@@ -65,6 +67,18 @@ Edge* Graph::addEdge(Vertex *src, Vertex *dst)
 	updateLength(e->id());
 
 	return e;
+}
+
+void Graph::checkTwin(Edge *e)
+{
+	for (size_t i = 0; i < _edges.size(); i++) {
+		if (edge(i)->dst()->id() == e->src()->id()
+		  && edge(i)->src()->id() == e->dst()->id()) {
+			edge(i)->setTwin(true);
+			e->setTwin(true);
+			break;
+		}
+	}
 }
 
 void Graph::center(void)

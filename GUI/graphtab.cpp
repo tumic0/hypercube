@@ -259,6 +259,7 @@ void GraphTab::loadGraph()
 		e->setFontSize(edg->fontSize());
 		e->setZValue(edg->zValue());
 		e->setDirected(edg->directed());
+		e->setTwin(edg->twin());
 	}
 }
 
@@ -299,6 +300,7 @@ void GraphTab::storeGraph()
 		edg->setFontSize(e->fontSize());
 		edg->setZValue(e->zValue());
 		edg->setDirected(e->directed());
+		edg->setTwin(e->twin());
 	}
 }
 

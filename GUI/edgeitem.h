@@ -15,6 +15,8 @@ public:
 	VertexItem* dst() const {return _dst;}
 	void adjust();
 
+	bool twin() const {return _twin;}
+	void setTwin(bool state) {_twin = state;}
 	bool directed() const {return _directed;}
 	void setDirected(bool val);
 	QColor color() const {return _color;}
@@ -40,6 +42,7 @@ private:
 	QGraphicsSimpleTextItem _text;
 
 	bool _directed;
+	bool _twin;
 	qreal _size;
 	QColor _color;
 	int _fontSize;

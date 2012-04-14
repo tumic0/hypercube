@@ -17,6 +17,7 @@ Edge::Edge(Vertex *src, Vertex *dst, size_t id)
 	_fontSize = 0;
 	_zValue = -1;
 	_directed = true;
+	_twin = false;
 }
 
 void Edge::setText(const std::wstring &text)

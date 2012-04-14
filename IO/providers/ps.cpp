@@ -110,6 +110,9 @@ static void edges(Graph *graph, wofstream &fs)
 			}
 
 			if (e->directed()) {
+				if (e->twin())
+					line.setP1(line.pointAt(0.5));
+
 				OutputProvider::Arrow arrow = OutputProvider::arrow(line,
 				  (float)e->dst()->size());
 

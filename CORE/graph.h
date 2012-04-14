@@ -29,6 +29,7 @@ public:
 	void setDimensions(const Coordinates &dimensions)
 	  {_dimensions = dimensions;}
 
+	void checkTwin(Edge *e);
 	void updateCoordinates(size_t vid);
 	void updateMargins(size_t vid);
 
