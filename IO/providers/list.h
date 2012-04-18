@@ -12,8 +12,9 @@ public:
 	  Encoding *encoding);
 
 private:
-	void addVertex(std::wstring vertex);
-	void addEdge(std::wstring src, std::wstring dst, std::wstring val);
+	void addVertex(const std::wstring &vertex);
+	void addEdge(const std::wstring &src, const std::wstring &dst,
+	  const std::wstring &val);
 
 	std::map<std::wstring, Vertex*> _vertexes;
 	Graph *_graph;

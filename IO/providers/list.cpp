@@ -8,7 +8,7 @@
 using namespace std;
 
 
-void ListGraphInput::addVertex(wstring vertex)
+void ListGraphInput::addVertex(const wstring &vertex)
 {
 	if (_vertexes.find(vertex) != _vertexes.end())
 		return;
@@ -19,7 +19,8 @@ void ListGraphInput::addVertex(wstring vertex)
 	_vertexes.insert(pair<wstring, Vertex*>(vertex, v));
 }
 
-void ListGraphInput::addEdge(wstring src, wstring dst, wstring val)
+void ListGraphInput::addEdge(const wstring &src, const wstring &dst,
+  const wstring &val)
 {
 	Edge *e = _graph->addEdge(_vertexes[src], _vertexes[dst]);
 	e->setText(val);
