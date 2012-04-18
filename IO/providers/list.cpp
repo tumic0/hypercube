@@ -1,11 +1,12 @@
+#include <fstream>
 #include <sstream>
 #include <cctype>
 #include "CORE/vertex.h"
 #include "CORE/edge.h"
 #include "list.h"
 
-
 using namespace std;
+
 
 void ListGraphInput::addVertex(wstring vertex)
 {
@@ -13,21 +14,15 @@ void ListGraphInput::addVertex(wstring vertex)
 		return;
 
 	Vertex *v = _graph->addVertex();
-	wstringstream ss;
-	ss << vertex;
-	v->setText(ss.str());
+	v->setText(vertex);
 
-	_vertexes.insert(pair<wstring,size_t>(vertex, v->id()));
+	_vertexes.insert(pair<wstring, Vertex*>(vertex, v));
 }
 
 void ListGraphInput::addEdge(wstring src, wstring dst, wstring val)
 {
-	wstringstream ss;
-
-	ss << val;
-	Edge *e = _graph->addEdge(_graph->vertex(_vertexes[src]),
-	  _graph->vertex(_vertexes[dst]));
-	e->setText(ss.str());
+	Edge *e = _graph->addEdge(_vertexes[src], _vertexes[dst]);
+	e->setText(val);
 }
 
 IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName,

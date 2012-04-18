@@ -1,7 +1,6 @@
 #ifndef LIST_H_
 #define LIST_H_
 
-#include <fstream>
 #include <map>
 #include <string>
 #include "IO/io.h"
@@ -16,7 +15,7 @@ private:
 	void addVertex(std::wstring vertex);
 	void addEdge(std::wstring src, std::wstring dst, std::wstring val);
 
-	std::map<std::wstring, size_t> _vertexes;
+	std::map<std::wstring, Vertex*> _vertexes;
 	Graph *_graph;
 };
 
