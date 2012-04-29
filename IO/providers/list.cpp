@@ -194,7 +194,7 @@ IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName,
 
 	_fs.open(fileName);
 	if (!_fs) {
-		ioerr << "Error opening file: " << strerror(errno) << endl;
+		ioerr << fileName << ": " << strerror(errno) << endl;
 		return OpenError;
 	}
 

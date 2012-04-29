@@ -191,7 +191,7 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *filename)
 		fs.imbue(lc);
 		fs.open(filename);
 		if (!fs) {
-			ioerr << "Error opening file: " << strerror(errno) << endl;
+			ioerr << filename << ": " << strerror(errno) << endl;
 			return OpenError;
 		}
 
@@ -205,7 +205,7 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *filename)
 			return Ok;
 	}
 
-	ioerr << "Error writing file: No applicable UTF->8bit conversion" << endl;
+	ioerr << "No applicable Unicode -> 8bit conversion" << endl;
 
 	return WriteError;
 }

@@ -17,7 +17,7 @@ IO::Error MatrixGraphInput::readGraph(Graph *graph, const char *fileName,
 
 	ifstream fs(fileName);
 	if (!fs) {
-		ioerr << "Error opening file: " << strerror(errno) << endl;
+		ioerr << fileName << ": " << strerror(errno) << endl;
 		return OpenError;
 	}
 
