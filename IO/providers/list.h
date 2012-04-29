@@ -3,7 +3,12 @@
 
 #include <map>
 #include <string>
+#include <fstream>
 #include "IO/io.h"
+
+
+class Vertex;
+
 
 class ListGraphInput: public InputProvider
 {
@@ -12,11 +17,27 @@ public:
 	  Encoding *encoding);
 
 private:
-	void addVertex(const std::wstring &vertex);
-	void addEdge(const std::wstring &src, const std::wstring &dst,
-	  const std::wstring &val);
+	enum Token {
+		START,		/* Initial value */
+		EOI,		/* End of File */
+		ERROR,		/* Parse error */
+		NL,			/* New line */
+		ID			/* ID */
+	};
 
+	void error();
+	void nextToken();
+	void compare(Token token);
+	void entry();
+	bool parse();
+
+	Vertex *addVertex(const std::wstring &vertex);
+
+	std::wifstream _fs;
+	std::wstring _id;
+	Token _token;
 	unsigned _line;
+
 	std::map<std::wstring, Vertex*> _vertexes;
 	Graph *_graph;
 };
