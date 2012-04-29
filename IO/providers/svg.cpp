@@ -1,3 +1,5 @@
+#include <cstring>
+#include <cerrno>
 #include <iostream>
 #include <fstream>
 #include "CORE/config.h"
@@ -119,8 +121,10 @@ IO::Error SvgGraphOutput::writeGraph(Graph *graph, const char *filename)
 
 	fs.imbue(utf8);
 	fs.open(filename);
-	if (!fs)
+	if (!fs) {
+		ioerr << "Error opening file: " << strerror(errno) << endl;
 		return OpenError;
+	}
 
 	header(graph, fs);
 	edges(graph, fs);

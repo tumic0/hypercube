@@ -1,4 +1,5 @@
 #include <cstring>
+#include <cerrno>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -178,16 +179,21 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *filename)
 	for (PsSnippet **sp = snippets; *sp; sp++) {
 		codecvt<wchar_t,char,mbstate_t> *cvt = 0;
 
-		for (Encoding **ep = encodings; *ep; ep++)
-			if (!strcmp((*sp)->encoding()->name(), (*ep)->name()))
+		for (Encoding **ep = encodings; *ep; ep++) {
+			if (!strcmp((*sp)->encoding()->name(), (*ep)->name())) {
 				cvt = (*ep)->cvt();
-		if (!cvt)
-			return WriteError;
+				break;
+			}
+		}
 
 		wofstream fs;
 		locale lc(locale(), cvt);
 		fs.imbue(lc);
 		fs.open(filename);
+		if (!fs) {
+			ioerr << "Error opening file: " << strerror(errno) << endl;
+			return OpenError;
+		}
 
 		prolog(graph, *sp, fs);
 		edges(graph, fs);
@@ -198,6 +204,8 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *filename)
 		if (!fs.fail())
 			return Ok;
 	}
+
+	ioerr << "Error writing file: No applicable UTF->8bit conversion" << endl;
 
 	return WriteError;
 }

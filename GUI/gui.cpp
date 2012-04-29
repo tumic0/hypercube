@@ -512,13 +512,15 @@ void GUI::saveAs()
 		if (!fileName.endsWith(suffix))
 			fileName.append(suffix);
 
+		IO::ioerr.str("");
 		IO::Error error = TAB()->writeGraph(fileName, *provider);
-		if (error)
+		if (error) {
+			std::cerr << IO::ioerr.str();
 			QMessageBox::critical(this, tr("Error"),
 			  tr("Error saving graph") + QString(":\n")
 			  + errorDescription(error));
+		}
 	}
-
 }
 
 void GUI::saveAll()

@@ -139,10 +139,7 @@ bool CLI::writeGraph()
 	error = (*p)->writeGraph(_graph, _outputFileName.c_str());
 
 	if (error) {
-		if (error == IO::OpenError)
-			cerr << "Error opening output file!" << endl;
-		else if (error == IO::WriteError)
-			cerr << "Error writing output file!" << endl;
+		cerr << IO::ioerr.str();
 		return false;
 	}
 
