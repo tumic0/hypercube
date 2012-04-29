@@ -1,4 +1,5 @@
-#include <iostream>
+#include <cstring>
+#include <cerrno>
 #include <fstream>
 #include <sstream>
 #include "CORE/vertex.h"
@@ -15,11 +16,15 @@ IO::Error MatrixGraphInput::readGraph(Graph *graph, const char *fileName,
 
 
 	ifstream fs(fileName);
-	if (!fs)
+	if (!fs) {
+		ioerr << "Error opening file: " << strerror(errno) << endl;
 		return OpenError;
+	}
 
-	if (!(fs >> size))
+	if (!(fs >> size)) {
+		ioerr << "MATRIX: parse error on line: 1" << endl;
 		return FormatError;
+	}
 
 
 	for (size_t i = 0; i < size; i++) {

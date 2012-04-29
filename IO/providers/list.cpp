@@ -1,6 +1,8 @@
+#include <cstring>
+#include <cerrno>
+#include <cctype>
 #include <fstream>
 #include <sstream>
-#include <cctype>
 #include "CORE/vertex.h"
 #include "CORE/edge.h"
 #include "list.h"
@@ -39,15 +41,20 @@ IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName,
 	}
 
 	fs.open(fileName);
-	if (!fs)
+	if (!fs) {
+		ioerr << "Error opening file: " << strerror(errno) << endl;
 		return OpenError;
+	}
 
 	_graph = graph;
+	_line = 0;
 
 	while (getline(fs, line)) {
+		_line++;
 		wistringstream iss(line);
 		iss >> src >> dst >> value;
 		if (!iss) {
+			ioerr << "LIST: parse error on line: " << _line << endl;
 			err = FormatError;
 			break;
 		}

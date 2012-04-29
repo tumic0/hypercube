@@ -454,9 +454,12 @@ void GUI::openFile()
 	setSAProperties(tab);
 	setGraphProperties(tab);
 	setMiscProperties(tab);
+
+	IO::ioerr.str("");
 	IO::Error error = tab->readGraph(fileName);
 
 	if (error) {
+		std::cerr << IO::ioerr.str();
 		QMessageBox::critical(this, tr("Error"), tr("Error loading graph")
 		  + QString(":\n") + errorDescription(error));
 		delete tab;

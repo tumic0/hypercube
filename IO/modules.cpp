@@ -1,5 +1,6 @@
 #include "providers/matrix.h"
 #include "providers/list.h"
+#include "providers/dot.h"
 #include "providers/svg.h"
 #include "providers/ps.h"
 #include "encodings/utf8.h"
@@ -7,6 +8,7 @@
 #include "encodings/latin2.h"
 #include "encodings/koi8r.h"
 #include "encodings/cp1250.h"
+#include "modules.h"
 
 
 OutputProvider* outputProviders[] = {
@@ -16,6 +18,7 @@ OutputProvider* outputProviders[] = {
 };
 
 InputProvider* inputProviders[] = {
+	new DotGraphInput,
 	new ListGraphInput,
 	new MatrixGraphInput,
 	0

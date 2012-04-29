@@ -36,6 +36,7 @@ HEADERS += CORE/sa_log.h \
     IO/providers/svg.h \
     IO/providers/matrix.h \
     IO/providers/list.h \
+    IO/providers/dot.h \
     IO/encodings/latin1cvt.h \
     IO/encodings/cp1250cvt.h \
     IO/encodings/latin1.h \
@@ -70,6 +71,7 @@ SOURCES += \
     IO/providers/ps/snippet.cpp \
     IO/providers/list.cpp \
     IO/providers/matrix.cpp \
+    IO/providers/dot.cpp \
     IO/providers/ps.cpp \
     IO/providers/svg.cpp \
     IO/encodings/utf8cvt.cpp \

@@ -1,20 +1,17 @@
 #ifndef IO_H_
 #define IO_H_
 
+#include <sstream>
 #include "CORE/graph.h"
 #include "CORE/line.h"
 #include "encoding.h"
 
+
 class IO
 {
 public:
-	typedef enum {
-		Ok,
-		OpenError,
-		ReadError,
-		WriteError,
-		FormatError,
-	} Error;
+	enum Error {Ok, OpenError, ReadError, WriteError, FormatError};
+	static std::ostringstream ioerr;
 };
 
 
@@ -32,9 +29,9 @@ public:
 	virtual const char* type() = 0;
 	virtual const char* description() = 0;
 
-	typedef struct {
+	struct Arrow {
 		CoordinatesF p[3];
-	} Arrow;
+	};
 
 	static CoordinatesF edgeTextPosition(const LineF &line, float size,
 	  const CoordinatesF &textBox);

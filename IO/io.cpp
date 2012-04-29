@@ -7,6 +7,10 @@ using namespace std;
 const float Pi = 3.141592f;
 const float C1 = 0.866025f; /* sqrt(3)/2 */
 
+
+ostringstream IO::ioerr;
+
+
 CoordinatesF OutputProvider::edgeTextPosition(const LineF &line, float size,
   const CoordinatesF &textBox)
 {

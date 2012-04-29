@@ -107,12 +107,7 @@ bool CLI::readGraph()
 	}
 
 	if (error) {
-		if (error == IO::FormatError)
-			cerr << "Unknown/invalid input format!" << endl;
-		else if (error == IO::OpenError)
-			cerr << "Error opening input file!" << endl;
-		else if (error == IO::ReadError)
-			cerr << "Error reading input file!" << endl;
+		cerr << IO::ioerr.str();
 		return false;
 	}
 
