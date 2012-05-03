@@ -203,6 +203,7 @@ IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName,
 	if (!parse())
 		err = FormatError;
 
+	_vertexes.clear();
 	_fs.close();
 	if (_fs.bad())
 		err = ReadError;
