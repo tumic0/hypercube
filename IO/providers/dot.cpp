@@ -524,7 +524,15 @@ bool DotGraphInput::parse()
 	nextToken();
 	graph();
 
-	return (_token == EOI) ? 1 : 0;
+	_vertexes.clear();
+	attributesClear();
+
+	if (_token == EOI)
+		return true;
+	else {
+		error();
+		return false;
+	}
 }
 
 
@@ -600,17 +608,14 @@ IO::Error DotGraphInput::readGraph(Graph *graph, const char *fileName,
 
 	_graph = graph;
 
-	if (!parse())
+	if (!parse()) {
 		err = FormatError;
+		_graph->clear();
+	}
 
-	_vertexes.clear();
-	attributesClear();
 	_fs.close();
 	if (_fs.bad())
 		err = ReadError;
-
-	if (err)
-		_graph->clear();
 
 	return err;
 }
