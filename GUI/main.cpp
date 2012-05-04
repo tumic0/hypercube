@@ -15,5 +15,9 @@ int main(int argc, char *argv[])
 	GUI gui;
 	gui.setWindowIcon(QIcon(QPixmap(APP_ICON)));
 	gui.show();
+
+	for (int i = 1; i < argc; i++)
+		gui.openFile(argv[i]);
+
 	return app.exec();
 }

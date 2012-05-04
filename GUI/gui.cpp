@@ -446,9 +446,12 @@ void GUI::about()
 void GUI::openFile()
 {
 	QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"));
-	if (fileName.isEmpty())
-		return;
+	if (!fileName.isEmpty())
+		openFile(fileName);
+}
 
+void GUI::openFile(const QString &fileName)
+{
 	GraphTab *tab = new GraphTab();
 
 	setSAProperties(tab);
