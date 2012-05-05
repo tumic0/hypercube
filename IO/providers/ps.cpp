@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <cstring>
 #include <cerrno>
 #include <iostream>
@@ -225,6 +226,8 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *fileName)
 	}
 
 	ioerr << "No applicable Unicode -> 8bit conversion" << endl;
+
+	remove(fileName);
 
 	return WriteError;
 }

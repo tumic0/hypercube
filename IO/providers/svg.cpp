@@ -146,8 +146,10 @@ IO::Error SvgGraphOutput::writeGraph(Graph *graph, const char *fileName)
 	fs << "</g>" << endl << endl << "</svg>" << endl;
 
 	fs.close();
-	if (fs.fail())
+	if (fs.fail()) {
+		remove(fileName);
 		return WriteError;
+	}
 
 	return Ok;
 }

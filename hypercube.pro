@@ -90,5 +90,8 @@ DEFINES += SA_LOG_SUPPORT
 RESOURCES += hypercube.qrc
 TRANSLATIONS = lang/hypercube_cs.ts
 INCLUDEPATH += ./
-win32:RC_FILE = hypercube.rc
+win32 {
+    RC_FILE = hypercube.rc
+	DEFINES += _CRT_SECURE_NO_WARNINGS
+}
 macx:ICON = icons/hypercube.icns
