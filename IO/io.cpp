@@ -51,3 +51,14 @@ OutputProvider::Arrow OutputProvider::arrow(LineF &line, float size)
 
 	return arrow;
 }
+
+void OutputProvider::stringReplace(wstring &source, const wstring &find,
+  const wstring &replace)
+{
+	size_t j = 0;
+
+	while ((j = source.find(find, j)) != wstring::npos) {
+		source.replace(j, find.length(), replace);
+		j += replace.length();
+	}
+}

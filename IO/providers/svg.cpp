@@ -13,6 +13,14 @@
 using namespace std;
 
 
+static void escape(wstring &str)
+{
+	OutputProvider::stringReplace(str, L"&", L"&amp;");
+	OutputProvider::stringReplace(str, L"<", L"&lt;");
+	OutputProvider::stringReplace(str, L">", L"&gt;");
+	OutputProvider::stringReplace(str, L"\"", L"&quot;");
+}
+
 static void header(Graph *graph, wofstream &fs)
 {
 	int width = graph->dimensions().x();
@@ -52,11 +60,14 @@ static void edges(Graph *graph, wofstream &fs)
 				CoordinatesF t = OutputProvider::edgeTextPosition(
 				  line, (float)e->size(), textBox);
 
+				wstring text(e->text());
+				escape(text);
+
 				fs << "\t<text x=\"" << t.toCoordinates().x()
 				   << "\" y=\"" << t.toCoordinates().y()
 				   << "\" fill=\"" << e->color()
 				   << "\" font-size=\"" << e->fontSize()
-				   << "\">" << e->text() << "</text>" << endl;
+				   << "\">" << text << "</text>" << endl;
 			}
 
 			if (e->directed()) {
@@ -102,10 +113,13 @@ static void vertexes(Graph *graph, wofstream &fs)
 		   << "\" r=\"" << v->size() / 2 << "\"/>" << endl;
 
 		if (v->fontSize() > 0) {
+			wstring text(v->text());
+			escape(text);
+
 			c = OutputProvider::vertexTextPosition(c, (float)v->size());
 			fs << "\t<text x=\"" << c.x() << "\" y=\"" << c.y()
 			   << "\" font-size=\"" << v->fontSize() << "\">"
-			   << v->text() << "</text>" << endl;
+			   << text << "</text>" << endl;
 		}
 
 		fs << "</g>" << endl;

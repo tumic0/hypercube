@@ -1,6 +1,7 @@
 #ifndef IO_H_
 #define IO_H_
 
+#include <string>
 #include "CORE/graph.h"
 #include "CORE/line.h"
 #include "encoding.h"
@@ -36,6 +37,9 @@ public:
 	static CoordinatesF vertexTextPosition(const CoordinatesF &point,
 	  float size);
 	static Arrow arrow(LineF &line, float size);
+
+	static void stringReplace(std::wstring &source, const std::wstring &find,
+	  const std::wstring &replace);
 };
 
 #endif /* IO_H_ */

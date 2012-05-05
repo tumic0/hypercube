@@ -15,6 +15,13 @@ using namespace std;
 
 #define tr(val,dim) ((dim).y()-(val))
 
+static void escape(wstring &str)
+{
+	OutputProvider::stringReplace(str, L"\\", L"\\\\");
+	OutputProvider::stringReplace(str, L"(", L"\\(");
+	OutputProvider::stringReplace(str, L")", L"\\)");
+}
+
 static void prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
 {
 	Coordinates dim = graph->dimensions();
@@ -106,7 +113,10 @@ static void edges(Graph *graph, wofstream &fs)
 				CoordinatesF t = OutputProvider::edgeTextPosition(
 				  line, (float)e->size(), textBox);
 
-				fs << "(" << e->text() << ") "
+				wstring text(e->text());
+				escape(text);
+
+				fs << "(" << text << ") "
 				   << t.x() << " " << tr(t.y(), dim) << " d" << endl;
 			}
 
@@ -166,8 +176,11 @@ static void vertexes(Graph *graph, wofstream &fs)
 			fs << fontSize << " f" << endl;
 		}
 
+		wstring text(v->text());
+		escape(text);
+
 		c = OutputProvider::vertexTextPosition(c, (float)v->size());
-		fs << "(" << v->text() << ") "
+		fs << "(" << text << ") "
 		   << c.x() << " " << tr(c.y(), dim) << " d" << endl;
 	}
 	fs << endl;
