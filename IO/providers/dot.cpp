@@ -74,6 +74,10 @@ void DotGraphInput::nextToken()
 					state = 3;
 					break;
 				}
+				if (c == '#') {
+					state = 4;
+					break;
+				}
 
 				if (c == ':') {
 					_token = COLON;
@@ -164,7 +168,7 @@ void DotGraphInput::nextToken()
 					_id += c;
 					break;
 				}
-				_fs.unget();
+				_fs.putback(c);
 				_token = keyword();
 				return;
 
@@ -182,8 +186,10 @@ void DotGraphInput::nextToken()
 				return;
 
 			case 4:
-				if (c == '\n')
+				if (c == '\n') {
+					_line++;
 					state = 0;
+				}
 				break;
 
 			case 5:
@@ -236,7 +242,7 @@ void DotGraphInput::nextToken()
 					_id += c;
 					break;
 				}
-				_fs.unget();
+				_fs.putback(c);
 				_token = ID;
 				return;
 
@@ -250,7 +256,7 @@ void DotGraphInput::nextToken()
 					_id += c;
 					break;
 				}
-				_fs.unget();
+				_fs.putback(c);
 				_token = ID;
 				return;
 
@@ -406,6 +412,7 @@ void DotGraphInput::idStatement(idSet &subgraph)
 			attributeList(attr);
 			setVertexAttributes(v, attr);
 			break;
+		case ID:
 		case RBRC:
 		case SEMICOLON:
 			v = addVertex(vertex);

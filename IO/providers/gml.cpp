@@ -104,7 +104,7 @@ void GmlGraphInput::nextToken()
 					_string += c;
 					break;
 				}
-				_fs.unget();
+				_fs.putback(c);
 				_token = KEY;
 				return;
 
@@ -124,7 +124,7 @@ void GmlGraphInput::nextToken()
 					_int = _int * 10 + c - '0';
 					break;
 				}
-				_fs.unget();
+				_fs.putback(c);
 				if (negative)
 					_int = -_int;
 				_token = INT;
@@ -141,7 +141,7 @@ void GmlGraphInput::nextToken()
 					state = 5;
 					break;
 				}
-				_fs.unget();
+				_fs.putback(c);
 				std::wistringstream(flstr) >> _float;
 				_token = REAL;
 				return;
@@ -170,7 +170,7 @@ void GmlGraphInput::nextToken()
 					flstr += c;
 					break;
 				}
-				_fs.unget();
+				_fs.putback(c);
 				std::wistringstream(flstr) >> _float;
 				_token = REAL;
 				return;

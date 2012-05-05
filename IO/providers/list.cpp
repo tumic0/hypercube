@@ -75,7 +75,7 @@ void ListGraphInput::nextToken()
 					_id += c;
 					break;
 				}
-				_fs.unget();
+				_fs.putback(c);
 				_token = ID;
 				return;
 
