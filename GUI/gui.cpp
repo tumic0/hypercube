@@ -458,9 +458,11 @@ void GUI::openFile(const QString &fileName)
 	setGraphProperties(tab);
 	setMiscProperties(tab);
 
+	IO::ioerr.str("");
 	IO::Error error = tab->readGraph(fileName);
 
 	if (error) {
+		std::cerr << IO::ioerr.str();
 		QMessageBox::critical(this, tr("Error"), tr("Error loading graph")
 		  + QString(":\n") + errorDescription(error));
 		delete tab;
@@ -513,8 +515,10 @@ void GUI::saveAs()
 		if (!fileName.endsWith(suffix))
 			fileName.append(suffix);
 
+		IO::ioerr.str("");
 		IO::Error error = TAB()->writeGraph(fileName, *provider);
 		if (error) {
+			std::cerr << IO::ioerr.str();
 			QMessageBox::critical(this, tr("Error"),
 			  tr("Error saving graph") + QString(":\n")
 			  + errorDescription(error));
@@ -556,8 +560,10 @@ void GUI::transformGraph()
 
 void GUI::reloadGraph()
 {
+	IO::ioerr.str("");
 	IO::Error error = TAB()->readGraph();
 	if (error) {
+		std::cerr << IO::ioerr.str();
 		QMessageBox::critical(this, tr("Error"),
 		  tr("Error loading graph") + QString(":\n")
 		  + errorDescription(error));

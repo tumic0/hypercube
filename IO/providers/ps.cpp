@@ -1,5 +1,5 @@
-#include <cstdio>
 #include <cstring>
+#include <cerrno>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -189,6 +189,9 @@ static void vertexes(Graph *graph, wofstream &fs)
 
 IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *fileName)
 {
+	wofstream fs;
+	bool fail;
+
 	for (PsSnippet **sp = snippets; *sp; sp++) {
 		codecvt<wchar_t,char,mbstate_t> *cvt = 0;
 
@@ -199,12 +202,12 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *fileName)
 			}
 		}
 
-		wofstream fs;
 		locale lc(locale(), cvt);
 		fs.imbue(lc);
+
 		fs.open(fileName);
 		if (!fs) {
-			perror(fileName);
+			ioerr << fileName << ": " << strerror(errno) << endl;
 			return OpenError;
 		}
 
@@ -213,12 +216,15 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *fileName)
 		vertexes(graph, fs);
 		fs << "%%EOF" << endl;
 
+		fail = fs.fail();
 		fs.close();
-		if (!fs.fail())
+		fs.clear();
+
+		if (!fail)
 			return Ok;
 	}
 
-	cerr << "No applicable Unicode -> 8bit conversion" << endl;
+	ioerr << "No applicable Unicode -> 8bit conversion" << endl;
 
 	return WriteError;
 }

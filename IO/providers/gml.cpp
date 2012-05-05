@@ -1,4 +1,5 @@
-#include <cstdio>
+#include <cstring>
+#include <cerrno>
 #include <sstream>
 #include "gml.h"
 
@@ -10,7 +11,7 @@ void GmlGraphInput::error()
 	if (_token == ERROR)
 		return;
 
-	cerr << "GML: parse error on line: " << _line << endl;
+	ioerr << "GML: parse error on line: " << _line << endl;
 	_token = ERROR;
 }
 
@@ -370,6 +371,8 @@ IO::Error GmlGraphInput::readGraph(Graph *graph, const char *fileName,
 {
 	IO::Error err = Ok;
 
+	_graph = graph;
+
 	if (encoding) {
 		locale lc(std::locale(), encoding->cvt());
 		_fs.imbue(lc);
@@ -377,20 +380,18 @@ IO::Error GmlGraphInput::readGraph(Graph *graph, const char *fileName,
 
 	_fs.open(fileName);
 	if (!_fs) {
-		perror(fileName);
-		return OpenError;
-	}
-
-	_graph = graph;
-
-	if (!parse()) {
-		err = FormatError;
-		_graph->clear();
+		ioerr << fileName << ": " << strerror(errno) << endl;
+		err = OpenError;
+	} else {
+		if (!parse())
+			err = (_fs.fail()) ? ReadError : FormatError;
 	}
 
 	_fs.close();
-	if (_fs.bad())
-		err = ReadError;
+	_fs.clear();
+
+	if (err)
+		_graph->clear();
 
 	return err;
 }

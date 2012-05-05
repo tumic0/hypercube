@@ -2,6 +2,7 @@
 #define IO_H_
 
 #include <string>
+#include <sstream>
 #include "CORE/graph.h"
 #include "CORE/line.h"
 #include "encoding.h"
@@ -11,6 +12,7 @@ class IO
 {
 public:
 	enum Error {Ok, OpenError, ReadError, WriteError, FormatError};
+	static std::ostringstream ioerr;
 };
 
 

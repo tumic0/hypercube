@@ -1,4 +1,5 @@
-#include <cstdio>
+#include <cstring>
+#include <cerrno>
 #include <cctype>
 #include <fstream>
 #include <sstream>
@@ -14,7 +15,7 @@ void ListGraphInput::error()
 	if (_token == ERROR)
 		return;
 
-	cerr << "LIST: parse error on line: " << _line << endl;
+	ioerr << "LIST: parse error on line: " << _line << endl;
 	_token = ERROR;
 }
 
@@ -22,14 +23,25 @@ void ListGraphInput::nextToken()
 {
 	int c, state = 0;
 
+	if (!_fs.good()) {
+		_token = EOI;
+		return;
+	}
 
 	_id.clear();
 
 	while (1) {
 		c = _fs.get();
 
-		if (!_fs.good())
-			c = -1;
+		if (!_fs.good()) {
+			if (state == 0)
+				_token = EOI;
+			else if (state == 2)
+				_token = ID;
+			else
+				_token = ERROR;
+			return;
+		}
 
 		switch (state) {
 			case 0:
@@ -52,10 +64,6 @@ void ListGraphInput::nextToken()
 					_id += c;
 					state = 2;
 					break;
-				}
-				if (c == -1) {
-					_token = EOI;
-					return;
 				}
 				error();
 				return;
@@ -87,18 +95,10 @@ void ListGraphInput::nextToken()
 					state = 4;
 					break;
 				}
-				if (c == -1) {
-					error();
-					return;
-				}
 				_id += c;
 				break;
 
 			case 4:
-				if (c == -1) {
-					error();
-					return;
-				}
 				if (c == '"')
 					_id += '"';
 				else {
@@ -144,6 +144,7 @@ void ListGraphInput::entry()
 bool ListGraphInput::parse()
 {
 	_line = 1;
+	_token = START;
 
 	nextToken();
 
@@ -155,9 +156,11 @@ bool ListGraphInput::parse()
 				nextToken();
 				break;
 			case EOI:
+				_vertexes.clear();
 				return true;
 			default:
 				error();
+				_vertexes.clear();
 				return false;
 		}
 	}
@@ -186,6 +189,8 @@ IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName,
 {
 	IO::Error err = Ok;
 
+	_graph = graph;
+
 	if (encoding) {
 		locale lc(std::locale(), encoding->cvt());
 		_fs.imbue(lc);
@@ -193,19 +198,15 @@ IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName,
 
 	_fs.open(fileName);
 	if (!_fs) {
-		perror(fileName);
-		return OpenError;
+		ioerr << fileName << ": " << strerror(errno) << endl;
+		err = OpenError;
+	} else {
+		if (!parse())
+			err = (_fs.fail()) ? ReadError : FormatError;
 	}
 
-	_graph = graph;
-
-	if (!parse())
-		err = FormatError;
-
-	_vertexes.clear();
 	_fs.close();
-	if (_fs.bad())
-		err = ReadError;
+	_fs.clear();
 
 	if (err)
 		graph->clear();

@@ -136,7 +136,7 @@ IO::Error SvgGraphOutput::writeGraph(Graph *graph, const char *fileName)
 	fs.imbue(utf8);
 	fs.open(fileName);
 	if (!fs) {
-		perror(fileName);
+		ioerr << fileName << ": " << strerror(errno) << endl;
 		return OpenError;
 	}
 

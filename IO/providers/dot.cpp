@@ -1,4 +1,5 @@
-#include <cstdio>
+#include <cstring>
+#include <cerrno>
 #include <cctype>
 #include "dot.h"
 
@@ -43,7 +44,7 @@ void DotGraphInput::error()
 	if (_token == ERROR)
 		return;
 
-	cerr << "DOT: parse error on line: " << _line << endl;
+	ioerr << "DOT: parse error on line: " << _line << endl;
 	_token = ERROR;
 }
 
@@ -601,6 +602,8 @@ IO::Error DotGraphInput::readGraph(Graph *graph, const char *fileName,
 {
 	IO::Error err = Ok;
 
+	_graph = graph;
+
 	if (encoding) {
 		locale lc(std::locale(), encoding->cvt());
 		_fs.imbue(lc);
@@ -608,20 +611,18 @@ IO::Error DotGraphInput::readGraph(Graph *graph, const char *fileName,
 
 	_fs.open(fileName);
 	if (!_fs) {
-		perror(fileName);
-		return OpenError;
-	}
-
-	_graph = graph;
-
-	if (!parse()) {
-		err = FormatError;
-		_graph->clear();
+		ioerr << fileName << ": " << strerror(errno) << endl;
+		err = OpenError;
+	} else {
+		if (!parse())
+			err = (_fs.fail()) ? ReadError : FormatError;
 	}
 
 	_fs.close();
-	if (_fs.bad())
-		err = ReadError;
+	_fs.clear();
+
+	if (err)
+		_graph->clear();
 
 	return err;
 }
