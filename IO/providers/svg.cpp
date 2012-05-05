@@ -114,15 +114,15 @@ static void vertexes(Graph *graph, wofstream &fs)
 }
 
 
-IO::Error SvgGraphOutput::writeGraph(Graph *graph, const char *filename)
+IO::Error SvgGraphOutput::writeGraph(Graph *graph, const char *fileName)
 {
 	wofstream fs;
 	locale utf8(std::locale(), new utf8cvt);
 
 	fs.imbue(utf8);
-	fs.open(filename);
+	fs.open(fileName);
 	if (!fs) {
-		ioerr << filename << ": " << strerror(errno) << endl;
+		perror(fileName);
 		return OpenError;
 	}
 

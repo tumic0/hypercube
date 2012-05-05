@@ -1,6 +1,5 @@
-#include <cstring>
-#include <cerrno>
-#include <istream>
+#include <cstdio>
+#include <sstream>
 #include "gml.h"
 
 using namespace std;
@@ -11,7 +10,7 @@ void GmlGraphInput::error()
 	if (_token == ERROR)
 		return;
 
-	ioerr << "GML: parse error on line: " << _line << endl;
+	cerr << "GML: parse error on line: " << _line << endl;
 	_token = ERROR;
 }
 
@@ -378,7 +377,7 @@ IO::Error GmlGraphInput::readGraph(Graph *graph, const char *fileName,
 
 	_fs.open(fileName);
 	if (!_fs) {
-		ioerr << fileName << ": " << strerror(errno) << endl;
+		perror(fileName);
 		return OpenError;
 	}
 

@@ -114,9 +114,6 @@ bool CLI::readGraph()
 		else if (error == IO::ReadError)
 			cerr << "Error reading input file!" << endl;
 
-		if (!IO::ioerr.str().empty())
-			cerr << IO::ioerr.str();
-
 		return false;
 	}
 
@@ -145,7 +142,6 @@ bool CLI::writeGraph()
 		return false;
 	}
 
-	IO::ioerr.str("");
 	error = (*p)->writeGraph(_graph, _outputFileName.c_str());
 
 	if (error) {
@@ -153,9 +149,6 @@ bool CLI::writeGraph()
 			cerr << "Error opening output file!" << endl;
 		else if (error == IO::WriteError)
 			cerr << "Error writing output file!" << endl;
-
-		if (!IO::ioerr.str().empty())
-			cerr << IO::ioerr.str();
 
 		return false;
 	}
