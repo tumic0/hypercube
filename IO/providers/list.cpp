@@ -119,6 +119,21 @@ void ListGraphInput::compare(Token token)
 		error();
 }
 
+void ListGraphInput::edgeValue(Edge *edge)
+{
+	switch (_token) {
+		case ID:
+			edge->setText(_id);
+			nextToken();
+			break;
+		case NL:
+		case EOI:
+			break;
+		default:
+			error();
+	}
+}
+
 void ListGraphInput::entry()
 {
 	Vertex *src, *dst;
@@ -133,11 +148,28 @@ void ListGraphInput::entry()
 			dst = addVertex(_id);
 			compare(ID);
 			edge = _graph->addEdge(src, dst);
-			edge->setText(_id);
-			compare(ID);
+			edgeValue(edge);
 			break;
 		default:
 			error();
+	}
+}
+
+void ListGraphInput::list()
+{
+	while (1) {
+		entry();
+
+		switch (_token) {
+			case NL:
+				nextToken();
+				break;
+			case EOI:
+				return;
+			default:
+				error();
+				return;
+		}
 	}
 }
 
@@ -147,23 +179,11 @@ bool ListGraphInput::parse()
 	_token = START;
 
 	nextToken();
+	list();
 
-	while (1) {
-		entry();
+	_vertexes.clear();
 
-		switch (_token) {
-			case NL:
-				nextToken();
-				break;
-			case EOI:
-				_vertexes.clear();
-				return true;
-			default:
-				error();
-				_vertexes.clear();
-				return false;
-		}
-	}
+	return (_token == EOI) ? true : false;
 }
 
 Vertex* ListGraphInput::addVertex(const wstring &vertex)

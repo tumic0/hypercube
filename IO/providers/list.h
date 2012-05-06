@@ -8,6 +8,7 @@
 
 
 class Vertex;
+class Edge;
 
 
 class ListGraphInput: public InputProvider
@@ -28,7 +29,9 @@ private:
 	void error();
 	void nextToken();
 	void compare(Token token);
+	void edgeValue(Edge *edge);
 	void entry();
+	void list();
 	bool parse();
 
 	Vertex *addVertex(const std::wstring &vertex);
