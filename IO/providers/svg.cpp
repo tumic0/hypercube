@@ -1,6 +1,5 @@
 #include <cstring>
 #include <cerrno>
-#include <iostream>
 #include <fstream>
 #include "CORE/config.h"
 #include "CORE/vertex.h"
@@ -13,15 +12,15 @@
 using namespace std;
 
 
-static void escape(wstring &str)
+void SvgGraphOutput::escape(wstring &str)
 {
-	OutputProvider::stringReplace(str, L"&", L"&amp;");
-	OutputProvider::stringReplace(str, L"<", L"&lt;");
-	OutputProvider::stringReplace(str, L">", L"&gt;");
-	OutputProvider::stringReplace(str, L"\"", L"&quot;");
+	stringReplace(str, L"&", L"&amp;");
+	stringReplace(str, L"<", L"&lt;");
+	stringReplace(str, L">", L"&gt;");
+	stringReplace(str, L"\"", L"&quot;");
 }
 
-static void header(Graph *graph, wofstream &fs)
+void SvgGraphOutput::header(Graph *graph, wofstream &fs)
 {
 	int width = graph->dimensions().x();
 	int height = graph->dimensions().y();
@@ -36,7 +35,7 @@ static void header(Graph *graph, wofstream &fs)
 	      "font-weight=\"normal\">"<< endl;
 }
 
-static void edges(Graph *graph, wofstream &fs)
+void SvgGraphOutput::edges(Graph *graph, wofstream &fs)
 {
 	for (int zValue = -2; zValue < 0; zValue++) {
 		for (size_t i = 0; i < graph->edge_size(); i++) {
@@ -57,8 +56,8 @@ static void edges(Graph *graph, wofstream &fs)
 				CoordinatesF textBox(
 				  e->text().length() * AVG_CHAR_WIDTH * e->fontSize(),
 				  (float)e->fontSize());
-				CoordinatesF t = OutputProvider::edgeTextPosition(
-				  line, (float)e->size(), textBox);
+				CoordinatesF t = edgeTextPosition(line, (float)e->size(),
+				  textBox);
 
 				wstring text(e->text());
 				escape(text);
@@ -74,13 +73,12 @@ static void edges(Graph *graph, wofstream &fs)
 				if (e->twin())
 					line.setP1(line.pointAt(0.5));
 
-				OutputProvider::Arrow arrow = OutputProvider::arrow(line,
-				  (float)e->dst()->size());
+				Arrow arw = arrow(line, (float)e->dst()->size());
 
 				fs << "\t<polygon points=\""
-				   << arrow.p[0].toCoordinates() << " "
-				   << arrow.p[1].toCoordinates() << " "
-				   << arrow.p[2].toCoordinates()
+				   << arw.p[0].toCoordinates() << " "
+				   << arw.p[1].toCoordinates() << " "
+				   << arw.p[2].toCoordinates()
 				   << "\" fill=\"" << e->color()
 				   << "\"/>" << endl;
 			}
@@ -99,7 +97,7 @@ static void edges(Graph *graph, wofstream &fs)
 	}
 }
 
-static void vertexes(Graph *graph, wofstream &fs)
+void SvgGraphOutput::vertexes(Graph *graph, wofstream &fs)
 {
 	for (size_t i = 0; i < graph->vertex_size(); i++) {
 		Vertex *v = graph->vertex(i);
@@ -116,7 +114,7 @@ static void vertexes(Graph *graph, wofstream &fs)
 			wstring text(v->text());
 			escape(text);
 
-			c = OutputProvider::vertexTextPosition(c, (float)v->size());
+			c = vertexTextPosition(c, (float)v->size());
 			fs << "\t<text x=\"" << c.x() << "\" y=\"" << c.y()
 			   << "\" font-size=\"" << v->fontSize() << "\">"
 			   << text << "</text>" << endl;

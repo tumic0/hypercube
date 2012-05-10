@@ -30,6 +30,7 @@ public:
 	virtual const char* type() = 0;
 	virtual const char* description() = 0;
 
+protected:
 	struct Arrow {
 		CoordinatesF p[3];
 	};

@@ -1,8 +1,5 @@
-#include <cstdio>
 #include <cstring>
 #include <cerrno>
-#include <iostream>
-#include <iomanip>
 #include <fstream>
 #include "CORE/vertex.h"
 #include "CORE/edge.h"
@@ -16,14 +13,14 @@ using namespace std;
 
 #define tr(val,dim) ((dim).y()-(val))
 
-static void escape(wstring &str)
+void PsGraphOutput::escape(wstring &str)
 {
-	OutputProvider::stringReplace(str, L"\\", L"\\\\");
-	OutputProvider::stringReplace(str, L"(", L"\\(");
-	OutputProvider::stringReplace(str, L")", L"\\)");
+	stringReplace(str, L"\\", L"\\\\");
+	stringReplace(str, L"(", L"\\(");
+	stringReplace(str, L")", L"\\)");
 }
 
-static void prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
+void PsGraphOutput::prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
 {
 	Coordinates dim = graph->dimensions();
 
@@ -76,7 +73,7 @@ static void prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
 	fs << "%%EndProlog" << endl << endl;
 }
 
-static void edges(Graph *graph, wofstream &fs)
+void PsGraphOutput::edges(Graph *graph, wofstream &fs)
 {
 	Color color;
 	int fontSize = -1, lineWidth = -1;
@@ -111,8 +108,8 @@ static void edges(Graph *graph, wofstream &fs)
 				CoordinatesF textBox(
 				  e->text().length() * AVG_CHAR_WIDTH * e->fontSize(),
 				  (float)e->fontSize());
-				CoordinatesF t = OutputProvider::edgeTextPosition(
-				  line, (float)e->size(), textBox);
+				CoordinatesF t = edgeTextPosition(line, (float)e->size(),
+				  textBox);
 
 				wstring text(e->text());
 				escape(text);
@@ -125,12 +122,11 @@ static void edges(Graph *graph, wofstream &fs)
 				if (e->twin())
 					line.setP1(line.pointAt(0.5));
 
-				OutputProvider::Arrow arrow = OutputProvider::arrow(line,
-				  (float)e->dst()->size());
+				Arrow arw = arrow(line, (float)e->dst()->size());
 
-				fs << arrow.p[0].x() << " " << tr(arrow.p[0].y(), dim) << " "
-				   << arrow.p[1].x() << " " << tr(arrow.p[1].y(), dim) << " "
-				   << arrow.p[2].x() << " " << tr(arrow.p[2].y(), dim) << " a"
+				fs << arw.p[0].x() << " " << tr(arw.p[0].y(), dim) << " "
+				   << arw.p[1].x() << " " << tr(arw.p[1].y(), dim) << " "
+				   << arw.p[2].x() << " " << tr(arw.p[2].y(), dim) << " a"
 				   << endl;
 			}
 
@@ -146,7 +142,7 @@ static void edges(Graph *graph, wofstream &fs)
 	}
 }
 
-static void vertexes(Graph *graph, wofstream &fs)
+void PsGraphOutput::vertexes(Graph *graph, wofstream &fs)
 {
 	Color color;
 	int fontSize = -1;
@@ -180,7 +176,7 @@ static void vertexes(Graph *graph, wofstream &fs)
 		wstring text(v->text());
 		escape(text);
 
-		c = OutputProvider::vertexTextPosition(c, (float)v->size());
+		c = vertexTextPosition(c, (float)v->size());
 		fs << "(" << text << ") "
 		   << c.x() << " " << tr(c.y(), dim) << " d" << endl;
 	}
