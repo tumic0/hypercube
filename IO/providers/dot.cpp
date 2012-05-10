@@ -415,6 +415,8 @@ void DotGraphInput::idStatement(idSet &subgraph)
 		case ID:
 		case RBRC:
 		case SEMICOLON:
+		case SUBGRAPH:
+		case LBRC:
 			v = addVertex(vertex);
 			setVertexAttributes(v, _nodeAttributes);
 			subgraph.insert(vertex);
