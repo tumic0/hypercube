@@ -64,7 +64,7 @@ void PsGraphOutput::prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
 
 	fs << "/e {newpath moveto lineto stroke} def" << endl
 	   << "/a {newpath moveto lineto lineto closepath fill} def" << endl
-	   << "/v {newpath arc closepath fill} def" << endl
+	   << "/v {newpath 0 360 arc closepath fill} def" << endl
 	   << "/d {moveto show} def" << endl
 	   << "/f {font findfont exch scalefont setfont} def" << endl
 	   << "/lw {setlinewidth} def" << endl
@@ -162,7 +162,7 @@ void PsGraphOutput::vertexes(Graph *graph, wofstream &fs)
 		}
 
 		fs << c.x() << " " << tr(c.y(), dim) << " " << v->size() / 2.0
-		   << " 0 360 v" << endl;
+		   << " v" << endl;
 
 
 		if (v->fontSize() == 0)
