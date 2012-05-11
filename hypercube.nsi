@@ -63,7 +63,7 @@ Section "Hypercube (required)" SEC_GUI_APP
   ; Write the uninstall keys for Windows
   WriteRegStr HKCU "${REGENTRY}" "DisplayName" "Hypercube"
   WriteRegStr HKCU "${REGENTRY}" "Publisher" "Martin Tuma"
-  WriteRegStr HKCU "${REGENTRY}" "DisplayVersion" "1.0.1"
+  WriteRegStr HKCU "${REGENTRY}" "DisplayVersion" "1.0.2"
   WriteRegStr HKCU "${REGENTRY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
   WriteRegDWORD HKCU "${REGENTRY}" "NoModify" 1
   WriteRegDWORD HKCU "${REGENTRY}" "NoRepair" 1
@@ -96,6 +96,13 @@ Section "QT libs" SEC_QT
  
 SectionEnd
 
+Section "MSVC runtime" SEC_MSVC
+
+  File "msvcp100.dll"
+  File "msvcr100.dll"
+
+SectionEnd
+
 ;--------------------------------
 
 ; Uninstaller
@@ -126,6 +133,8 @@ SectionEnd
 ;Language strings
 LangString DESC_QT ${LANG_ENGLISH} \
   "QT Library. Unselct only if you have QT already installed!"
+LangString DESC_MSVC ${LANG_ENGLISH} \
+  "Visual C++ 2010 runtime components. Unselct only if you have the runtime already installed!"
 LangString DESC_GUI_APP ${LANG_ENGLISH} \
   "Hypercube application"
 LangString DESC_CLI_APP ${LANG_ENGLISH} \
@@ -134,6 +143,7 @@ LangString DESC_CLI_APP ${LANG_ENGLISH} \
 ;Assign language strings to sections
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_QT} $(DESC_QT)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_MSVC} $(DESC_MSVC) 
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_GUI_APP} $(DESC_GUI_APP)
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_CLI_APP} $(DESC_CLI_APP)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
