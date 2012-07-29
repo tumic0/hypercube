@@ -4,27 +4,27 @@
 <context>
     <name>ColorComboBox</name>
     <message>
-        <location filename="../GUI/colorcombobox.cpp" line="33"/>
+        <location filename="../GUI/colorcombobox.cpp" line="11"/>
         <source>More...</source>
         <translation>Další...</translation>
     </message>
     <message>
-        <location filename="../GUI/colorcombobox.cpp" line="35"/>
+        <location filename="../GUI/colorcombobox.cpp" line="13"/>
         <source>Black</source>
         <translation>Černá</translation>
     </message>
     <message>
-        <location filename="../GUI/colorcombobox.cpp" line="36"/>
+        <location filename="../GUI/colorcombobox.cpp" line="14"/>
         <source>Red</source>
         <translation>Červená</translation>
     </message>
     <message>
-        <location filename="../GUI/colorcombobox.cpp" line="37"/>
+        <location filename="../GUI/colorcombobox.cpp" line="15"/>
         <source>Green</source>
         <translation>Zelená</translation>
     </message>
     <message>
-        <location filename="../GUI/colorcombobox.cpp" line="38"/>
+        <location filename="../GUI/colorcombobox.cpp" line="16"/>
         <source>Blue</source>
         <translation>Modrá</translation>
     </message>
@@ -32,258 +32,275 @@
 <context>
     <name>GUI</name>
     <message>
-        <location filename="../GUI/gui.cpp" line="75"/>
+        <location filename="../GUI/gui.cpp" line="65"/>
         <source>Exit</source>
         <translation>Konec</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="79"/>
-        <location filename="../GUI/gui.cpp" line="427"/>
+        <location filename="../GUI/gui.cpp" line="69"/>
+        <location filename="../GUI/gui.cpp" line="437"/>
         <source>About Hypercube</source>
         <translation>O Hypercube</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="81"/>
+        <location filename="../GUI/gui.cpp" line="71"/>
         <source>About Qt</source>
         <translation>O Qt</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="86"/>
+        <location filename="../GUI/gui.cpp" line="76"/>
+        <location filename="../GUI/gui.cpp" line="448"/>
         <source>Open file</source>
         <translation>Otevřít soubor</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="89"/>
+        <location filename="../GUI/gui.cpp" line="79"/>
+        <location filename="../GUI/gui.cpp" line="505"/>
         <source>Save file</source>
         <translation>Uložit soubor</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="93"/>
+        <location filename="../GUI/gui.cpp" line="83"/>
         <source>Save as</source>
         <translation>Uložit jako</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="97"/>
+        <location filename="../GUI/gui.cpp" line="87"/>
         <source>Save all</source>
         <translation>Uložit vše</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="101"/>
+        <location filename="../GUI/gui.cpp" line="91"/>
         <source>Close file</source>
         <translation>Zavřít soubor</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="107"/>
+        <location filename="../GUI/gui.cpp" line="97"/>
         <source>Transform graph</source>
         <translation>Transformovat graf</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="112"/>
+        <location filename="../GUI/gui.cpp" line="102"/>
         <source>Reload graph</source>
         <translation>Znovu načíst graf</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="131"/>
-        <location filename="../GUI/gui.cpp" line="154"/>
+        <location filename="../GUI/gui.cpp" line="121"/>
+        <location filename="../GUI/gui.cpp" line="144"/>
         <source>File</source>
         <translation>Soubor</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="139"/>
-        <location filename="../GUI/gui.cpp" line="160"/>
-        <location filename="../GUI/gui.cpp" line="315"/>
+        <location filename="../GUI/gui.cpp" line="129"/>
+        <location filename="../GUI/gui.cpp" line="150"/>
+        <location filename="../GUI/gui.cpp" line="323"/>
         <source>Graph</source>
         <translation>Graf</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="143"/>
-        <location filename="../GUI/gui.cpp" line="164"/>
+        <location filename="../GUI/gui.cpp" line="133"/>
+        <location filename="../GUI/gui.cpp" line="154"/>
         <source>Projections</source>
         <translation>Projekce</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="147"/>
+        <location filename="../GUI/gui.cpp" line="137"/>
         <source>Help</source>
         <translation>Nápověda</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="177"/>
+        <location filename="../GUI/gui.cpp" line="173"/>
         <source>Graph settings</source>
         <translation>Nastavení grafu</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="226"/>
+        <location filename="../GUI/gui.cpp" line="175"/>
+        <source>Miscellaneous</source>
+        <translation>Různé</translation>
+    </message>
+    <message>
+        <location filename="../GUI/gui.cpp" line="210"/>
+        <source>CLI arguments</source>
+        <translation>argumenty pro CLI</translation>
+    </message>
+    <message>
+        <location filename="../GUI/gui.cpp" line="217"/>
+        <source>Escape special characters</source>
+        <translation>Escapovat speciální znaky</translation>
+    </message>
+    <message>
+        <location filename="../GUI/gui.cpp" line="240"/>
         <source>Graph layout</source>
         <translation>Rozvržení grafu</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="240"/>
+        <location filename="../GUI/gui.cpp" line="254"/>
         <source>Node distribution:</source>
         <translation>Vzdálenost uzlů:</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="241"/>
+        <location filename="../GUI/gui.cpp" line="255"/>
         <source>Edge length:</source>
         <translation>Délka hran:</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="242"/>
+        <location filename="../GUI/gui.cpp" line="256"/>
         <source>Edge crossings:</source>
         <translation>Křížení hran:</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="246"/>
+        <location filename="../GUI/gui.cpp" line="260"/>
         <source>SA parameters</source>
         <translation>Paramatry SA</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="263"/>
+        <location filename="../GUI/gui.cpp" line="277"/>
         <source>Initial temperature:</source>
         <translation>Počáteční teplota:</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="264"/>
+        <location filename="../GUI/gui.cpp" line="278"/>
         <source>Final temperature:</source>
         <translation>Koncová teplota:</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="265"/>
+        <location filename="../GUI/gui.cpp" line="279"/>
         <source>Cooling factor:</source>
         <translation>Koeficient ochlazování:</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="266"/>
+        <location filename="../GUI/gui.cpp" line="280"/>
         <source>Steps:</source>
         <translation>Počet iterací:</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="270"/>
+        <location filename="../GUI/gui.cpp" line="284"/>
         <source>Debug</source>
         <translation>Ladící výstup</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="271"/>
+        <location filename="../GUI/gui.cpp" line="285"/>
         <source>Create debug output</source>
         <translation>Vytvořit ladící výstup</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="296"/>
+        <location filename="../GUI/gui.cpp" line="308"/>
+        <source>Directed graph</source>
+        <translation>Orientovaný graf</translation>
+    </message>
+    <message>
+        <location filename="../GUI/gui.cpp" line="340"/>
         <source>Colored edges</source>
         <translation>Obarvené hrany</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="323"/>
+        <location filename="../GUI/gui.cpp" line="326"/>
         <source>Width:</source>
         <translation>Šířka:</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="324"/>
+        <location filename="../GUI/gui.cpp" line="327"/>
         <source>Height:</source>
         <translation>Výška:</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="367"/>
-        <location filename="../GUI/gui.cpp" line="372"/>
+        <location filename="../GUI/gui.cpp" line="373"/>
+        <location filename="../GUI/gui.cpp" line="380"/>
         <source>Size:</source>
         <translation>Velikost:</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="368"/>
-        <location filename="../GUI/gui.cpp" line="373"/>
+        <location filename="../GUI/gui.cpp" line="374"/>
+        <location filename="../GUI/gui.cpp" line="381"/>
         <source>Font size:</source>
         <translation>Velikost písma:</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="369"/>
-        <location filename="../GUI/gui.cpp" line="374"/>
+        <location filename="../GUI/gui.cpp" line="375"/>
+        <location filename="../GUI/gui.cpp" line="382"/>
         <source>Color:</source>
         <translation>Barva:</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="362"/>
+        <location filename="../GUI/gui.cpp" line="368"/>
         <source>Edges</source>
         <translation>Hrany</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="118"/>
+        <location filename="../GUI/gui.cpp" line="108"/>
         <source>Project appearance</source>
         <translation>Promítnout vzhled</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="123"/>
+        <location filename="../GUI/gui.cpp" line="113"/>
         <source>Project layout</source>
         <translation>Promítnout rozvržení</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="178"/>
+        <location filename="../GUI/gui.cpp" line="174"/>
         <source>Algorithm settings</source>
         <translation>Nastavení algoritmu</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="179"/>
-        <source>I/O settings</source>
-        <translation>Nastavení I/O</translation>
-    </message>
-    <message>
-        <location filename="../GUI/gui.cpp" line="190"/>
+        <location filename="../GUI/gui.cpp" line="180"/>
         <source>Encoding</source>
         <translation>Kódování</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="201"/>
+        <location filename="../GUI/gui.cpp" line="192"/>
         <source>Input encoding:</source>
         <translation>Vstupní kódování:</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="205"/>
+        <location filename="../GUI/gui.cpp" line="198"/>
         <source>Display</source>
         <translation>Zobrazení</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="207"/>
+        <location filename="../GUI/gui.cpp" line="200"/>
         <source>Use antialiasing</source>
         <translation>Vyhlazování hran</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="294"/>
+        <location filename="../GUI/gui.cpp" line="339"/>
         <source>Show edge values</source>
         <translation>Zobrazit ohodnocení hran</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="295"/>
+        <location filename="../GUI/gui.cpp" line="338"/>
         <source>Show vertex IDs</source>
-        <translation>Zobrazit identifikátory uzlů</translation>
+        <translation>Zobrazit ID uzlů</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="361"/>
+        <location filename="../GUI/gui.cpp" line="367"/>
         <source>Vertexes</source>
         <translation>Uzly</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="429"/>
+        <location filename="../GUI/gui.cpp" line="439"/>
         <source>Graph visualizing tool</source>
         <translation>Nástroj na vizualizaci grafů</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="430"/>
+        <location filename="../GUI/gui.cpp" line="440"/>
         <source>Hypercube is distributed under the terms of the GNU General Public License version 3. For more info about Hypercube visit the project homepage at</source>
         <translation>Program Hypercube je šířen za podmínek GNU General Public License verze 3. Více informací o Hypercube naleznete na domovské stránce projektu na adrese</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="450"/>
-        <location filename="../GUI/gui.cpp" line="504"/>
-        <location filename="../GUI/gui.cpp" line="547"/>
+        <location filename="../GUI/gui.cpp" line="466"/>
+        <location filename="../GUI/gui.cpp" line="522"/>
+        <location filename="../GUI/gui.cpp" line="567"/>
         <source>Error</source>
         <translation>Chyba</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="450"/>
-        <location filename="../GUI/gui.cpp" line="548"/>
+        <location filename="../GUI/gui.cpp" line="466"/>
+        <location filename="../GUI/gui.cpp" line="568"/>
         <source>Error loading graph</source>
         <translation>Chyba při nčítání grafu</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="505"/>
+        <location filename="../GUI/gui.cpp" line="523"/>
         <source>Error saving graph</source>
         <translation>Chyba při ukládání grafu</translation>
     </message>
@@ -291,27 +308,27 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../GUI/gui.cpp" line="913"/>
+        <location filename="../GUI/gui.cpp" line="1035"/>
         <source>Error opening file</source>
         <translation>Chyba při otevírání soubou</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="915"/>
+        <location filename="../GUI/gui.cpp" line="1037"/>
         <source>Error reading file</source>
         <translation>Chyba při čtení souboru</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="917"/>
+        <location filename="../GUI/gui.cpp" line="1039"/>
         <source>Error writing file</source>
         <translation>Chyba při zápisu souboru</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="919"/>
+        <location filename="../GUI/gui.cpp" line="1041"/>
         <source>File format error</source>
         <translation>Chybný formát souboru</translation>
     </message>
     <message>
-        <location filename="../GUI/gui.cpp" line="921"/>
+        <location filename="../GUI/gui.cpp" line="1043"/>
         <source>Unknown error</source>
         <translation>Neznámá chyba</translation>
     </message>

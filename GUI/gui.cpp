@@ -325,7 +325,7 @@ void GUI::createGraphProperties()
 	QFormLayout *graphLayout = new QFormLayout;
 	graphLayout->addRow(tr("Width:"), _graphWidth);
 	graphLayout->addRow(tr("Height:"), _graphHeight);
-	graphLayout->addWidget(_directedGraph);
+	graphLayout->addRow(_directedGraph);
 	graphBox->setLayout(graphLayout);
 
 
@@ -373,14 +373,14 @@ void GUI::createGraphProperties()
 	edgeLayout->addRow(tr("Size:"), _edgeSize);
 	edgeLayout->addRow(tr("Font size:"), _edgeFontSize);
 	edgeLayout->addRow(tr("Color:"), _edgeColor);
-	edgeLayout->addWidget(_edgeValues);
-	edgeLayout->addWidget(_coloredEdges);
+	edgeLayout->addRow(_edgeValues);
+	edgeLayout->addRow(_coloredEdges);
 	edgeBox->setLayout(edgeLayout);
 
 	vertexLayout->addRow(tr("Size:"), _vertexSize);
 	vertexLayout->addRow(tr("Font size:"), _vertexFontSize);
 	vertexLayout->addRow(tr("Color:"), _vertexColor);
-	vertexLayout->addWidget(_vertexIDs);
+	vertexLayout->addRow(_vertexIDs);
 	vertexBox->setLayout(vertexLayout);
 
 
@@ -398,6 +398,11 @@ void GUI::createViews()
 {
 	_viewTab = new QTabWidget;
 
+#if QT_VERSION >= 0x040500
+	_viewTab->setTabsClosable(true);
+	connect(_viewTab, SIGNAL(tabCloseRequested(int)),
+	  this, SLOT(tabClosed(int)));
+#endif
 	connect(_viewTab, SIGNAL(currentChanged(int)),
 	  this, SLOT(tabChanged(int)));
 }
@@ -413,6 +418,25 @@ void GUI::createStatusBar()
 	statusBar()->setSizeGripEnabled(false);
 }
 
+void GUI::checkActions()
+{
+	int cnt = _viewTab->count();
+	if (cnt == 0) {
+		_fileActionGroup->setEnabled(false);
+		_graphActionGroup->setEnabled(false);
+	} else if (cnt == 1)
+		_projectActionGroup->setEnabled(false);
+}
+
+void GUI::tabClosed(int current)
+{
+	GraphTab* tab = (GraphTab*)(_viewTab->widget(current));
+
+	_viewTab->removeTab(current);
+	delete tab;
+
+	checkActions();
+}
 
 void GUI::tabChanged(int current)
 {
@@ -545,12 +569,7 @@ void GUI::closeFile()
 	_viewTab->removeTab(_viewTab->indexOf(tab));
 	delete tab;
 
-	int cnt = _viewTab->count();
-	if (cnt == 0) {
-		_fileActionGroup->setEnabled(false);
-		_graphActionGroup->setEnabled(false);
-	} else if (cnt == 1)
-		_projectActionGroup->setEnabled(false);
+	checkActions();
 }
 
 void GUI::transformGraph()

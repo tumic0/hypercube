@@ -179,11 +179,6 @@ void Graph::updateMargins(size_t vid)
 	for (size_t i = 0; i < _edges.size(); i++)
 		m = max(m, _edges[i]->margin());
 
-	if (m != Margin()) {
-		m.setRb(m.rb() + Coordinates(0, _vertexes[vid]->size() / 2));
-		m.setLt(m.lt() - Coordinates(0, _vertexes[vid]->size() / 2));
-	}
-
 	m = max(m, _vertexes[vid]->margin());
 
 	_margins[vid] = m;

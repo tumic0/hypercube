@@ -36,11 +36,14 @@ void Vertex::setFontSize(int size)
 
 void Vertex::computeMargin()
 {
-	_margin.setRb(
-	  Coordinates(
-		_size + (int)ceil(AVG_CHAR_WIDTH * _fontSize * _text.length()),
-		MAX(_size, _size / 2 + _fontSize))
-	  );
+	if (_fontSize)
+		_margin.setRb(Coordinates(
+			_size + (int)ceil(AVG_CHAR_WIDTH * _fontSize * _text.length()),
+			MAX(_size, _size / 2 + _fontSize)
+		));
+	else
+		_margin.setRb(Coordinates(_size, _size));
+
 	_graph->updateMargins(_id);
 }
 

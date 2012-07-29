@@ -60,6 +60,7 @@ private slots:
 	void setSpecialsEscaping();
 
 	void tabChanged(int current);
+	void tabClosed(int current);
 	void zoom(qreal zoom);
 
 private:
@@ -73,6 +74,8 @@ private:
 	void createSAProperties();
 	void createGraphProperties();
 	void createMiscProperties();
+
+	void checkActions();
 
 	void getMiscProperties(GraphTab *tab);
 	void getSAProperties(GraphTab *tab);
