@@ -5,7 +5,6 @@
 #include "CORE/vertex.h"
 #include "CORE/edge.h"
 #include "CORE/line.h"
-#include "CORE/misc.h"
 #include "IO/encodings/utf8cvt.h"
 #include "svg.h"
 

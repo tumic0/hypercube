@@ -1,6 +1,5 @@
 #include <QPainter>
 #include <QtCore/qmath.h>
-#include "CORE/misc.h"
 #include "CORE/config.h"
 #include "vertexitem.h"
 #include "edgeitem.h"

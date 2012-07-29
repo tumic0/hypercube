@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <iomanip>
-#include "misc.h"
 
 
 class Coordinates
