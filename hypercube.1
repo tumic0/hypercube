@@ -1,0 +1,229 @@
+.TH HYPERCUBE 1 "2012-11-03" "1.0.3"
+.SH NAME
+Hypercube \- Graph visualization tool
+.SH SYNOPSIS
+.B hypercube-cli
+.RI [ OPTIONS ]
+.I FILE
+.br
+.B hypercube
+.RI [ FILE... ]
+.SH DESCRIPTION
+Hypercube draws text based graph representations as vector images. A simulated
+annealing based algorithm allowing layout parametrization is used to lay out
+the graph.
+.B hypercube-cli
+is a command line utility version of Hypercube,
+.B hypercube
+a GUI application.
+.PP
+Graphs can be represented as DOT files, GML files, edge lists or adjancency
+matrixes and can be visualized to SVG or EPS images. For info on the file
+formats, see the
+.B INPUT FORMATS
+section.
+.SH OPTIONS
+.SS "Generic Program Information"
+.TP
+.BR \-h
+Print a short usage info and exit.
+.TP
+.BR \-v
+Print the program version and exit.
+.SS "Input and Output Control"
+.TP
+.BI \-o " FILE"
+Set output file to
+.IR FILE .
+If no output file name is set, it is generated from the input file by replacing
+its suffix with the output format suffix.
+.TP
+.BI \-f " FORMAT"
+Set output format to
+.IR FORMAT .
+Supported formats are
+.B svg
+and
+.BR eps .
+Default format is svg.
+.TP
+.BI \-e " ENCODING"
+Set input file encoding to
+.IR ENCODING .
+Supported encodings are
+.B iso8859-1\fR,\fP iso8859-2\fR,\fP koi8-r\fR,\fP cp1250 
+and
+.BR utf-8 .
+Default encoding is iso8859\-1.
+.SS "Graph Appearance"
+.TP
+.BI \-s " SIZE"
+Set image size to
+.IR SIZE .
+The image size is expected as
+.BR width,height .
+.TP
+.BR \-d
+Directed graph. If set the graph edges are drawn as arrows displaying the edge
+orientation.
+.TP
+.BI \-vc " COLOR"
+Set vertex color to
+.IR COLOR .
+The color format is
+.BR #RRGGBB .
+.TP
+.BI \-ec " COLOR"
+Set edge color to
+.IR COLOR .
+The color format is
+.BR #RRGGBB .
+.TP
+.BI \-vs " SIZE"
+Set vertex size to
+.IR SIZE .
+.TP
+.BI \-es " SIZE"
+Set edge size to
+.IR SIZE .
+.TP
+.BI \-vf " SIZE"
+Set vertex ID font size to
+.IR SIZE .
+To disable showing vertex IDs, set their font size to 0.
+.TP
+.BI \-ef " SIZE"
+Set edge value font size to
+.IR SIZE .
+To disable showing edge values, set their font size to 0.
+.TP
+.BR \-c
+Colorize graph. Asign a unique color to every uniqe edge value. When this option
+is set, the
+.B \-ec
+option is ommited.
+.PP
+All sizes are given in output format units \- pixels for SVG and points for EPS.
+.SS "Graph Layout"
+.TP
+.BI \-nd " DIST"
+Set node distribution factor to
+.IR DIST .
+.TP
+.BI \-el " LENGTH"
+Set edge length factor to
+.IR LENGTH .
+.TP
+.BI \-ec " CROSSINGS"
+Set edge crossings factor to
+.IR CROSSINGS .
+.SS "Algorithm Settings"
+.TP
+.BI \-it " TEMP"
+Set initial temerature to
+.IR TEMP .
+.TP
+.BI \-ft " TEMP"
+Set final temerature to
+.IR TEMP .
+.TP
+.BI \-cf " FACTOR"
+Set cooling factor to
+.IR FACTOR .
+.TP
+.BI \-ns " STEPS"
+Set number of iteration steps to
+.IR STEPS .
+.SH "INPUT FORMATS"
+.SS "DOT"
+DOT file format as described in the official Graphviz documentation. Hypercube
+parses the complete language, but the only used attribute is the label attribute
+(for both edges and nodes).
+.PP
+.nf
+Digraph {
+    0 -> 1 [label = 1];
+    0 -> 3 [label = 2];
+    0 -> 5 [label = 3];
+    1 -> 2 [label = 4];
+    1 -> 6 [label = 5];
+    2 -> 3 [label = 6];
+    2 -> 7 [label = 7];
+    3 -> 4 [label = 8];
+    4 -> 5 [label = 9];
+    4 -> 7 [label = 10];
+    5 -> 6 [label = 11];
+    6 -> 7 [label = 12];
+}
+.fi
+.SS "GML"
+GML file format as described in the official documentation. Except the mandatory
+keys id, target and source, the label key is also supported.
+.PP
+.nf
+graph [
+  node [id 0]
+  node [id 1]
+  node [id 2]
+  node [id 3]
+  node [id 4]
+  node [id 5]
+  node [id 6]
+  node [id 7]
+
+  edge [label "1" source 0 target 1]
+  edge [label "2" source 0 target 3]
+  edge [label "3" source 0 target 5]
+  edge [label "4" source 1 target 2]
+  edge [label "5" source 1 target 6]
+  edge [label "6" source 2 target 3]
+  edge [label "7" source 2 target 7]
+  edge [label "8" source 3 target 4]
+  edge [label "9" source 4 target 5]
+  edge [label "10" source 4 target 7]
+  edge [label "11" source 5 target 6]
+  edge [label "12" source 6 target 7]
+]
+.fi
+.SS "Edge list"
+Each line of the input file represents an edge entry. The first value is the
+edge's start vertex ID, the second value the end vertex ID and the optional
+third value is the edge label (value). The values are strings separated by an
+arbitrary amount of whitespace. Quoted strings can be used, if whitespace
+occurs in the value.
+.PP
+.nf
+0 1 1
+0 3 2
+0 5 3
+1 2 4
+1 6 5
+2 3 6
+2 7 7
+3 4 8
+4 5 9
+4 7 10
+5 6 11
+6 7 12
+.fi
+.SS "Adjacency matrix"
+The adjacency matrix representation starts with a single number on a separate
+line representing the number of vertexes of the graph. Starting with the next
+line, the adjacency matrix itself follows. Numbers greater than 0 are taken as
+edges with the given edge value.
+.PP
+.nf
+8
+0 1 0 2 0 3 0 0
+0 0 4 0 0 0 5 0
+0 0 0 6 0 0 0 7
+0 0 0 0 8 0 0 0
+0 0 0 0 0 9 0 10
+0 0 0 0 0 0 11 0
+0 0 0 0 0 0 0 12
+0 0 0 0 0 0 0 0
+.fi
+.SH SEE ALSO
+dot(1), eps2pdf(1), convert(1)
+.SH AUTHOR
+Martin Tuma (tumic@cbox.cz)
