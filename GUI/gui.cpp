@@ -164,6 +164,7 @@ void GUI::createProperties()
 
 	_properties = new QToolBox;
 
+	_properties->setBackgroundRole(QPalette::Window);
 	_properties->setSizePolicy(QSizePolicy(QSizePolicy::Maximum,
 	  QSizePolicy::Ignored));
 	_properties->setMinimumWidth(qMax(_MiscProperties->sizeHint().width(),
