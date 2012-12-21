@@ -21,6 +21,9 @@ class InputProvider : public IO
 public:
 	virtual Error readGraph(Graph *graph, const char *fileName,
 	  Encoding *encoding) = 0;
+
+protected:
+	static bool stringCaseCmp(const std::wstring &s1, const std::wstring &s2);
 };
 
 class OutputProvider : public IO

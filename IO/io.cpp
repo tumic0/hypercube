@@ -63,3 +63,15 @@ void OutputProvider::stringReplace(wstring &source, const wstring &find,
 		j += replace.length();
 	}
 }
+
+bool InputProvider::stringCaseCmp(const wstring &s1, const wstring &s2)
+{
+	if (s1.length() != s2.length())
+		return false;
+
+	for (size_t i = 0; i < s1.length(); i++)
+		if (tolower(s1[i]) != tolower(s2[i]))
+			return false;
+
+	return true;
+}

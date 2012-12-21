@@ -1,5 +1,6 @@
 #include "providers/matrix.h"
 #include "providers/list.h"
+#include "providers/graphml.h"
 #include "providers/dot.h"
 #include "providers/gml.h"
 #include "providers/svg.h"
@@ -19,6 +20,7 @@ OutputProvider* outputProviders[] = {
 };
 
 InputProvider* inputProviders[] = {
+	new GraphmlGraphInput,
 	new DotGraphInput,
 	new GmlGraphInput,
 	new ListGraphInput,
