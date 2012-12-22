@@ -1,5 +1,6 @@
 #include <cstring>
 #include <cerrno>
+#include "IO/modules.h"
 #include "IO/encodings/utf8cvt.h"
 #include "graphml.h"
 
@@ -19,6 +20,15 @@ const GraphmlGraphInput::Relation GraphmlGraphInput::relations[] = {
 	{L"node", L"graph"},
 	{L"edge", L"graph"}
 };
+
+
+static std::wstring s2w(const string &s)
+{
+	std::wstring w(s.length(), L' ');
+	std::copy(s.begin(), s.end(), w.begin());
+
+	return w;
+}
 
 
 Vertex* GraphmlGraphInput::addVertex(const wstring &id)
@@ -55,6 +65,52 @@ void GraphmlGraphInput::checkRelation(const wstring &node, const wstring &parent
 				error();
 			return;
 		}
+	}
+}
+
+void GraphmlGraphInput::setEncoding(const wstring &encoding)
+{
+	codecvt<wchar_t,char,mbstate_t> *cvt = 0;
+
+	for (Encoding **ep = encodings; *ep; ep++) {
+		if (stringCaseCmp(encoding, s2w((*ep)->name()))) {
+			cvt = (*ep)->cvt();
+			break;
+		}
+	}
+	if (!cvt) {
+		cerr << "Unsupported encoding. Using UTF-8." << endl;
+		cvt = new utf8cvt;
+	}
+
+	locale lc(std::locale(), cvt);
+	_fs.imbue(lc);
+}
+
+void GraphmlGraphInput::setAttribute(const wstring &attr, const wstring &value)
+{
+	if (attr == L"id")
+		_attributes.id = value;
+	if (attr == L"source")
+		_attributes.source = value;
+	if (attr == L"target")
+		_attributes.target = value;
+	if (attr == L"encoding")
+		_attributes.encoding = value;
+}
+
+void GraphmlGraphInput::handleElement(const wstring &element)
+{
+	Vertex *vertex;
+	Edge *edge;
+
+	if (element == L"node") {
+		vertex = addVertex(_attributes.id);
+		vertex->setText(_attributes.id);
+	}
+	if (element == L"edge") {
+		edge = addEdge(_attributes.source, _attributes.target);
+		edge->setText(_attributes.id);
 	}
 }
 
@@ -124,7 +180,7 @@ void GraphmlGraphInput::nextToken()
 					_token = EOI;
 					return;
 				}
-				error();
+				_token = DATA;
 				return;
 
 			case 1:
@@ -207,7 +263,9 @@ void GraphmlGraphInput::data()
 		switch (_token) {
 			case LT:
 			case ERROR:
+				return;
 			case EOI:
+				error();
 				return;
 			default:
 				nextToken();
@@ -228,12 +286,7 @@ void GraphmlGraphInput::attribute()
 	if (_token == ERROR)
 		return;
 
-	if (attr == L"id")
-		_attributes.id = value;
-	if (attr == L"source")
-		_attributes.source = value;
-	if (attr == L"target")
-		_attributes.target = value;
+	setAttribute(attr, value);
 }
 
 bool GraphmlGraphInput::attributes()
@@ -275,14 +328,13 @@ void GraphmlGraphInput::nextItem(const wstring &parent)
 			nextToken();
 			elementType(parent);
 			break;
-		case IDENT:
+		case EOI:
+		case ERROR:
+			break;
+		default:
 			data();
 			compare(LT);
 			break;
-		case EOI:
-			break;
-		default:
-			error();
 	}
 }
 
@@ -290,32 +342,21 @@ void GraphmlGraphInput::element(const wstring &parent)
 {
 	bool closed;
 	wstring start, end;
-	Vertex *vertex;
-	Edge *edge;
-
 
 	start = _string;
 	compare(IDENT);
 	checkRelation(start, parent);
 	closed = attributes();
 	compare(GT);
-
 	if (_token == ERROR)
 		return;
 
-	if (start == L"node") {
-		vertex = addVertex(_attributes.id);
-		vertex->setText(_attributes.id);
-	}
-	if (start == L"edge") {
-		edge = addEdge(_attributes.source, _attributes.target);
-		edge->setText(_attributes.id);
-	}
+	handleElement(start);
 
 	if (closed)
 		return;
 
-	while (_token == LT || _token == IDENT)
+	while (_token != ERROR && _token != SLASH)
 		nextItem(start);
 
 	compare(SLASH);
@@ -333,10 +374,9 @@ void GraphmlGraphInput::xmlAttributes()
 		switch (_token) {
 			case QM:
 			case ERROR:
-			case EOI:
 				return;
 			default:
-				nextToken();
+				attribute();
 		}
 	}
 }
@@ -363,10 +403,12 @@ void GraphmlGraphInput::xml()
 	switch (_token) {
 		case QM:
 			xmlProlog();
+			setEncoding(_attributes.encoding);
 			compare(LT);
 			element(L"");
 			break;
 		case IDENT:
+			setEncoding(_attributes.encoding);
 			element(L"");
 			break;
 		default:
@@ -378,6 +420,7 @@ bool GraphmlGraphInput::parse()
 {
 	_line = 1;
 	_token = START;
+	_attributes.encoding = L"utf-8";
 
 	nextToken();
 	xml();
@@ -398,9 +441,6 @@ IO::Error GraphmlGraphInput::readGraph(Graph *graph, const char *fileName,
 	IO::Error err = Ok;
 
 	_graph = graph;
-
-	locale lc(std::locale(), new utf8cvt);
-	_fs.imbue(lc);
 
 	_fs.open(fileName);
 	if (!_fs) {

@@ -20,6 +20,7 @@ public:
 
 		STRING,		/* Quoted string */
 		IDENT,		/* Identificator (unknown) */
+		DATA,		/* Character data */
 
 		LT,			/* '<' */
 		GT,			/* '>' */
@@ -38,11 +39,16 @@ public:
 		std::wstring id;
 		std::wstring source;
 		std::wstring target;
+		std::wstring encoding;
 	};
 
 	Vertex *addVertex(const std::wstring &id);
 	Edge *addEdge(const std::wstring &source, const std::wstring &target);
 
+	void setAttribute(const std::wstring &attr, const std::wstring &value);
+	void handleElement(const std::wstring &element);
+
+	void setEncoding(const std::wstring &encoding);
 	void checkRelation(const std::wstring &node, const std::wstring &parent);
 
 	void error();
