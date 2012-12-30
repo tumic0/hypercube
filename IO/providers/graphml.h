@@ -28,6 +28,8 @@ public:
 		AMP,		/* '&' */
 		SLASH,		/* '/' */
 		QM,			/* '?' */
+		EXCL,		/* '!' */
+		MINUS		/* '-' */
 	};
 
 	struct Relation {
@@ -45,6 +47,7 @@ public:
 	Vertex *addVertex(const std::wstring &id);
 	Edge *addEdge(const std::wstring &source, const std::wstring &target);
 
+	void clearAttributes();
 	void setAttribute(const std::wstring &attr, const std::wstring &value);
 	void handleElement(const std::wstring &element);
 
@@ -55,11 +58,14 @@ public:
 	void nextToken();
 	void compare(Token token);
 	void data();
+	void commentData();
+	void comment();
 	void attribute();
 	bool attributes();
 	void nextItem(const std::wstring &parent);
 	void elementType(const std::wstring &parent);
 	void element(const std::wstring &parent);
+	void rootElement();
 	void xmlAttributes();
 	void xmlProlog();
 	void xml();

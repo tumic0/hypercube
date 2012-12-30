@@ -1,4 +1,4 @@
-.TH HYPERCUBE 1 "2012-11-10" "1.0.4"
+.TH HYPERCUBE 1 "2012-12-30" "1.1.0"
 .SH NAME
 Hypercube \- Graph visualization tool
 .SH SYNOPSIS
@@ -17,9 +17,9 @@ is a command line utility version of Hypercube,
 .B hypercube
 a GUI application.
 .PP
-Graphs can be represented as DOT files, GML files, edge lists or adjancency
-matrixes and can be visualized to SVG or EPS images. For info on the file
-formats, see the
+Graphs can be represented as DOT files, GML files, GraphML files, edge lists or
+adjancency matrixes and can be visualized to SVG or EPS images. For info on the
+file formats, see the
 .B INPUT FORMATS
 section.
 .SH OPTIONS
@@ -184,6 +184,46 @@ graph [
   edge [label "11" source 5 target 6]
   edge [label "12" source 6 target 7]
 ]
+.fi
+.SS "GraphML"
+GraphML file format as described in the official documentation. Hypercube does
+not support nested graphs, hyperedges or ports. Also, all GraphML attributes
+(data elements) are ignored.
+.PP
+The input encoding is always taken from the xml declaration (with UTF\-8 as the
+default), setting the encoding using the
+.B \-e
+parameter is pointless for GraphML files.
+.PP
+.nf
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+     http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <graph id="G" edgedefault="undirected">
+    <node id="0"/>
+    <node id="1"/>
+    <node id="2"/>
+    <node id="3"/>
+    <node id="4"/>
+    <node id="5"/>
+    <node id="6"/>
+    <node id="7"/>
+    <edge source="0" target="1" id="1"/>
+    <edge source="0" target="3" id="2"/>
+    <edge source="0" target="5" id="3"/>
+    <edge source="1" target="2" id="4"/>
+    <edge source="1" target="6" id="5"/>
+    <edge source="2" target="3" id="6"/>
+    <edge source="2" target="7" id="7"/>
+    <edge source="3" target="4" id="8"/>
+    <edge source="4" target="5" id="9"/>
+    <edge source="4" target="7" id="10"/>
+    <edge source="5" target="6" id="11"/>
+    <edge source="6" target="7" id="12"/>
+  </graph>
+</graphml>
 .fi
 .SS "Edge list"
 Each line of the input file represents an edge entry. The first value is the

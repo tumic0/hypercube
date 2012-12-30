@@ -250,7 +250,7 @@ void GmlGraphInput::list(ValueType parent)
 					}
 					Vertex *v = addVertex(_nodeAttributes.id);
 					setVertexAttributes(v);
-					attributesClear();
+					clearAttributes();
 				}
 				if (type == EDGE) {
 					if (_edgeAttributes.source < 0
@@ -260,7 +260,7 @@ void GmlGraphInput::list(ValueType parent)
 					}
 					Edge *e = addEdge();
 					setEdgeAttributes(e);
-					attributesClear();
+					clearAttributes();
 				}
 
 				break;
@@ -278,13 +278,13 @@ bool GmlGraphInput::parse()
 {
 	_line = 1;
 	_token = START;
-	attributesClear();
+	clearAttributes();
 
 	nextToken();
 	list(UNKNOWN);
 
 	_vertexes.clear();
-	attributesClear();
+	clearAttributes();
 
 	if (_token == EOI)
 		return true;
@@ -340,7 +340,7 @@ Edge* GmlGraphInput::addEdge()
 	return _graph->addEdge(src, dst);
 }
 
-void GmlGraphInput::attributesClear()
+void GmlGraphInput::clearAttributes()
 {
 	_nodeAttributes.label.clear();
 	_nodeAttributes.id = -1;

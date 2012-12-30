@@ -99,18 +99,34 @@ void GraphmlGraphInput::setAttribute(const wstring &attr, const wstring &value)
 		_attributes.encoding = value;
 }
 
+void GraphmlGraphInput::clearAttributes()
+{
+	_attributes.id.clear();
+	_attributes.source.clear();
+	_attributes.target.clear();
+}
+
 void GraphmlGraphInput::handleElement(const wstring &element)
 {
 	Vertex *vertex;
 	Edge *edge;
 
 	if (element == L"node") {
+		if (_attributes.id.empty()) {
+			error();
+			return;
+		}
 		vertex = addVertex(_attributes.id);
 		vertex->setText(_attributes.id);
 	}
 	if (element == L"edge") {
+		if (_attributes.source.empty() || _attributes.target.empty()) {
+			error();
+			return;
+		}
 		edge = addEdge(_attributes.source, _attributes.target);
-		edge->setText(_attributes.id);
+		if (!_attributes.id.empty())
+			edge->setText(_attributes.id);
 	}
 }
 
@@ -143,8 +159,8 @@ void GraphmlGraphInput::nextToken()
 					break;
 				}
 				if (c == '<') {
-					state = 3;
-					break;
+					_token = LT;
+					return;
 				}
 				if (c == '>') {
 					_token = GT;
@@ -164,6 +180,14 @@ void GraphmlGraphInput::nextToken()
 				}
 				if (c == '?') {
 					_token = QM;
+					return;
+				}
+				if (c == '!') {
+					_token = EXCL;
+					return;
+				}
+				if (c == '-') {
+					_token = MINUS;
 					return;
 				}
 				if (isStartName(c)) {
@@ -201,50 +225,6 @@ void GraphmlGraphInput::nextToken()
 					_line++;
 				_string += c;
 				break;
-
-			case 3:
-				if (c == '!') {
-					state = 4;
-					break;
-				}
-				_fs.putback(c);
-				_token = LT;
-				return;
-
-			case 4:
-				if (c == '-') {
-					state = 5;
-					break;
-				}
-				error();
-
-			case 5:
-				if (c == '-') {
-					state = 6;
-					break;
-				}
-				error();
-
-			case 6:
-				if (c == '-')
-					state = 7;
-				if (c == '\n')
-					_line++;
-				break;
-
-			case 7:
-				if (c == '-')
-					state = 8;
-				else
-					state = 6;
-				break;
-
-			case 8:
-				if (c == '>')
-					state = 0;
-				else
-					state = 6;
-				break;
 		}
 	}
 }
@@ -273,6 +253,36 @@ void GraphmlGraphInput::data()
 	}
 }
 
+void GraphmlGraphInput::commentData()
+{
+	while (1) {
+		switch (_token) {
+			case MINUS:
+				nextToken();
+				if (_token == MINUS)
+					return;
+				break;
+			case ERROR:
+				return;
+			case EOI:
+				error();
+				return;
+			default:
+				nextToken();
+		}
+	}
+}
+
+void GraphmlGraphInput::comment()
+{
+	compare(EXCL);
+	compare(MINUS);
+	compare(MINUS);
+	commentData();
+	compare(MINUS);
+	compare(GT);
+}
+
 void GraphmlGraphInput::attribute()
 {
 	wstring attr, value;
@@ -291,6 +301,8 @@ void GraphmlGraphInput::attribute()
 
 bool GraphmlGraphInput::attributes()
 {
+	clearAttributes();
+
 	while (1) {
 		switch (_token) {
 			case SLASH:
@@ -315,6 +327,9 @@ void GraphmlGraphInput::elementType(const wstring &parent)
 			break;
 		case IDENT:
 			element(parent);
+			break;
+		case EXCL:
+			comment();
 			break;
 		default:
 			error();
@@ -343,6 +358,7 @@ void GraphmlGraphInput::element(const wstring &parent)
 	bool closed;
 	wstring start, end;
 
+
 	start = _string;
 	compare(IDENT);
 	checkRelation(start, parent);
@@ -368,6 +384,23 @@ void GraphmlGraphInput::element(const wstring &parent)
 		error();
 }
 
+void GraphmlGraphInput::rootElement()
+{
+	switch (_token) {
+		case EXCL:
+			comment();
+			compare(LT);
+			rootElement();
+			break;
+		case IDENT:
+			setEncoding(_attributes.encoding);
+			element(L"");
+			break;
+		default:
+			error();
+	}
+}
+
 void GraphmlGraphInput::xmlAttributes()
 {
 	while (1) {
@@ -383,17 +416,13 @@ void GraphmlGraphInput::xmlAttributes()
 
 void GraphmlGraphInput::xmlProlog()
 {
-	wstring elm;
-
 	nextToken();
-	elm = _string;
+	if (_string != L"xml")
+		error();
 	compare(IDENT);
 	xmlAttributes();
 	compare(QM);
 	compare(GT);
-
-	if (elm != L"xml")
-		error();
 }
 
 void GraphmlGraphInput::xml()
@@ -403,13 +432,12 @@ void GraphmlGraphInput::xml()
 	switch (_token) {
 		case QM:
 			xmlProlog();
-			setEncoding(_attributes.encoding);
 			compare(LT);
-			element(L"");
+			rootElement();
 			break;
 		case IDENT:
-			setEncoding(_attributes.encoding);
-			element(L"");
+		case EXCL:
+			rootElement();
 			break;
 		default:
 			error();

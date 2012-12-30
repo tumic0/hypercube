@@ -58,7 +58,7 @@ private:
 
 	ValueType valueType();
 
-	void attributesClear();
+	void clearAttributes();
 	void setVertexAttributes(Vertex *vertex);
 	void setEdgeAttributes(Edge *edge);
 
