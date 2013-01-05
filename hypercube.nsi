@@ -63,7 +63,7 @@ Section "Hypercube (required)" SEC_GUI_APP
   ; Write the uninstall keys for Windows
   WriteRegStr HKCU "${REGENTRY}" "DisplayName" "Hypercube"
   WriteRegStr HKCU "${REGENTRY}" "Publisher" "Martin Tuma"
-  WriteRegStr HKCU "${REGENTRY}" "DisplayVersion" "1.1.0"
+  WriteRegStr HKCU "${REGENTRY}" "DisplayVersion" "1.1.1"
   WriteRegStr HKCU "${REGENTRY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
   WriteRegDWORD HKCU "${REGENTRY}" "NoModify" 1
   WriteRegDWORD HKCU "${REGENTRY}" "NoRepair" 1
