@@ -24,8 +24,8 @@ const GraphmlGraphInput::Relation GraphmlGraphInput::relations[] = {
 
 static std::wstring s2w(const string &s)
 {
-	std::wstring w(s.length(), L' ');
-	std::copy(s.begin(), s.end(), w.begin());
+	wstring w(s.length(), L' ');
+	copy(s.begin(), s.end(), w.begin());
 
 	return w;
 }
@@ -150,20 +150,27 @@ void GraphmlGraphInput::nextToken()
 
 		if (!_fs.good())
 			c = -1;
+		if (c == '\n')
+			_line++;
 
 		switch (state) {
 			case 0:
-				if (isspace(c)) {
-					if (c == '\n')
-						_line++;
+				if (isspace(c))
 					break;
-				}
 				if (c == '<') {
 					_token = LT;
 					return;
 				}
 				if (c == '>') {
 					_token = GT;
+					return;
+				}
+				if (c == '[') {
+					_token = LSB;
+					return;
+				}
+				if (c == ']') {
+					_token = RSB;
 					return;
 				}
 				if (c == '=') {
@@ -200,6 +207,11 @@ void GraphmlGraphInput::nextToken()
 					state = 2;
 					break;
 				}
+				if (c == '\'') {
+					_string.clear();
+					state = 3;
+					break;
+				}
 				if (c == -1) {
 					_token = EOI;
 					return;
@@ -221,8 +233,14 @@ void GraphmlGraphInput::nextToken()
 					_token = STRING;
 					return;
 				}
-				if (c == '\n')
-					_line++;
+				_string += c;
+				break;
+
+			case 3:
+				if (c == '\'') {
+					_token = STRING;
+					return;
+				}
 				_string += c;
 				break;
 		}
@@ -253,14 +271,68 @@ void GraphmlGraphInput::data()
 	}
 }
 
-void GraphmlGraphInput::commentData()
+void GraphmlGraphInput::dtdElement()
 {
 	while (1) {
 		switch (_token) {
-			case MINUS:
+			case GT:
 				nextToken();
-				if (_token == MINUS)
-					return;
+				return;
+			case ERROR:
+				return;
+			case EOI:
+				error();
+				return;
+			default:
+				nextToken();
+		}
+	}
+}
+
+void GraphmlGraphInput::dtdElementType()
+{
+	switch (_token) {
+		case MINUS:
+			comment();
+			break;
+		case IDENT:
+			dtdElement();
+			break;
+		default:
+			error();
+	}
+}
+
+void GraphmlGraphInput::dtdData()
+{
+	while (1) {
+		switch (_token) {
+			case LT:
+				nextToken();
+				compare(EXCL);
+				dtdElementType();
+				break;
+			case RSB:
+				nextToken();
+				return;
+			default:
+				error();
+				return;
+		}
+	}
+}
+
+void GraphmlGraphInput::cdataData()
+{
+	while (1) {
+		switch (_token) {
+			case RSB:
+				nextToken();
+				if (_token == RSB) {
+					nextToken();
+					if (_token == GT)
+						return;
+				}
 				break;
 			case ERROR:
 				return;
@@ -273,14 +345,76 @@ void GraphmlGraphInput::commentData()
 	}
 }
 
+void GraphmlGraphInput::commentData()
+{
+	int c, state = 0;
+
+	while (1) {
+		c = _fs.get();
+
+		if (!_fs.good()) {
+			error();
+			return;
+		}
+		if (c == '\n')
+			_line++;
+
+		switch (state) {
+			case 0:
+				if (c == '-')
+					state = 1;
+				break;
+
+			case 1:
+				if (c == '-')
+					state = 2;
+				else
+					state = 0;
+				break;
+
+			case 2:
+				if (c == '>') {
+					_token = GT;
+					return;
+				}
+				error();
+				return;
+		}
+	}
+}
+
 void GraphmlGraphInput::comment()
 {
-	compare(EXCL);
 	compare(MINUS);
-	compare(MINUS);
+	if (_token != MINUS) {
+		error();
+		return;
+	}
 	commentData();
-	compare(MINUS);
 	compare(GT);
+}
+
+void GraphmlGraphInput::cdata()
+{
+	compare(LSB);
+	compare(IDENT);
+	compare(LSB);
+	cdataData();
+	compare(GT);
+}
+
+void GraphmlGraphInput::special()
+{
+	switch (_token) {
+		case MINUS:
+			comment();
+			break;
+		case LSB:
+			cdata();
+			break;
+		default:
+			error();
+	}
 }
 
 void GraphmlGraphInput::attribute()
@@ -297,6 +431,19 @@ void GraphmlGraphInput::attribute()
 		return;
 
 	setAttribute(attr, value);
+}
+
+void GraphmlGraphInput::xmlAttributes()
+{
+	while (1) {
+		switch (_token) {
+			case QM:
+			case ERROR:
+				return;
+			default:
+				attribute();
+		}
+	}
 }
 
 bool GraphmlGraphInput::attributes()
@@ -329,7 +476,8 @@ void GraphmlGraphInput::elementType(const wstring &parent)
 			element(parent);
 			break;
 		case EXCL:
-			comment();
+			nextToken();
+			special();
 			break;
 		default:
 			error();
@@ -384,45 +532,110 @@ void GraphmlGraphInput::element(const wstring &parent)
 		error();
 }
 
-void GraphmlGraphInput::rootElement()
+void GraphmlGraphInput::dtdMarkupDecl()
 {
 	switch (_token) {
-		case EXCL:
-			comment();
-			compare(LT);
-			rootElement();
+		case LSB:
+			nextToken();
+			dtdData();
+			break;
+		case GT:
+			return;
+		default:
+			error();
+	}
+}
+
+void GraphmlGraphInput::dtdExternalId()
+{
+	wstring type = _string;
+
+	switch (_token) {
+		case LSB:
 			break;
 		case IDENT:
-			setEncoding(_attributes.encoding);
-			element(L"");
+			nextToken();
+			if (type == L"PUBLIC") {
+				compare(STRING);
+				compare(STRING);
+			} else if (type == L"SYSTEM")
+				compare(STRING);
+			else
+				error();
 			break;
 		default:
 			error();
 	}
 }
 
-void GraphmlGraphInput::xmlAttributes()
+void GraphmlGraphInput::dtdDecl()
 {
-	while (1) {
-		switch (_token) {
-			case QM:
-			case ERROR:
-				return;
-			default:
-				attribute();
-		}
-	}
+	if (_string != L"DOCTYPE")
+		error();
+	compare(IDENT);
+	compare(IDENT);
+	dtdExternalId();
+	dtdMarkupDecl();
+	compare(GT);
 }
 
-void GraphmlGraphInput::xmlProlog()
+void GraphmlGraphInput::xmlDecl()
 {
-	nextToken();
-	if (_string != L"xml")
+	compare(QM);
+	if (!stringCaseCmp(_string, L"xml"))
 		error();
 	compare(IDENT);
 	xmlAttributes();
 	compare(QM);
 	compare(GT);
+}
+
+void GraphmlGraphInput::prologComment()
+{
+	switch (_token) {
+		case EXCL:
+			nextToken();
+			comment();
+			compare(LT);
+			prologComment();
+			break;
+		case IDENT:
+			break;
+		default:
+			error();
+	}
+}
+
+void GraphmlGraphInput::prologSpecial()
+{
+	switch (_token) {
+		case MINUS:
+			comment();
+			compare(LT);
+			prologContent();
+			break;
+		case IDENT:
+			dtdDecl();
+			compare(LT);
+			prologComment();
+			break;
+		default:
+			error();
+	}
+}
+
+void GraphmlGraphInput::prologContent()
+{
+	switch (_token) {
+		case EXCL:
+			nextToken();
+			prologSpecial();
+			break;
+		case IDENT:
+			break;
+		default:
+			error();
+	}
 }
 
 void GraphmlGraphInput::xml()
@@ -431,17 +644,22 @@ void GraphmlGraphInput::xml()
 
 	switch (_token) {
 		case QM:
-			xmlProlog();
+			xmlDecl();
 			compare(LT);
-			rootElement();
+			prologContent();
+			break;
+		case EXCL:
+			nextToken();
+			prologSpecial();
 			break;
 		case IDENT:
-		case EXCL:
-			rootElement();
 			break;
 		default:
 			error();
 	}
+
+	setEncoding(_attributes.encoding);
+	element(L"");
 }
 
 bool GraphmlGraphInput::parse()

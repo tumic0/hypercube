@@ -24,6 +24,8 @@ public:
 
 		LT,			/* '<' */
 		GT,			/* '>' */
+		LSB,		/* '[' */
+		RSB,		/* ']' */
 		EQ,			/* '=' */
 		AMP,		/* '&' */
 		SLASH,		/* '/' */
@@ -58,16 +60,27 @@ public:
 	void nextToken();
 	void compare(Token token);
 	void data();
+	void dtdData();
+	void cdataData();
 	void commentData();
 	void comment();
+	void cdata();
+	void special();
 	void attribute();
 	bool attributes();
 	void nextItem(const std::wstring &parent);
 	void elementType(const std::wstring &parent);
 	void element(const std::wstring &parent);
-	void rootElement();
+	void prologSpecial();
+	void prologContent();
+	void prologComment();
+	void dtdElement();
+	void dtdElementType();
+	void dtdMarkupDecl();
+	void dtdExternalId();
+	void dtdDecl();
 	void xmlAttributes();
-	void xmlProlog();
+	void xmlDecl();
 	void xml();
 	bool parse();
 
