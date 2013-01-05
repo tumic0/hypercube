@@ -150,13 +150,14 @@ void GraphmlGraphInput::nextToken()
 
 		if (!_fs.good())
 			c = -1;
-		if (c == '\n')
-			_line++;
 
 		switch (state) {
 			case 0:
-				if (isspace(c))
+				if (isspace(c)) {
+					if (c == '\n')
+						_line++;
 					break;
+				}
 				if (c == '<') {
 					_token = LT;
 					return;
@@ -233,6 +234,8 @@ void GraphmlGraphInput::nextToken()
 					_token = STRING;
 					return;
 				}
+				if (c == '\n')
+					_line++;
 				_string += c;
 				break;
 
@@ -241,6 +244,8 @@ void GraphmlGraphInput::nextToken()
 					_token = STRING;
 					return;
 				}
+				if (c == '\n')
+					_line++;
 				_string += c;
 				break;
 		}
