@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sstream>
+#include <fstream>
 #include "CORE/graph.h"
 #include "CORE/line.h"
 #include "encoding.h"
@@ -46,6 +47,24 @@ protected:
 
 	static void stringReplace(std::wstring &source, const std::wstring &find,
 	  const std::wstring &replace);
+};
+
+class lexstream : public std::wifstream
+{
+public:
+	lexstream() : _unget(false) {}
+	int get() {
+		if (_unget)
+			_unget = false;
+		else
+			_last = std::wifstream::get();
+		return std::wifstream::good() ? _last : -1;
+	}
+	void unget() {_unget = true;}
+
+private:
+	int _last;
+	bool _unget;
 };
 
 #endif /* IO_H_ */

@@ -65,8 +65,8 @@ private:
 	Vertex *addVertex(int id);
 	Edge *addEdge();
 
-	std::wifstream _fs;
 	std::wstring _string;
+	lexstream _fs;
 	int _int;
 	float _float;
 	Token _token;

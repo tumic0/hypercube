@@ -82,8 +82,8 @@ private:
 
 	static const Keyword keywords[];
 
-	std::wifstream _fs;
 	std::wstring _id;
+	lexstream _fs;
 	Token _token;
 	unsigned _line;
 

@@ -23,25 +23,10 @@ void ListGraphInput::nextToken()
 {
 	int c, state = 0;
 
-	if (!_fs.good()) {
-		_token = EOI;
-		return;
-	}
-
 	_id.clear();
 
 	while (1) {
 		c = _fs.get();
-
-		if (!_fs.good()) {
-			if (state == 0)
-				_token = EOI;
-			else if (state == 2)
-				_token = ID;
-			else
-				_token = ERROR;
-			return;
-		}
 
 		switch (state) {
 			case 0:
@@ -65,6 +50,11 @@ void ListGraphInput::nextToken()
 					state = 2;
 					break;
 				}
+				if (c == -1) {
+					_token = EOI;
+					return;
+				}
+
 				error();
 				return;
 
@@ -82,7 +72,7 @@ void ListGraphInput::nextToken()
 					_id += c;
 					break;
 				}
-				_fs.putback(c);
+				_fs.unget();
 				_token = ID;
 				return;
 

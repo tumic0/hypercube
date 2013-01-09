@@ -27,7 +27,7 @@ private:
 	void matrix(unsigned cnt);
 	bool parse();
 
-	std::wifstream _fs;
+	lexstream _fs;
 	Token _token;
 	unsigned _line;
 	unsigned _id;

@@ -25,9 +25,6 @@ void GmlGraphInput::nextToken()
 	while (1) {
 		c = _fs.get();
 
-		if (!_fs.good())
-			c = -1;
-
 		switch (state) {
 			case 0:
 				if (c == '#') {
@@ -35,8 +32,7 @@ void GmlGraphInput::nextToken()
 					break;
 				}
 				if (isspace(c)) {
-					if (c == '\n')
-						_line++;
+
 					break;
 				}
 				if (c == '[') {
@@ -104,7 +100,7 @@ void GmlGraphInput::nextToken()
 					_string += c;
 					break;
 				}
-				_fs.putback(c);
+				_fs.unget();
 				_token = KEY;
 				return;
 
@@ -124,7 +120,7 @@ void GmlGraphInput::nextToken()
 					_int = _int * 10 + c - '0';
 					break;
 				}
-				_fs.putback(c);
+				_fs.unget();
 				if (negative)
 					_int = -_int;
 				_token = INT;
@@ -141,8 +137,8 @@ void GmlGraphInput::nextToken()
 					state = 5;
 					break;
 				}
-				_fs.putback(c);
-				std::wistringstream(flstr) >> _float;
+				_fs.unget();
+				wistringstream(flstr) >> _float;
 				_token = REAL;
 				return;
 
@@ -170,12 +166,16 @@ void GmlGraphInput::nextToken()
 					flstr += c;
 					break;
 				}
-				_fs.putback(c);
-				std::wistringstream(flstr) >> _float;
+				_fs.unget();
+				wistringstream(flstr) >> _float;
 				_token = REAL;
 				return;
 
 			case 7:
+				if (c == -1) {
+					error();
+					return;
+				}
 				if (c == '"') {
 					_token = STRING;
 					return;
@@ -353,7 +353,7 @@ void GmlGraphInput::clearAttributes()
 void GmlGraphInput::setVertexAttributes(Vertex *vertex)
 {
 	if (_nodeAttributes.label.empty()) {
-		std::wostringstream ss;
+		wostringstream ss;
 		ss << _nodeAttributes.id;
 		vertex->setText(ss.str());
 	} else
@@ -374,7 +374,7 @@ IO::Error GmlGraphInput::readGraph(Graph *graph, const char *fileName,
 	_graph = graph;
 
 	if (encoding) {
-		locale lc(std::locale(), encoding->cvt());
+		locale lc(locale(), encoding->cvt());
 		_fs.imbue(lc);
 	}
 

@@ -12,7 +12,7 @@ public:
 	virtual Error readGraph(Graph *graph, const char *fileName,
 	  Encoding *encoding);
 
-public:
+private:
 	enum Token {
 		START,		/* Initial value */
 		EOI,		/* End of File */
@@ -84,8 +84,8 @@ public:
 	void xml();
 	bool parse();
 
-	std::wifstream _fs;
 	std::wstring _string;
+	lexstream _fs;
 	Token _token;
 	unsigned _line;
 	static const Relation relations[];

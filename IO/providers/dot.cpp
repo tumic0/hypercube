@@ -52,16 +52,10 @@ void DotGraphInput::nextToken()
 {
 	int c, state = 0, parenthesis = 0;
 
-
 	_id.clear();
 
 	while (1) {
 		c = _fs.get();
-
-		if (!_fs.good()) {
-			_token = (state) ? ERROR : EOI;
-			return;
-		}
 
 		switch (state) {
 			case 0:
@@ -140,6 +134,10 @@ void DotGraphInput::nextToken()
 					state = 12;
 					break;
 				}
+				if (c == -1) {
+					_token = EOI;
+					return;
+				}
 
 				error();
 				return;
@@ -168,7 +166,7 @@ void DotGraphInput::nextToken()
 					_id += c;
 					break;
 				}
-				_fs.putback(c);
+				_fs.unget();
 				_token = keyword();
 				return;
 
@@ -186,6 +184,10 @@ void DotGraphInput::nextToken()
 				return;
 
 			case 4:
+				if (c == -1) {
+					_token = EOI;
+					return;
+				}
 				if (c == '\n') {
 					_line++;
 					state = 0;
@@ -193,6 +195,10 @@ void DotGraphInput::nextToken()
 				break;
 
 			case 5:
+				if (c == -1) {
+					error();
+					return;
+				}
 				if (c == '*')
 					state = 6;
 				if (c == '\n')
@@ -200,13 +206,23 @@ void DotGraphInput::nextToken()
 				break;
 
 			case 6:
+				if (c == -1) {
+					error();
+					return;
+				}
 				if (c == '/')
 					state = 0;
 				else
 					state = 5;
+				if (c == '\n')
+					_line++;
 				break;
 
 			case 7:
+				if (c == -1) {
+					error();
+					return;
+				}
 				if (c == '"') {
 					_token = ID;
 					return;
@@ -215,10 +231,16 @@ void DotGraphInput::nextToken()
 					state = 8;
 					break;
 				}
+				if (c == '\n')
+					_line++;
 				_id += c;
 				break;
 
 			case 8:
+				if (c == -1) {
+					error();
+					return;
+				}
 				if (c == '"')
 					_id += '"';
 				else {
@@ -242,7 +264,7 @@ void DotGraphInput::nextToken()
 					_id += c;
 					break;
 				}
-				_fs.putback(c);
+				_fs.unget();
 				_token = ID;
 				return;
 
@@ -256,11 +278,15 @@ void DotGraphInput::nextToken()
 					_id += c;
 					break;
 				}
-				_fs.putback(c);
+				_fs.unget();
 				_token = ID;
 				return;
 
 			case 12:
+				if (c == -1) {
+					error();
+					return;
+				}
 				if (c == '>') {
 					if (!parenthesis) {
 						_token = ID;

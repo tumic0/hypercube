@@ -148,9 +148,6 @@ void GraphmlGraphInput::nextToken()
 	while (1) {
 		c = _fs.get();
 
-		if (!_fs.good())
-			c = -1;
-
 		switch (state) {
 			case 0:
 				if (isspace(c)) {
@@ -225,7 +222,7 @@ void GraphmlGraphInput::nextToken()
 					_string += c;
 					break;
 				}
-				_fs.putback(c);
+				_fs.unget();
 				_token = IDENT;
 				return;
 
@@ -357,20 +354,24 @@ void GraphmlGraphInput::commentData()
 	while (1) {
 		c = _fs.get();
 
-		if (!_fs.good()) {
-			error();
-			return;
-		}
 		if (c == '\n')
 			_line++;
 
 		switch (state) {
 			case 0:
+				if (c == -1) {
+					error();
+					return;
+				}
 				if (c == '-')
 					state = 1;
 				break;
 
 			case 1:
+				if (c == -1) {
+					error();
+					return;
+				}
 				if (c == '-')
 					state = 2;
 				else
