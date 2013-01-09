@@ -16,24 +16,10 @@ const DotGraphInput::Keyword DotGraphInput::keywords[] = {
 	{STRICT, L"STRICT"}
 };
 
-
-static bool strCaseCmp(const wstring &str1, const wstring &str2)
-{
-	if (str1.length() != str2.length())
-		return false;
-
-	for (size_t i = 0; i < str1.length(); i++)
-		if (tolower(str1[i]) != tolower(str2[i]))
-			return false;
-
-	return true;
-}
-
-
 DotGraphInput::Token DotGraphInput::keyword()
 {
 	for (size_t i = 0; i < NUM_KEYWORDS ; i++)
-		if (strCaseCmp(_id, keywords[i].name))
+		if (stringCaseCmp(_id, keywords[i].name))
 			return keywords[i].token;
 
 	return ID;
@@ -580,7 +566,7 @@ void DotGraphInput::attributesClear()
 void DotGraphInput::setAttribute(Attributes &attr, const wstring &key,
   const wstring &value)
 {
-	if (strCaseCmp(key, L"LABEL"))
+	if (stringCaseCmp(key, L"LABEL"))
 		attr.label = value;
 }
 
