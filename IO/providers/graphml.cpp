@@ -665,7 +665,10 @@ void GraphmlGraphInput::xml()
 	}
 
 	setEncoding(_attributes.encoding);
-	element(L"");
+	if (_string == L"graphml")
+		element(L"");
+	else
+		error();
 }
 
 bool GraphmlGraphInput::parse()
@@ -688,7 +691,7 @@ bool GraphmlGraphInput::parse()
 }
 
 IO::Error GraphmlGraphInput::readGraph(Graph *graph, const char *fileName,
-  Encoding *encoding)
+  Encoding *)
 {
 	IO::Error err = Ok;
 
