@@ -2,6 +2,7 @@
 #include <cerrno>
 #include "IO/modules.h"
 #include "IO/encodings/utf8cvt.h"
+#include "IO/encodings/latin1.h"
 #include "graphml.h"
 
 using namespace std;
@@ -696,6 +697,9 @@ IO::Error GraphmlGraphInput::readGraph(Graph *graph, const char *fileName,
 	IO::Error err = Ok;
 
 	_graph = graph;
+
+	locale lc(std::locale(), new latin1cvt);
+	_fs.imbue(lc);
 
 	_fs.open(fileName);
 	if (!_fs) {
