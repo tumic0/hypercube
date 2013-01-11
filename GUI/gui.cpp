@@ -154,6 +154,12 @@ void GUI::createToolBars()
 	_projectionsToolBar = addToolBar(tr("Projections"));
 	_projectionsToolBar->addAction(_bindAction);
 	_projectionsToolBar->addAction(_projectAction);
+
+#ifdef Q_WS_MAC
+	_fileToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+	_graphToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+	_projectionsToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+#endif
 }
 
 void GUI::createProperties()
