@@ -256,7 +256,8 @@ void GmlGraphInput::list(ValueType parent)
 				checkRelation(type, parent);
 				nextToken();
 				value(parent, type);
-				handleKey(type);
+				if (!handleKey(type))
+					error();
 				break;
 			case RBRK:
 			case EOI:
@@ -308,34 +309,30 @@ void GmlGraphInput::checkRelation(ValueType key, ValueType parent)
 	}
 }
 
-void GmlGraphInput::handleKey(ValueType type)
+bool GmlGraphInput::handleKey(ValueType type)
 {
 	Vertex *v;
 	Edge *e ;
 
 	switch (type) {
 		case NODE:
-			if (_nodeAttributes.id < 0) {
-				error();
-				return;
-			}
+			if (_nodeAttributes.id < 0)
+				return false;
 			v = addVertex(_nodeAttributes.id);
 			setVertexAttributes(v);
 			clearAttributes();
-			break;
+			return true;
 
 		case EDGE:
-			if (_edgeAttributes.source < 0 || _edgeAttributes.target < 0) {
-				error();
-				return;
-			}
+			if (_edgeAttributes.source < 0 || _edgeAttributes.target < 0)
+				return false;
 			e = addEdge(_edgeAttributes.source, _edgeAttributes.target);
 			setEdgeAttributes(e);
 			clearAttributes();
-			break;
+			return true;
 
 		default:
-			break;
+			return true;
 	}
 }
 

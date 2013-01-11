@@ -69,7 +69,7 @@ private:
 
 	ValueType valueType();
 	void checkRelation(ValueType key, ValueType parent);
-	void handleKey(ValueType type);
+	bool handleKey(ValueType type);
 
 	void clearAttributes();
 	void setVertexAttributes(Vertex *vertex);
