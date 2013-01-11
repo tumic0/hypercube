@@ -6,6 +6,27 @@
 using namespace std;
 
 
+#define NUM_KEYWORDS (sizeof(keywords) / sizeof(Keyword))
+const GmlGraphInput::Keyword GmlGraphInput::keywords[] = {
+	{NODE, L"node"},
+	{EDGE, L"edge"},
+	{GRAPH, L"graph"},
+	{ID, L"id"},
+	{LABEL, L"label"},
+	{SOURCE, L"source"},
+	{TARGET, L"target"}
+};
+
+#define NUM_RELATIONS (sizeof(relations) / sizeof(Relation))
+const GmlGraphInput::Relation GmlGraphInput::relations[] = {
+	{NODE, GRAPH},
+	{EDGE, GRAPH},
+	{SOURCE, EDGE},
+	{TARGET, EDGE},
+	{GRAPH, ROOT}
+};
+
+
 void GmlGraphInput::error()
 {
 	if (_token == ERROR)
@@ -27,12 +48,10 @@ void GmlGraphInput::nextToken()
 
 		switch (state) {
 			case 0:
+				if (isspace(c))
+					break;
 				if (c == '#') {
 					state = 1;
-					break;
-				}
-				if (isspace(c)) {
-
 					break;
 				}
 				if (c == '[') {
@@ -234,35 +253,10 @@ void GmlGraphInput::list(ValueType parent)
 		switch (_token) {
 			case KEY:
 				type = valueType();
-				if (((type == EDGE || type == NODE) && parent != GRAPH)
-				  || ((type == SOURCE || type == TARGET) && parent != EDGE)) {
-					error();
-					return;
-				}
-
+				checkRelation(type, parent);
 				nextToken();
 				value(parent, type);
-
-				if (type == NODE) {
-					if (_nodeAttributes.id < 0) {
-						error();
-						return;
-					}
-					Vertex *v = addVertex(_nodeAttributes.id);
-					setVertexAttributes(v);
-					clearAttributes();
-				}
-				if (type == EDGE) {
-					if (_edgeAttributes.source < 0
-					  || _edgeAttributes.target < 0) {
-						error();
-						return;
-					}
-					Edge *e = addEdge();
-					setEdgeAttributes(e);
-					clearAttributes();
-				}
-
+				handleKey(type);
 				break;
 			case RBRK:
 			case EOI:
@@ -281,7 +275,7 @@ bool GmlGraphInput::parse()
 	clearAttributes();
 
 	nextToken();
-	list(UNKNOWN);
+	list(ROOT);
 
 	_vertexes.clear();
 	clearAttributes();
@@ -296,22 +290,53 @@ bool GmlGraphInput::parse()
 
 GmlGraphInput::ValueType GmlGraphInput::valueType()
 {
-	if (_string == L"graph")
-		return GRAPH;
-	if (_string == L"node")
-		return NODE;
-	if (_string == L"edge")
-		return EDGE;
-	if (_string == L"id")
-		return ID;
-	if (_string == L"label")
-		return LABEL;
-	if (_string == L"source")
-		return SOURCE;
-	if (_string == L"target")
-		return TARGET;
+	for (size_t i = 0; i < NUM_KEYWORDS ; i++)
+		if (_string == keywords[i].name)
+			return keywords[i].value;
 
 	return UNKNOWN;
+}
+
+void GmlGraphInput::checkRelation(ValueType key, ValueType parent)
+{
+	for (size_t i = 0; i < NUM_RELATIONS; i++) {
+		if (key == relations[i].key) {
+			if (parent != relations[i].parent)
+				error();
+			return;
+		}
+	}
+}
+
+void GmlGraphInput::handleKey(ValueType type)
+{
+	Vertex *v;
+	Edge *e ;
+
+	switch (type) {
+		case NODE:
+			if (_nodeAttributes.id < 0) {
+				error();
+				return;
+			}
+			v = addVertex(_nodeAttributes.id);
+			setVertexAttributes(v);
+			clearAttributes();
+			break;
+
+		case EDGE:
+			if (_edgeAttributes.source < 0 || _edgeAttributes.target < 0) {
+				error();
+				return;
+			}
+			e = addEdge(_edgeAttributes.source, _edgeAttributes.target);
+			setEdgeAttributes(e);
+			clearAttributes();
+			break;
+
+		default:
+			break;
+	}
 }
 
 Vertex* GmlGraphInput::addVertex(int id)
@@ -330,12 +355,12 @@ Vertex* GmlGraphInput::addVertex(int id)
 	return v;
 }
 
-Edge* GmlGraphInput::addEdge()
+Edge* GmlGraphInput::addEdge(int source, int target)
 {
 	Vertex *src, *dst;
 
-	src = addVertex(_edgeAttributes.source);
-	dst = addVertex(_edgeAttributes.target);
+	src = addVertex(source);
+	dst = addVertex(target);
 
 	return _graph->addEdge(src, dst);
 }

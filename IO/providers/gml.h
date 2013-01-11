@@ -29,6 +29,7 @@ private:
 
 	enum ValueType {
 		UNKNOWN,
+		ROOT,
 		GRAPH,
 		NODE,
 		EDGE,
@@ -36,6 +37,16 @@ private:
 		LABEL,
 		SOURCE,
 		TARGET
+	};
+
+	struct Keyword {
+		ValueType value;
+		std::wstring name;
+	};
+
+	struct Relation {
+		ValueType key;
+		ValueType parent;
 	};
 
 	struct NodeAttributes {
@@ -57,13 +68,18 @@ private:
 	bool parse();
 
 	ValueType valueType();
+	void checkRelation(ValueType key, ValueType parent);
+	void handleKey(ValueType type);
 
 	void clearAttributes();
 	void setVertexAttributes(Vertex *vertex);
 	void setEdgeAttributes(Edge *edge);
 
 	Vertex *addVertex(int id);
-	Edge *addEdge();
+	Edge *addEdge(int source, int target);
+
+	static const Keyword keywords[];
+	static const Relation relations[];
 
 	std::wstring _string;
 	lexstream _fs;
