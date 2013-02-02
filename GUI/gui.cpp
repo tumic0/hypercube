@@ -476,9 +476,14 @@ void GUI::about()
 
 void GUI::openFile()
 {
-	QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"));
-	if (!fileName.isEmpty())
-		openFile(fileName);
+	QStringList files = QFileDialog::getOpenFileNames(this, tr("Open file"));
+	QStringList list = files;
+	QStringList::Iterator it = list.begin();
+
+	while(it != list.end()) {
+		openFile(*it);
+		++it;
+	}
 }
 
 void GUI::openFile(const QString &fileName)
@@ -494,8 +499,10 @@ void GUI::openFile(const QString &fileName)
 
 	if (error) {
 		std::cerr << IO::ioerr.str();
-		QMessageBox::critical(this, tr("Error"), tr("Error loading graph")
-		  + QString(":\n") + errorDescription(error));
+		QMessageBox::critical(this, tr("Error"),
+		  fileName + QString("\n\n")
+		  + tr("Error loading graph") + QString(":\n")
+		  + errorDescription(error));
 		delete tab;
 	} else {
 		QFileInfo fi(fileName);
@@ -551,7 +558,8 @@ void GUI::saveAs()
 		if (error) {
 			std::cerr << IO::ioerr.str();
 			QMessageBox::critical(this, tr("Error"),
-			  tr("Error saving graph") + QString(":\n")
+			  fileName + QString("\n\n")
+			  + tr("Error saving graph") + QString(":\n")
 			  + errorDescription(error));
 		}
 	}
