@@ -505,6 +505,8 @@ void GUI::openFile(const QString &fileName)
 		  + errorDescription(error));
 		delete tab;
 	} else {
+		tab->transformGraph();
+
 		QFileInfo fi(fileName);
 		int index = _viewTab->addTab(tab, fi.fileName());
 
