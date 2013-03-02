@@ -1,5 +1,4 @@
-#include <QtGui>
-#include <QFileInfo>
+#include <QVBoxLayout>
 #include "CORE/vertex.h"
 #include "CORE/edge.h"
 #include "IO/modules.h"

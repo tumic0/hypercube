@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QTranslator>
 #include "GUI/gui.h"
 #include "GUI/icons.h"
 

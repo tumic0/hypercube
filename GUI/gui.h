@@ -1,7 +1,15 @@
 #ifndef GUI_H_
 #define GUI_H_
 
-#include <QtGui>
+#include <QMainWindow>
+#include <QMenu>
+#include <QToolBar>
+#include <QToolBox>
+#include <QSpinBox>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QLabel>
+
 
 class GraphTab;
 class FloatEdit;

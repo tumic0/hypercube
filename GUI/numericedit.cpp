@@ -1,3 +1,4 @@
+#include <QDoubleValidator>
 #include <cfloat>
 #include <climits>
 #include "numericedit.h"

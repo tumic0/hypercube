@@ -1,6 +1,7 @@
 TARGET = hypercube
 QT += core \
     gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 HEADERS += CORE/sa_log.h \
     CORE/graph.h \
     CORE/misc.h \
@@ -94,6 +95,6 @@ TRANSLATIONS = lang/hypercube_cs.ts
 INCLUDEPATH += ./
 win32 {
     RC_FILE = hypercube.rc
-	DEFINES += _CRT_SECURE_NO_WARNINGS
+    DEFINES += _CRT_SECURE_NO_WARNINGS
 }
 macx:ICON = icons/hypercube.icns

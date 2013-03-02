@@ -1,3 +1,13 @@
+#include <QApplication>
+#include <QHBoxLayout>
+#include <QFormLayout>
+#include <QMenuBar>
+#include <QStatusBar>
+#include <QGroupBox>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QSettings>
+#include <QCloseEvent>
 #include "gui.h"
 #include "colorcombobox.h"
 #include "numericedit.h"
@@ -1039,7 +1049,7 @@ void GUI::readSettings()
 	QString ie = settings.value(INPUT_ENCODING_SETTING,
 	  (*encodings)->name()).toString();
 	for (Encoding **ep = encodings; *ep; ep++, index++) {
-		if (!strcmp((*ep)->name(), ie.toAscii().constData())) {
+		if (!strcmp((*ep)->name(), ie.toLatin1().constData())) {
 			_inputEncoding->setCurrentIndex(index);
 			break;
 		}

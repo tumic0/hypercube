@@ -1,6 +1,7 @@
 #ifndef GRAPHTAB_H_
 #define GRAPHTAB_H_
 
+#include <QWidget>
 #include "graphview.h"
 #include "CORE/graph.h"
 #include "CORE/sa.h"

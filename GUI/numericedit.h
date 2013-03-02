@@ -1,7 +1,7 @@
 #ifndef NUMERICEDIT_H_
 #define NUMERICEDIT_H_
 
-#include <QtGui>
+#include <QLineEdit>
 
 class FloatEdit : public QLineEdit
 {

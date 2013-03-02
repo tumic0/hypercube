@@ -41,7 +41,7 @@ int ColorComboBox::colorCount() const
 
 QColor ColorComboBox::color() const
 {
-	return qVariantValue<QColor>(itemData(currentIndex()));
+	return itemData(currentIndex()).value<QColor>();
 }
 
 void ColorComboBox::setColor(const QColor &color)
@@ -85,7 +85,7 @@ void ColorComboBox::emitActivatedColor(int index)
 			color = lastActivated;
 		}
 	} else
-		color = qVariantValue<QColor>(itemData(index));
+		color = itemData(index).value<QColor>();
 
 	update();
 	lastActivated = color;
