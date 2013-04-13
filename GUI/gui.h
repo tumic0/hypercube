@@ -5,6 +5,7 @@
 #include <QMenu>
 #include <QToolBar>
 #include <QToolBox>
+#include <QGroupBox>
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QComboBox>
@@ -44,9 +45,14 @@ private slots:
 	void setFinalTemp(float value);
 	void setCoolFactor(float value);
 	void setNumSteps(int value);
+	void setSize(int value);
+	void setPlanarity(int value);
+	void setQuality(int value);
 #ifdef SA_LOG_SUPPORT
 	void setSALogInfo(int state);
 #endif
+
+	void layoutOptionsTypeChanged(int advanced);
 
 	void setGraphWidth(int width);
 	void setGraphHeight(int height);
@@ -79,16 +85,16 @@ private:
 
 	void createViews();
 	void createProperties();
-	void createSAProperties();
+	void createAlgorithmProperties();
 	void createGraphProperties();
 	void createMiscProperties();
 
 	void checkActions();
 
 	void getMiscProperties(GraphTab *tab);
-	void getSAProperties(GraphTab *tab);
+	void getAlgorithmProperties(GraphTab *tab);
 	void getGraphProperties(GraphTab *tab);
-	void setSAProperties(GraphTab *tab);
+	void setAlgorithmProperties(GraphTab *tab);
 	void setGraphProperties(GraphTab *tab);
 	void setMiscProperties(GraphTab *tab);
 
@@ -108,8 +114,8 @@ private:
 	QToolBar *_projectionsToolBar;
 
 	QWidget *_graphProperties;
-	QWidget *_SAProperties;
-	QWidget *_MiscProperties;
+	QWidget *_algorithmProperties;
+	QWidget *_miscProperties;
 
 	QActionGroup *_fileActionGroup;
 	QActionGroup *_graphActionGroup;
@@ -131,6 +137,12 @@ private:
 	QToolBox *_properties;
 	QTabWidget *_viewTab;
 
+	QGroupBox *_layoutBox;
+	QGroupBox *_compBox;
+	QGroupBox *_debugBox;
+	QGroupBox *_SABox;
+	QGroupBox *_graphBox;
+
 	QSpinBox *_graphWidth;
 	QSpinBox *_graphHeight;
 	QSpinBox *_edgeSize;
@@ -143,6 +155,10 @@ private:
 	QCheckBox *_directedGraph;
 	ColorComboBox *_edgeColor;
 	ColorComboBox *_vertexColor;
+
+	QSlider *_sizeSlider;
+	QSlider *_planaritySlider;
+	QSlider *_qualitySlider;
 
 	FloatEdit *_nodeDistribution;
 	FloatEdit *_edgeLength;

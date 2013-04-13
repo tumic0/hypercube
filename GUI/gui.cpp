@@ -8,6 +8,7 @@
 #include <QFileDialog>
 #include <QSettings>
 #include <QCloseEvent>
+#include <cmath>
 #include "gui.h"
 #include "colorcombobox.h"
 #include "numericedit.h"
@@ -18,6 +19,13 @@
 #include "IO/io.h"
 #include "IO/encoding.h"
 #include "IO/modules.h"
+
+
+#define EDGE_LENGTH_RANGE       1
+#define NODE_DISTRIBUTION_RANGE 1
+#define EDGE_CROSSINGS_RANGE    2
+#define NUM_STEPS_RANGE         0.5
+#define INIT_TEMP_RANGE         0.5
 
 
 #define TAB() ((GraphTab*) _viewTab->currentWidget())
@@ -175,7 +183,7 @@ void GUI::createToolBars()
 void GUI::createProperties()
 {
 	createGraphProperties();
-	createSAProperties();
+	createAlgorithmProperties();
 	createMiscProperties();
 
 	_properties = new QToolBox;
@@ -183,13 +191,13 @@ void GUI::createProperties()
 	_properties->setBackgroundRole(QPalette::Window);
 	_properties->setSizePolicy(QSizePolicy(QSizePolicy::Maximum,
 	  QSizePolicy::Ignored));
-	_properties->setMinimumWidth(qMax(_MiscProperties->sizeHint().width(),
+	_properties->setMinimumWidth(qMax(_miscProperties->sizeHint().width(),
 	  qMax(_graphProperties->sizeHint().width(),
-	  _SAProperties->sizeHint().width())));
+	  _algorithmProperties->sizeHint().width())));
 
 	_properties->addItem(_graphProperties, tr("Graph settings"));
-	_properties->addItem(_SAProperties, tr("Algorithm settings"));
-	_properties->addItem(_MiscProperties, tr("Miscellaneous"));
+	_properties->addItem(_algorithmProperties, tr("Algorithm settings"));
+	_properties->addItem(_miscProperties, tr("Miscellaneous"));
 }
 
 void GUI::createMiscProperties()
@@ -248,13 +256,53 @@ void GUI::createMiscProperties()
 	layout->addWidget(displayBox);
 	layout->addWidget(argumentsBox);
 
-	_MiscProperties = new QWidget;
-	_MiscProperties->setLayout(layout);
+	_miscProperties = new QWidget;
+	_miscProperties->setLayout(layout);
 }
 
-void GUI::createSAProperties()
+void GUI::createAlgorithmProperties()
 {
-	QGroupBox *graphBox = new QGroupBox(tr("Graph layout"));
+	QComboBox *optionsType = new QComboBox();
+	optionsType->addItem(tr("Basic settings"));
+	optionsType->addItem(tr("Advanced settings"));
+
+	connect(optionsType, SIGNAL(currentIndexChanged(int)),
+	  this, SLOT(layoutOptionsTypeChanged(int)));
+
+
+	_layoutBox = new QGroupBox(tr("Graph layout"));
+
+	_sizeSlider = new QSlider(Qt::Horizontal);
+	_sizeSlider->setRange(0, 100);
+	_sizeSlider->setValue(50);
+	_planaritySlider = new QSlider(Qt::Horizontal);
+	_planaritySlider->setRange(0, 100);
+	_planaritySlider->setValue(50);
+
+	_compBox = new QGroupBox(tr("Computation"));
+
+	_qualitySlider = new QSlider(Qt::Horizontal);
+	_qualitySlider->setRange(0, 100);
+	_qualitySlider->setValue(50);
+
+
+	connect(_sizeSlider, SIGNAL(valueChanged(int)),
+	  this, SLOT(setSize(int)));
+	connect(_planaritySlider, SIGNAL(valueChanged(int)),
+	  this, SLOT(setPlanarity(int)));
+	connect(_qualitySlider, SIGNAL(valueChanged(int)),
+	  this, SLOT(setQuality(int)));
+
+	QFormLayout *layoutLayout = new QFormLayout;
+	layoutLayout->addRow(tr("Size:"), _sizeSlider);
+	layoutLayout->addRow(tr("Planarity:"), _planaritySlider);
+	_layoutBox->setLayout(layoutLayout);
+
+	QFormLayout *compLayout = new QFormLayout;
+	compLayout->addRow(tr("Quality:"), _qualitySlider);
+	_compBox->setLayout(compLayout);
+
+	_graphBox = new QGroupBox(tr("Graph layout"));
 
 	_nodeDistribution = new FloatEdit(10);
 	_edgeLength = new FloatEdit(10);
@@ -271,10 +319,10 @@ void GUI::createSAProperties()
 	graphLayout->addRow(tr("Node distribution:"), _nodeDistribution);
 	graphLayout->addRow(tr("Edge length:"), _edgeLength);
 	graphLayout->addRow(tr("Edge crossings:"), _edgeCrossings);
-	graphBox->setLayout(graphLayout);
+	_graphBox->setLayout(graphLayout);
 
 
-	QGroupBox *SABox = new QGroupBox(tr("SA parameters"));
+	_SABox = new QGroupBox(tr("Computation"));
 
 	_initTemp = new FloatEdit(10);
 	_finalTemp = new FloatEdit(10);
@@ -295,14 +343,14 @@ void GUI::createSAProperties()
 	SAlayout->addRow(tr("Final temperature:"), _finalTemp);
 	SAlayout->addRow(tr("Cooling factor:"), _coolFactor);
 	SAlayout->addRow(tr("Steps:"), _numSteps);
-	SABox->setLayout(SAlayout);
+	_SABox->setLayout(SAlayout);
 
 #ifdef SA_LOG_SUPPORT
-	QGroupBox *debugBox = new QGroupBox(tr("Debug"));
+	_debugBox = new QGroupBox(tr("Debug"));
 	_debug = new QCheckBox(tr("Create debug output"), this);
 	QVBoxLayout *debugLayout = new QVBoxLayout;
 	debugLayout->addWidget(_debug, 0, Qt::AlignTop);
-	debugBox->setLayout(debugLayout);
+	_debugBox->setLayout(debugLayout);
 
 	connect(_debug, SIGNAL(stateChanged(int)),
 	  this, SLOT(setSALogInfo(int)));
@@ -310,14 +358,19 @@ void GUI::createSAProperties()
 
 
 	QVBoxLayout *layout = new QVBoxLayout;
-	layout->addWidget(graphBox);
-	layout->addWidget(SABox);
+	layout->addWidget(_layoutBox);
+	layout->addWidget(_compBox);
+	layout->addWidget(_graphBox);
+	layout->addWidget(_SABox);
 #ifdef SA_LOG_SUPPORT
-	layout->addWidget(debugBox);
+	layout->addWidget(_debugBox);
 #endif
+	layout->addWidget(optionsType);
 
-	_SAProperties = new QWidget;
-	_SAProperties->setLayout(layout);
+	_algorithmProperties = new QWidget;
+	_algorithmProperties->setLayout(layout);
+
+	layoutOptionsTypeChanged(0);
 }
 
 void GUI::createGraphProperties()
@@ -435,6 +488,23 @@ void GUI::createStatusBar()
 	statusBar()->setSizeGripEnabled(false);
 }
 
+void GUI::layoutOptionsTypeChanged(int advanced)
+{
+	if (advanced) {
+		_layoutBox->hide();
+		_compBox->hide();
+		_debugBox->show();
+		_SABox->show();
+		_graphBox->show();
+	} else {
+		_layoutBox->show();
+		_compBox->show();
+		_debugBox->hide();
+		_SABox->hide();
+		_graphBox->hide();
+	}
+}
+
 void GUI::checkActions()
 {
 	int cnt = _viewTab->count();
@@ -465,7 +535,7 @@ void GUI::tabChanged(int current)
 
 	GraphTab *tab = (GraphTab*) _viewTab->widget(current);
 
-	getSAProperties(tab);
+	getAlgorithmProperties(tab);
 	getGraphProperties(tab);
 	getMiscProperties(tab);
 
@@ -500,7 +570,7 @@ void GUI::openFile(const QString &fileName)
 {
 	GraphTab *tab = new GraphTab();
 
-	setSAProperties(tab);
+	setAlgorithmProperties(tab);
 	setGraphProperties(tab);
 	setMiscProperties(tab);
 
@@ -614,7 +684,8 @@ void GUI::reloadGraph()
 		  tr("Error loading graph") + QString(":\n")
 		  + errorDescription(error));
 		closeFile();
-	}
+	} else
+		TAB()->transformGraph();
 }
 
 void GUI::bindGraph()
@@ -689,6 +760,53 @@ void GUI::setNumSteps(int value)
 	if (TAB())
 		TAB()->setNumSteps(value);
 	getArguments();
+}
+
+void GUI::setSize(int value)
+{
+	float minvl = pow(10, (log10(EDGE_LENGTH) - EDGE_LENGTH_RANGE));
+	float maxvl = pow(10, (log10(EDGE_LENGTH) + EDGE_LENGTH_RANGE));
+	float minvn = pow(10, (log10(NODE_DISTRIBUTION) - NODE_DISTRIBUTION_RANGE));
+	float maxvn = pow(10, (log10(NODE_DISTRIBUTION) + NODE_DISTRIBUTION_RANGE));
+
+	float scalel = (maxvl - minvl) / 100;
+	float scalen = (maxvn - minvn) / 100;
+
+	_edgeLength->setValue(maxvl - scalel * value);
+	_nodeDistribution->setValue(minvn + scalen * value);
+
+	if (TAB())
+		TAB()->setSize(_sizeSlider->value());
+}
+
+void GUI::setPlanarity(int value)
+{
+	float minv = pow(10, (log10(EDGE_CROSSINGS) - EDGE_CROSSINGS_RANGE));
+	float maxv = pow(10, (log10(EDGE_CROSSINGS) + EDGE_CROSSINGS_RANGE));
+
+	float scale = (maxv - minv) / 100;
+
+	_edgeCrossings->setValue(minv + scale * value);
+
+	if (TAB())
+		TAB()->setPlanarity(_planaritySlider->value());
+}
+
+void GUI::setQuality(int value)
+{
+	float mins = pow(10, (log10(NUM_STEPS) - NUM_STEPS_RANGE));
+	float maxs = pow(10, (log10(NUM_STEPS) + NUM_STEPS_RANGE));
+	float mint = pow(10, (log10(INIT_TEMP) - INIT_TEMP_RANGE));
+	float maxt = pow(10, (log10(INIT_TEMP) + INIT_TEMP_RANGE));
+
+	float scales = (maxs - mins) / 100;
+	float scalet = (maxt - mint) / 100;
+
+	_numSteps->setValue(mins + scales * value);
+	_initTemp->setValue(mint + scalet * value);
+
+	if (TAB())
+		TAB()->setQuality(_qualitySlider->value());
 }
 
 #ifdef SA_LOG_SUPPORT
@@ -813,8 +931,12 @@ void GUI::setMiscProperties(GraphTab *tab)
 	  ? true : false);
 }
 
-void GUI::setSAProperties(GraphTab *tab)
+void GUI::setAlgorithmProperties(GraphTab *tab)
 {
+	tab->setSize(_sizeSlider->value());
+	tab->setPlanarity(_planaritySlider->value());
+	tab->setQuality(_qualitySlider->value());
+
 	tab->setNodeDistribution(_nodeDistribution->value());
 	tab->setEdgeLength(_edgeLength->value());
 	tab->setEdgeCrossings(_edgeCrossings->value());
@@ -914,8 +1036,12 @@ void GUI::getMiscProperties(GraphTab *tab)
 	getArguments();
 }
 
-void GUI::getSAProperties(GraphTab *tab)
+void GUI::getAlgorithmProperties(GraphTab *tab)
 {
+	BLOCK(_sizeSlider, setValue(tab->size()));
+	BLOCK(_planaritySlider, setValue(tab->planarity()));
+	BLOCK(_qualitySlider, setValue(tab->quality()));
+
 	BLOCK(_nodeDistribution, setValue(tab->nodeDistribution()));
 	BLOCK(_edgeLength, setValue(tab->edgeLength()));
 	BLOCK(_edgeCrossings, setValue(tab->edgeCrossings()));
@@ -977,6 +1103,9 @@ void GUI::writeSettings()
 	settings.endGroup();
 
 	settings.beginGroup(ALGORITHM_GROUP);
+	settings.setValue(SIZE_SLIDER_SETTING, _sizeSlider->value());
+	settings.setValue(PLANARITY_SLIDER_SETTING, _planaritySlider->value());
+	settings.setValue(QUALITY_SLIDER_SETTING, _qualitySlider->value());
 	settings.setValue(NODE_DISTRIBUTION_SETTING, _nodeDistribution->value());
 	settings.setValue(EDGE_LENGTH_SETTING, _edgeLength->value());
 	settings.setValue(EDGE_CROSSINGS_SETTING, _edgeCrossings->value());
@@ -1030,6 +1159,11 @@ void GUI::readSettings()
 	settings.endGroup();
 
 	settings.beginGroup(ALGORITHM_GROUP);
+	_sizeSlider->setValue(settings.value(SIZE_SLIDER_SETTING, 50).toInt());
+	_planaritySlider->setValue(settings.value(PLANARITY_SLIDER_SETTING,
+	  50).toInt());
+	_qualitySlider->setValue(settings.value(QUALITY_SLIDER_SETTING,
+	  50).toInt());
 	_nodeDistribution->setValue(settings.value(NODE_DISTRIBUTION_SETTING,
 	  NODE_DISTRIBUTION).toFloat());
 	_edgeLength->setValue(settings.value(EDGE_LENGTH_SETTING,
@@ -1055,7 +1189,7 @@ void GUI::readSettings()
 		}
 	}
 	_antialiasing->setChecked((Qt::CheckState)settings.value(
-	  ANTIALIASING_SETTING, Qt::Unchecked).toBool());
+	  ANTIALIASING_SETTING, Qt::Checked).toBool());
 	_argumentsEscape->setChecked((Qt::CheckState)settings.value(
 	  ESCAPE_SPECIALS_SETTING, Qt::Unchecked).toBool());
 	settings.endGroup();

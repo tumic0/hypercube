@@ -21,6 +21,10 @@ GraphTab::GraphTab()
 	layout->setContentsMargins(0, 0, 0, 0);
 	layout->addWidget(_view);
 	setLayout(layout);
+
+	_size = 50;
+	_planarity = 50;
+	_quality = 50;
 }
 
 GraphTab::~GraphTab()
@@ -105,6 +109,7 @@ Graph *GraphTab::graph()
 void GraphTab::transformGraph(void)
 {
 	storeGraph();
+	_graph->randomize();
 	_sa->compute(_graph);
 	_graph->center();
 	loadGraph();
@@ -203,8 +208,10 @@ void GraphTab::setEdgeZValue(int value)
 void GraphTab::setInputEncoding(Encoding *encoding)
 {
 	_inputEncoding = encoding;
-	if (_inputProvider)
+	if (_inputProvider) {
 		readGraph();
+		transformGraph();
+	}
 }
 
 bool GraphTab::antialiasing() const

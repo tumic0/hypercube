@@ -30,6 +30,9 @@
 #define FINAL_TEMP_SETTING "finalTemp"
 #define COOL_FACTOR_SETTING "coolFactor"
 #define NUM_STEPS_SETTING "numSteps"
+#define SIZE_SLIDER_SETTING "size"
+#define PLANARITY_SLIDER_SETTING "planarity"
+#define QUALITY_SLIDER_SETTING "quality"
 
 #define MISC_GROUP "Misc"
 #define INPUT_ENCODING_SETTING "inputEncoding"

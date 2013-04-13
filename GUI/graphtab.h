@@ -58,6 +58,14 @@ public:
 	void colorizeEdges(bool colorize);
 	void setEdgeZValue(int value);
 
+
+	int size() const {return _size;}
+	void setSize(int value) {_size = value;}
+	int planarity() const {return _planarity;}
+	void setPlanarity(int value) {_planarity = value;}
+	int quality() const {return _quality;}
+	void setQuality(int value) {_quality = value;}
+
 	float nodeDistribution() const {return _sa->nodeDistribution();}
 	void setNodeDistribution(float value) {_sa->setNodeDistribution(value);}
 	float edgeLength() const {return _sa->edgeLength();}
@@ -105,6 +113,9 @@ private:
 	bool _showEdgeValues;
 	bool _coloredEdges;
 	bool _directedGraph;
+	int _size;
+	int _planarity;
+	int _quality;
 };
 
 #endif /* GRAPHTAB_H_ */
