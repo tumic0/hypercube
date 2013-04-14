@@ -40,9 +40,9 @@
 	QString("%1%").arg((int)((zoom) * 100))
 
 #define MIN_VAL(midpoint, orderRange) \
-	(pow(10.0f, (log10((float)(midpoint)) - (orderRange))))
+	(pow(10.0f, log10((float)(midpoint)) - (float)(orderRange)))
 #define MAX_VAL(midpoint, orderRange) \
-	(pow(10.0f, (log10((float)(midpoint)) + (orderRange))))
+	(pow(10.0f, log10((float)(midpoint)) + (float)(orderRange)))
 #define SCALE(min, max) \
 	(((max) - (min)) / 100.0f)
 

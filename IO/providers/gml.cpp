@@ -225,7 +225,7 @@ void GmlGraphInput::value(ValueType parent, ValueType key)
 			if (parent == EDGE && key == TARGET)
 				_edgeAttributes.target = _int;
 			if (parent == GRAPH && key == DIRECTED)
-				_graphAttributes.directed = _int;
+				_graphAttributes.directed = _int ? true : false;
 			nextToken();
 			break;
 		case REAL:

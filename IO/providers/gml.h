@@ -62,7 +62,7 @@ private:
 	};
 
 	struct GraphAttributes {
-		int directed;
+		bool directed;
 	};
 
 	void error();
