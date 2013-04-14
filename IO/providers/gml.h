@@ -36,7 +36,8 @@ private:
 		ID,
 		LABEL,
 		SOURCE,
-		TARGET
+		TARGET,
+		DIRECTED
 	};
 
 	struct Keyword {
@@ -60,6 +61,10 @@ private:
 		std::wstring label;
 	};
 
+	struct GraphAttributes {
+		int directed;
+	};
+
 	void error();
 	void nextToken();
 	void compare(Token token);
@@ -71,7 +76,9 @@ private:
 	void checkRelation(ValueType key, ValueType parent);
 	bool handleKey(ValueType type);
 
-	void clearAttributes();
+	void clearNodeAttributes();
+	void clearEdgeAttributes();
+	void clearGraphAttributes();
 	void setVertexAttributes(Vertex *vertex);
 	void setEdgeAttributes(Edge *edge);
 
@@ -88,6 +95,7 @@ private:
 	Token _token;
 	unsigned _line;
 
+	GraphAttributes _graphAttributes;
 	NodeAttributes _nodeAttributes;
 	EdgeAttributes _edgeAttributes;
 

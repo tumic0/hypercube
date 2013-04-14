@@ -1,12 +1,12 @@
 #include <cstring>
 #include <cerrno>
 #include <sstream>
+#include "CORE/misc.h"
 #include "gml.h"
 
 using namespace std;
 
 
-#define NUM_KEYWORDS (sizeof(keywords) / sizeof(Keyword))
 const GmlGraphInput::Keyword GmlGraphInput::keywords[] = {
 	{NODE, L"node"},
 	{EDGE, L"edge"},
@@ -14,16 +14,17 @@ const GmlGraphInput::Keyword GmlGraphInput::keywords[] = {
 	{ID, L"id"},
 	{LABEL, L"label"},
 	{SOURCE, L"source"},
-	{TARGET, L"target"}
+	{TARGET, L"target"},
+	{DIRECTED, L"directed"}
 };
 
-#define NUM_RELATIONS (sizeof(relations) / sizeof(Relation))
 const GmlGraphInput::Relation GmlGraphInput::relations[] = {
 	{NODE, GRAPH},
 	{EDGE, GRAPH},
 	{SOURCE, EDGE},
 	{TARGET, EDGE},
-	{GRAPH, ROOT}
+	{GRAPH, ROOT},
+	{DIRECTED, GRAPH}
 };
 
 
@@ -223,6 +224,8 @@ void GmlGraphInput::value(ValueType parent, ValueType key)
 				_edgeAttributes.source = _int;
 			if (parent == EDGE && key == TARGET)
 				_edgeAttributes.target = _int;
+			if (parent == GRAPH && key == DIRECTED)
+				_graphAttributes.directed = _int;
 			nextToken();
 			break;
 		case REAL:
@@ -273,13 +276,15 @@ bool GmlGraphInput::parse()
 {
 	_line = 1;
 	_token = START;
-	clearAttributes();
+
+	clearNodeAttributes();
+	clearEdgeAttributes();
+	clearGraphAttributes();
 
 	nextToken();
 	list(ROOT);
 
 	_vertexes.clear();
-	clearAttributes();
 
 	if (_token == EOI)
 		return true;
@@ -291,7 +296,7 @@ bool GmlGraphInput::parse()
 
 GmlGraphInput::ValueType GmlGraphInput::valueType()
 {
-	for (size_t i = 0; i < NUM_KEYWORDS ; i++)
+	for (size_t i = 0; i < ARRAY_SIZE(keywords) ; i++)
 		if (_string == keywords[i].name)
 			return keywords[i].value;
 
@@ -300,7 +305,7 @@ GmlGraphInput::ValueType GmlGraphInput::valueType()
 
 void GmlGraphInput::checkRelation(ValueType key, ValueType parent)
 {
-	for (size_t i = 0; i < NUM_RELATIONS; i++) {
+	for (size_t i = 0; i < ARRAY_SIZE(relations); i++) {
 		if (key == relations[i].key) {
 			if (parent != relations[i].parent)
 				error();
@@ -320,7 +325,7 @@ bool GmlGraphInput::handleKey(ValueType type)
 				return false;
 			v = addVertex(_nodeAttributes.id);
 			setVertexAttributes(v);
-			clearAttributes();
+			clearNodeAttributes();
 			return true;
 
 		case EDGE:
@@ -328,7 +333,7 @@ bool GmlGraphInput::handleKey(ValueType type)
 				return false;
 			e = addEdge(_edgeAttributes.source, _edgeAttributes.target);
 			setEdgeAttributes(e);
-			clearAttributes();
+			clearEdgeAttributes();
 			return true;
 
 		default:
@@ -362,14 +367,22 @@ Edge* GmlGraphInput::addEdge(int source, int target)
 	return _graph->addEdge(src, dst);
 }
 
-void GmlGraphInput::clearAttributes()
+void GmlGraphInput::clearNodeAttributes()
 {
 	_nodeAttributes.label.clear();
 	_nodeAttributes.id = -1;
+}
 
+void GmlGraphInput::clearEdgeAttributes()
+{
 	_edgeAttributes.label.clear();
 	_edgeAttributes.source = -1;
 	_edgeAttributes.target = -1;
+}
+
+void GmlGraphInput::clearGraphAttributes()
+{
+	_graphAttributes.directed = 0;
 }
 
 void GmlGraphInput::setVertexAttributes(Vertex *vertex)
@@ -407,6 +420,8 @@ IO::Error GmlGraphInput::readGraph(Graph *graph, const char *fileName,
 	} else {
 		if (!parse())
 			err = (_fs.fail()) ? ReadError : FormatError;
+		else
+			_graph->setDirected(_graphAttributes.directed);
 	}
 
 	_fs.close();

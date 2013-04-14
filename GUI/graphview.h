@@ -18,7 +18,9 @@ public:
 	virtual ~GraphView();
 
 	void setDimensions(const QPoint dimensions);
-	QPoint dimensions(void) const {return _dimensions;}
+	QPoint dimensions() const {return _dimensions;}
+	void setDirectedGraph(bool state);
+	bool directedGraph() const {return _directed;}
 
 	VertexItem* addVertex();
 	EdgeItem* addEdge(VertexItem *src, VertexItem *dst);
@@ -30,7 +32,6 @@ public:
 
 	void clear();
 
-	void setDirectedGraph(bool state);
 	void showEdgeValues(bool visible);
 	void showVertexIDs(bool visible);
 	void setVertexColor(const QColor &color);
@@ -57,6 +58,7 @@ private:
 	QVector<EdgeItem*> _edges;
 
 	QPoint _dimensions;
+	bool _directed;
 };
 
 #endif /* GRAPHSCENE_H_ */

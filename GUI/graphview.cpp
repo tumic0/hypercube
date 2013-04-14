@@ -65,6 +65,7 @@ VertexItem* GraphView::addVertex()
 EdgeItem* GraphView::addEdge(VertexItem *src, VertexItem *dst)
 {
 	EdgeItem *e = new EdgeItem(src, dst);
+	e->setDirected(_directed);
 	_scene->addItem(e);
 	_edges.append(e);
 
@@ -90,6 +91,13 @@ void GraphView::setDimensions(const QPoint dimensions)
 	_dimensions = dimensions;
 }
 
+void GraphView::setDirectedGraph(bool state)
+{
+	_directed = state;
+
+	for (int i = 0; i < _edges.size(); i++)
+		_edges.at(i)->setDirected(state);
+}
 
 void GraphView::setVertexColor(const QColor &color)
 {
@@ -131,12 +139,6 @@ void GraphView::setEdgeZValue(int value)
 {
 	for (int i = 0; i < _edges.size(); i++)
 		_edges.at(i)->setZValue(value);
-}
-
-void GraphView::setDirectedGraph(bool state)
-{
-	for (int i = 0; i < _edges.size(); i++)
-		_edges.at(i)->setDirected(state);
 }
 
 

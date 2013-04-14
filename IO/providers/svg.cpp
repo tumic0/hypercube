@@ -68,7 +68,7 @@ void SvgGraphOutput::edges(Graph *graph, wofstream &fs)
 				   << "\">" << text << "</text>" << endl;
 			}
 
-			if (e->directed()) {
+			if (graph->directed()) {
 				if (e->twin())
 					line.setP1(line.pointAt(0.5));
 

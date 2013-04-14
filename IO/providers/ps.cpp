@@ -118,7 +118,7 @@ void PsGraphOutput::edges(Graph *graph, wofstream &fs)
 				   << t.x() << " " << tr(t.y(), dim) << " d" << endl;
 			}
 
-			if (e->directed()) {
+			if (graph->directed()) {
 				if (e->twin())
 					line.setP1(line.pointAt(0.5));
 

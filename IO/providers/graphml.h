@@ -44,13 +44,15 @@ private:
 		std::wstring source;
 		std::wstring target;
 		std::wstring encoding;
+		std::wstring edgedefault;
 	};
 
 	Vertex *addVertex(const std::wstring &id);
 	Edge *addEdge(const std::wstring &source, const std::wstring &target);
 
 	void clearAttributes();
-	void setAttribute(const std::wstring &attr, const std::wstring &value);
+	void setAttribute(const std::wstring &element, const std::wstring &attr,
+	  const std::wstring &value);
 	void handleElement(const std::wstring &element);
 
 	void setEncoding(const std::wstring &encoding);
@@ -66,8 +68,8 @@ private:
 	void comment();
 	void cdata();
 	void special();
-	void attribute();
-	bool attributes();
+	void attribute(const std::wstring &element);
+	bool attributes(const std::wstring &element);
 	void nextItem(const std::wstring &parent);
 	void elementType(const std::wstring &parent);
 	void element(const std::wstring &parent);

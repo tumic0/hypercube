@@ -56,6 +56,7 @@ IO::Error GraphTab::readGraph(const QString &fileName)
 
 	_inputFileName = fileName;
 
+	getGraphProperties();
 	setGraphProperties();
 	loadGraph();
 
@@ -74,6 +75,7 @@ IO::Error GraphTab::readGraph()
 	if (error != IO::Ok)
 		return error;
 
+	getGraphProperties();
 	setGraphProperties();
 	loadGraph();
 
@@ -194,9 +196,13 @@ void GraphTab::colorizeEdges(bool colorize)
 		_view->setEdgeColor(_edgeColor);
 }
 
+bool GraphTab::directedGraph() const
+{
+	return _view->directedGraph();
+}
+
 void GraphTab::setDirectedGraph(bool state)
 {
-	_directedGraph = state;
 	_view->setDirectedGraph(state);
 }
 
@@ -240,6 +246,7 @@ void GraphTab::loadGraph()
 
 	_view->setDimensions(QPoint(_graph->dimensions().x(),
 	  _graph->dimensions().y()));
+	_view->setDirectedGraph(_graph->directed());
 
 	for (size_t i = 0; i < _graph->vertex_size(); i++) {
 		vtx = _graph->vertex(i);
@@ -264,7 +271,6 @@ void GraphTab::loadGraph()
 		e->setText(QString::fromStdWString(edg->text()));
 		e->setFontSize(edg->fontSize());
 		e->setZValue(edg->zValue());
-		e->setDirected(edg->directed());
 		e->setTwin(edg->twin());
 	}
 }
@@ -282,6 +288,7 @@ void GraphTab::storeGraph()
 
 	_graph->setDimensions(Coordinates(_view->dimensions().x(),
 	  _view->dimensions().y()));
+	_graph->setDirected(_view->directedGraph());
 
 	for (int i = 0; i < _view->vertex_size(); i++) {
 		v = _view->vertex(i);
@@ -305,9 +312,13 @@ void GraphTab::storeGraph()
 		edg->setText(e->text().toStdWString());
 		edg->setFontSize(e->fontSize());
 		edg->setZValue(e->zValue());
-		edg->setDirected(e->directed());
 		edg->setTwin(e->twin());
 	}
+}
+
+void GraphTab::getGraphProperties()
+{
+	_view->setDirectedGraph(_graph->directed());
 }
 
 void GraphTab::setGraphProperties()
@@ -321,7 +332,6 @@ void GraphTab::setGraphProperties()
 	_graph->setEdgeSize(_edgeSize);
 	_graph->setVertexFontSize(_showVertexIDs ? _vertexFontSize : 0);
 	_graph->setEdgeFontSize(_showEdgeValues ? _edgeFontSize : 0);
-	_graph->setDirected(_directedGraph);
 
 	_graph->setDimensions(Coordinates(_dimensions.x(), _dimensions.y()));
 	_graph->randomize();

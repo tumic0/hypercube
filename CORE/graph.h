@@ -17,6 +17,8 @@ class Edge;
 class Graph
 {
 public:
+	Graph();
+
 	Vertex *addVertex();
 	Edge *addEdge(Vertex *src, Vertex *dst);
 
@@ -28,6 +30,9 @@ public:
 	Coordinates dimensions() const {return _dimensions;}
 	void setDimensions(const Coordinates &dimensions)
 	  {_dimensions = dimensions;}
+	bool directed() const {return _directed;}
+	void setDirected(bool state) {_directed = state;}
+
 
 	void updateCoordinates(size_t vid);
 	void updateMargins(size_t vid);
@@ -51,7 +56,6 @@ public:
 	void setEdgeSize(int size);
 	void setVertexFontSize(int size);
 	void setEdgeFontSize(int size);
-	void setDirected(bool state);
 
 private:
 	void checkTwin(Edge *e);

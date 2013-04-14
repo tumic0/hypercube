@@ -1,5 +1,6 @@
 #include <cstring>
 #include <cerrno>
+#include "CORE/misc.h"
 #include "IO/modules.h"
 #include "IO/encodings/utf8cvt.h"
 #include "IO/encodings/latin1.h"
@@ -14,7 +15,6 @@ using namespace std;
 	(isStartName((c)) || (c) == '-' || (c) == '.')
 
 
-#define NUM_RELATIONS (sizeof(relations) / sizeof(Relation))
 const GraphmlGraphInput::Relation GraphmlGraphInput::relations[] = {
 	{L"graphml", L""},
 	{L"graph", L"graphml"},
@@ -60,7 +60,7 @@ Edge* GraphmlGraphInput::addEdge(const wstring &source, const wstring &target)
 
 void GraphmlGraphInput::checkRelation(const wstring &node, const wstring &parent)
 {
-	for (size_t i = 0; i < NUM_RELATIONS; i++) {
+	for (size_t i = 0; i < ARRAY_SIZE(relations); i++) {
 		if (node == relations[i].node) {
 			if (parent != relations[i].parent)
 				error();
@@ -88,16 +88,25 @@ void GraphmlGraphInput::setEncoding(const wstring &encoding)
 	_fs.imbue(lc);
 }
 
-void GraphmlGraphInput::setAttribute(const wstring &attr, const wstring &value)
+void GraphmlGraphInput::setAttribute(const wstring &element,
+  const wstring &attr, const wstring &value)
 {
-	if (attr == L"id")
-		_attributes.id = value;
-	if (attr == L"source")
-		_attributes.source = value;
-	if (attr == L"target")
-		_attributes.target = value;
-	if (attr == L"encoding")
-		_attributes.encoding = value;
+	if (element == L"node" || element == L"edge") {
+		if (attr == L"id")
+			_attributes.id = value;
+	}
+	if (element == L"edge") {
+		if (attr == L"source")
+			_attributes.source = value;
+		if (attr == L"target")
+			_attributes.target = value;
+	} else if (element == L"xml") {
+		if (attr == L"encoding")
+			_attributes.encoding = value;
+	} else if (element == L"graph") {
+		if (attr == L"edgedefault")
+			_attributes.edgedefault = value;
+	}
 }
 
 void GraphmlGraphInput::clearAttributes()
@@ -424,7 +433,7 @@ void GraphmlGraphInput::special()
 	}
 }
 
-void GraphmlGraphInput::attribute()
+void GraphmlGraphInput::attribute(const wstring &element)
 {
 	wstring attr, value;
 
@@ -437,7 +446,7 @@ void GraphmlGraphInput::attribute()
 	if (_token == ERROR)
 		return;
 
-	setAttribute(attr, value);
+	setAttribute(element, attr, value);
 }
 
 void GraphmlGraphInput::xmlAttributes()
@@ -448,12 +457,12 @@ void GraphmlGraphInput::xmlAttributes()
 			case ERROR:
 				return;
 			default:
-				attribute();
+				attribute(L"xml");
 		}
 	}
 }
 
-bool GraphmlGraphInput::attributes()
+bool GraphmlGraphInput::attributes(const wstring &element)
 {
 	clearAttributes();
 
@@ -465,7 +474,7 @@ bool GraphmlGraphInput::attributes()
 			case GT:
 				return false;
 			case IDENT:
-				attribute();
+				attribute(element);
 				break;
 			default:
 				error();
@@ -517,7 +526,7 @@ void GraphmlGraphInput::element(const wstring &parent)
 	start = _string;
 	compare(IDENT);
 	checkRelation(start, parent);
-	closed = attributes();
+	closed = attributes(start);
 	compare(GT);
 	if (_token == ERROR)
 		return;
@@ -677,6 +686,7 @@ bool GraphmlGraphInput::parse()
 	_line = 1;
 	_token = START;
 	_attributes.encoding = L"utf-8";
+	_attributes.edgedefault = L"directed";
 
 	nextToken();
 	xml();
@@ -708,6 +718,8 @@ IO::Error GraphmlGraphInput::readGraph(Graph *graph, const char *fileName,
 	} else {
 		if (!parse())
 			err = (_fs.fail()) ? ReadError : FormatError;
+		else
+			_graph->setDirected((_attributes.edgedefault == L"directed"));
 	}
 
 	_fs.close();

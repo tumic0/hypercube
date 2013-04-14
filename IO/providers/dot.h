@@ -89,6 +89,7 @@ private:
 
 	std::map<std::wstring, Vertex*> _vertexes;
 	Attributes _nodeAttributes, _edgeAttributes;
+	bool _directed;
 
 	Graph *_graph;
 };

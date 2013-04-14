@@ -1,12 +1,12 @@
 #include <cstring>
 #include <cerrno>
 #include <cctype>
+#include "CORE/misc.h"
 #include "dot.h"
 
 using namespace std;
 
 
-#define NUM_KEYWORDS (sizeof(keywords) / sizeof(Keyword))
 const DotGraphInput::Keyword DotGraphInput::keywords[] = {
 	{NODE, L"NODE"},
 	{EDGE, L"EDGE"},
@@ -18,7 +18,7 @@ const DotGraphInput::Keyword DotGraphInput::keywords[] = {
 
 DotGraphInput::Token DotGraphInput::keyword()
 {
-	for (size_t i = 0; i < NUM_KEYWORDS ; i++)
+	for (size_t i = 0; i < ARRAY_SIZE(keywords); i++)
 		if (stringCaseCmp(_id, keywords[i].name))
 			return keywords[i].token;
 
@@ -515,7 +515,11 @@ void DotGraphInput::graphType()
 {
 	switch (_token) {
 		case GRAPH:
+			_directed = 0;
+			nextToken();
+			break;
 		case DIGRAPH:
+			_directed = 1;
 			nextToken();
 			break;
 		default:
@@ -630,6 +634,8 @@ IO::Error DotGraphInput::readGraph(Graph *graph, const char *fileName,
 	} else {
 		if (!parse())
 			err = (_fs.fail()) ? ReadError : FormatError;
+		else
+			_graph->setDirected(_directed);
 	}
 
 	_fs.close();

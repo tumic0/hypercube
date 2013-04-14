@@ -22,9 +22,16 @@ static const Margin max(const Margin &a, const Margin &b)
 }
 
 
+Graph::Graph()
+{
+	_dimensions = Coordinates(0, 0);
+	_directed = 0;
+}
+
 void Graph::clear()
 {
 	_dimensions = Coordinates(0, 0);
+	_directed = 0;
 
 	_vertexes.clear();
 	_edges.clear();
@@ -261,10 +268,4 @@ void Graph::setEdgeFontSize(int size)
 {
 	for (size_t i = 0; i < _edges.size(); i++)
 		_edges[i]->setFontSize(size);
-}
-
-void Graph::setDirected(bool state)
-{
-	for (size_t i = 0; i < _edges.size(); i++)
-		_edges[i]->setDirected(state);
 }

@@ -51,7 +51,7 @@ public:
 	bool vertexIDs() const {return _showVertexIDs;}
 	bool edgeValues() const {return _showEdgeValues;}
 	bool coloredEdges() const {return _coloredEdges;}
-	bool directedGraph() const {return _directedGraph;}
+	bool directedGraph() const;
 	void setDirectedGraph(bool state);
 	void showVertexIDs(bool show);
 	void showEdgeValues(bool show);
@@ -90,6 +90,7 @@ public:
 private:
 	void loadGraph();
 	void storeGraph();
+	void getGraphProperties();
 	void setGraphProperties();
 
 	Graph *_graph;
@@ -112,7 +113,7 @@ private:
 	bool _showVertexIDs;
 	bool _showEdgeValues;
 	bool _coloredEdges;
-	bool _directedGraph;
+
 	int _size;
 	int _planarity;
 	int _quality;

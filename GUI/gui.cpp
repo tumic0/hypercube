@@ -595,6 +595,7 @@ void GUI::openFile(const QString &fileName)
 		delete tab;
 	} else {
 		tab->transformGraph();
+		getGraphProperties(tab);
 
 		QFileInfo fi(fileName);
 		int index = _viewTab->addTab(tab, fi.fileName());
@@ -693,8 +694,10 @@ void GUI::reloadGraph()
 		  tr("Error loading graph") + QString(":\n")
 		  + errorDescription(error));
 		closeFile();
-	} else
+	} else {
 		TAB()->transformGraph();
+		getGraphProperties(TAB());
+	}
 }
 
 void GUI::bindGraph()
