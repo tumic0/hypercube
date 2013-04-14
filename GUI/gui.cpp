@@ -21,21 +21,30 @@
 #include "IO/modules.h"
 
 
-#define EDGE_LENGTH_RANGE       1
-#define NODE_DISTRIBUTION_RANGE 1
-#define EDGE_CROSSINGS_RANGE    2
-#define NUM_STEPS_RANGE         0.5
-#define INIT_TEMP_RANGE         0.5
+#define EDGE_LENGTH_ORDER_RANGE       1
+#define NODE_DISTRIBUTION_ORDER_RANGE 1
+#define EDGE_CROSSINGS_ORDER_RANGE    2
+#define NUM_STEPS_ORDER_RANGE         0.5
+#define INIT_TEMP_ORDER_RANGE         0.5
 
 
-#define TAB() ((GraphTab*) _viewTab->currentWidget())
+#define TAB() \
+	((GraphTab*) _viewTab->currentWidget())
 
 #define BLOCK(widget, action) \
 	widget->blockSignals(true); \
 	widget->action; \
 	widget->blockSignals(false)
 
-#define ZOOM_STRING(zoom) QString("%1%").arg((int)((zoom) * 100))
+#define ZOOM_STRING(zoom) \
+	QString("%1%").arg((int)((zoom) * 100))
+
+#define MIN_VAL(midpoint, orderRange) \
+	(pow(10.0f, (log10((float)(midpoint)) - (orderRange))))
+#define MAX_VAL(midpoint, orderRange) \
+	(pow(10.0f, (log10((float)(midpoint)) + (orderRange))))
+#define SCALE(min, max) \
+	(((max) - (min)) / 100.0f)
 
 
 static QString saveFilter(OutputProvider *provider);
@@ -764,13 +773,12 @@ void GUI::setNumSteps(int value)
 
 void GUI::setSize(int value)
 {
-	float minvl = pow(10, (log10(EDGE_LENGTH) - EDGE_LENGTH_RANGE));
-	float maxvl = pow(10, (log10(EDGE_LENGTH) + EDGE_LENGTH_RANGE));
-	float minvn = pow(10, (log10(NODE_DISTRIBUTION) - NODE_DISTRIBUTION_RANGE));
-	float maxvn = pow(10, (log10(NODE_DISTRIBUTION) + NODE_DISTRIBUTION_RANGE));
-
-	float scalel = (maxvl - minvl) / 100;
-	float scalen = (maxvn - minvn) / 100;
+	float minvl = MIN_VAL(EDGE_LENGTH, EDGE_LENGTH_ORDER_RANGE);
+	float maxvl = MAX_VAL(EDGE_LENGTH, EDGE_LENGTH_ORDER_RANGE);
+	float minvn = MIN_VAL(NODE_DISTRIBUTION, NODE_DISTRIBUTION_ORDER_RANGE);
+	float maxvn = MAX_VAL(NODE_DISTRIBUTION, NODE_DISTRIBUTION_ORDER_RANGE);
+	float scalel = SCALE(minvl, maxvl);
+	float scalen = SCALE(minvn, maxvn);
 
 	_edgeLength->setValue(maxvl - scalel * value);
 	_nodeDistribution->setValue(minvn + scalen * value);
@@ -781,10 +789,9 @@ void GUI::setSize(int value)
 
 void GUI::setPlanarity(int value)
 {
-	float minv = pow(10, (log10(EDGE_CROSSINGS) - EDGE_CROSSINGS_RANGE));
-	float maxv = pow(10, (log10(EDGE_CROSSINGS) + EDGE_CROSSINGS_RANGE));
-
-	float scale = (maxv - minv) / 100;
+	float minv = MIN_VAL(EDGE_CROSSINGS, EDGE_CROSSINGS_ORDER_RANGE);
+	float maxv = MAX_VAL(EDGE_CROSSINGS, EDGE_CROSSINGS_ORDER_RANGE);
+	float scale = SCALE(minv, maxv);
 
 	_edgeCrossings->setValue(minv + scale * value);
 
@@ -794,13 +801,12 @@ void GUI::setPlanarity(int value)
 
 void GUI::setQuality(int value)
 {
-	float mins = pow(10, (log10(NUM_STEPS) - NUM_STEPS_RANGE));
-	float maxs = pow(10, (log10(NUM_STEPS) + NUM_STEPS_RANGE));
-	float mint = pow(10, (log10(INIT_TEMP) - INIT_TEMP_RANGE));
-	float maxt = pow(10, (log10(INIT_TEMP) + INIT_TEMP_RANGE));
-
-	float scales = (maxs - mins) / 100;
-	float scalet = (maxt - mint) / 100;
+	float mins = MIN_VAL(NUM_STEPS, NUM_STEPS_ORDER_RANGE);
+	float maxs = MAX_VAL(NUM_STEPS, NUM_STEPS_ORDER_RANGE);
+	float mint = MIN_VAL(INIT_TEMP, INIT_TEMP_ORDER_RANGE);
+	float maxt = MAX_VAL(INIT_TEMP, INIT_TEMP_ORDER_RANGE);
+	float scales = SCALE(mins, maxs);
+	float scalet = SCALE(mint, maxt);
 
 	_numSteps->setValue(mins + scales * value);
 	_initTemp->setValue(mint + scalet * value);
