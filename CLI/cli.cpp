@@ -48,7 +48,8 @@ CLI::CLI(int argc, char *argv[])
 	_numSteps = NUM_STEPS;
 
 	_coloredEdges = false;
-	_directedGraph = false;
+	_forceDirected = false;
+	_forceUndirected = false;
 }
 
 CLI::~CLI()
@@ -181,6 +182,7 @@ void CLI::usage()
 	cout << " -vf <size>       set vertex font size to <size>" << endl;
 	cout << " -ef <size>       set edge font size to <size>" << endl;
 	cout << " -d               directed graph" << endl;
+	cout << " -u               undirected graph" << endl;
 	cout << " -c               asign a unique color to every uniqe edge value"
 		 << endl;
 	cout << endl;
@@ -238,7 +240,8 @@ int CLI::argument(int i)
 	ARG("-ns", _numSteps);
 
 	SWITCH("-c", _coloredEdges);
-	SWITCH("-d", _directedGraph);
+	SWITCH("-d", _forceDirected);
+	SWITCH("-u", _forceUndirected);
 
 	return 0;
 }
@@ -288,6 +291,10 @@ bool CLI::parseArguments()
 void CLI::setGraphProperties()
 {
 	_graph->setDimensions(_dimensions);
+	if (_forceDirected)
+		_graph->setDirected(true);
+	if (_forceUndirected)
+		_graph->setDirected(false);
 
 	_graph->setVertexColor(_vertexColor);
 	_graph->setVertexSize(_vertexSize);
@@ -295,7 +302,6 @@ void CLI::setGraphProperties()
 		_graph->colorize();
 	else
 		_graph->setEdgeColor(_edgeColor);
-	_graph->setDirected(_directedGraph);
 	_graph->setEdgeSize(_edgeSize);
 	_graph->setVertexFontSize(_vertexFontSize);
 	_graph->setEdgeFontSize(_edgeFontSize);
