@@ -78,7 +78,10 @@ private:
 
 	void clearNodeAttributes();
 	void clearEdgeAttributes();
-	void clearGraphAttributes();
+	void initGraphAttributes();
+	void setIntAttribute(ValueType parent, ValueType key, int value);
+	void setStringAttribute(ValueType parent, ValueType key,
+	  const std::wstring &value);
 	void setVertexAttributes(Vertex *vertex);
 	void setEdgeAttributes(Edge *edge);
 

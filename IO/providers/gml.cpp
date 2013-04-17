@@ -218,24 +218,14 @@ void GmlGraphInput::value(ValueType parent, ValueType key)
 {
 	switch (_token) {
 		case INT:
-			if (parent == NODE && key == ID)
-				_nodeAttributes.id = _int;
-			if (parent == EDGE && key == SOURCE)
-				_edgeAttributes.source = _int;
-			if (parent == EDGE && key == TARGET)
-				_edgeAttributes.target = _int;
-			if (parent == GRAPH && key == DIRECTED)
-				_graphAttributes.directed = _int ? true : false;
+			setIntAttribute(parent, key, _int);
 			nextToken();
 			break;
 		case REAL:
 			nextToken();
 			break;
 		case STRING:
-			if (parent == NODE && key == LABEL)
-				_nodeAttributes.label = _string;
-			if (parent == EDGE && key == LABEL)
-				_edgeAttributes.label = _string;
+			setStringAttribute(parent, key, _string);
 			nextToken();
 			break;
 		case LBRK:
@@ -279,7 +269,7 @@ bool GmlGraphInput::parse()
 
 	clearNodeAttributes();
 	clearEdgeAttributes();
-	clearGraphAttributes();
+	initGraphAttributes();
 
 	nextToken();
 	list(ROOT);
@@ -380,9 +370,34 @@ void GmlGraphInput::clearEdgeAttributes()
 	_edgeAttributes.target = -1;
 }
 
-void GmlGraphInput::clearGraphAttributes()
+void GmlGraphInput::initGraphAttributes()
 {
 	_graphAttributes.directed = 0;
+}
+
+void GmlGraphInput::setIntAttribute(ValueType parent, ValueType key, int value)
+{
+	if (parent == NODE) {
+		if (key == ID)
+			_nodeAttributes.id = value;
+	} else if (parent == EDGE) {
+		if (key == SOURCE)
+			_edgeAttributes.source = value;
+		if (key == TARGET)
+			_edgeAttributes.target = value;
+	} else if (parent == GRAPH) {
+		if (key == DIRECTED)
+			_graphAttributes.directed = value ? true : false;
+	}
+}
+
+void GmlGraphInput::setStringAttribute(ValueType parent, ValueType key,
+  const wstring &value)
+{
+	if (parent == NODE && key == LABEL)
+		_nodeAttributes.label = value;
+	if (parent == EDGE && key == LABEL)
+		_edgeAttributes.label = value;
 }
 
 void GmlGraphInput::setVertexAttributes(Vertex *vertex)

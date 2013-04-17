@@ -91,29 +91,41 @@ void GraphmlGraphInput::setEncoding(const wstring &encoding)
 void GraphmlGraphInput::setAttribute(const wstring &element,
   const wstring &attr, const wstring &value)
 {
-	if (element == L"node" || element == L"edge") {
+	if (element == L"node") {
 		if (attr == L"id")
-			_attributes.id = value;
-	}
-	if (element == L"edge") {
+			_nodeAttributes.id = value;
+	} else if (element == L"edge") {
+		if (attr == L"id")
+			_edgeAttributes.id = value;
 		if (attr == L"source")
-			_attributes.source = value;
+			_edgeAttributes.source = value;
 		if (attr == L"target")
-			_attributes.target = value;
+			_edgeAttributes.target = value;
 	} else if (element == L"xml") {
 		if (attr == L"encoding")
-			_attributes.encoding = value;
+			_graphAttributes.encoding = value;
 	} else if (element == L"graph") {
 		if (attr == L"edgedefault")
-			_attributes.edgedefault = value;
+			_graphAttributes.edgedefault = value;
 	}
 }
 
-void GraphmlGraphInput::clearAttributes()
+void GraphmlGraphInput::initGraphAttributes()
 {
-	_attributes.id.clear();
-	_attributes.source.clear();
-	_attributes.target.clear();
+	_graphAttributes.encoding = L"utf-8";
+	_graphAttributes.edgedefault = L"directed";
+}
+
+void GraphmlGraphInput::clearNodeAttributes()
+{
+	_nodeAttributes.id.clear();
+}
+
+void GraphmlGraphInput::clearEdgeAttributes()
+{
+	_edgeAttributes.id.clear();
+	_edgeAttributes.source.clear();
+	_edgeAttributes.target.clear();
 }
 
 void GraphmlGraphInput::handleElement(const wstring &element)
@@ -122,21 +134,25 @@ void GraphmlGraphInput::handleElement(const wstring &element)
 	Edge *edge;
 
 	if (element == L"node") {
-		if (_attributes.id.empty()) {
+		if (_nodeAttributes.id.empty()) {
 			error();
 			return;
 		}
-		vertex = addVertex(_attributes.id);
-		vertex->setText(_attributes.id);
+		vertex = addVertex(_nodeAttributes.id);
+		vertex->setText(_nodeAttributes.id);
+
+		clearNodeAttributes();
 	}
 	if (element == L"edge") {
-		if (_attributes.source.empty() || _attributes.target.empty()) {
+		if (_edgeAttributes.source.empty() || _edgeAttributes.target.empty()) {
 			error();
 			return;
 		}
-		edge = addEdge(_attributes.source, _attributes.target);
-		if (!_attributes.id.empty())
-			edge->setText(_attributes.id);
+		edge = addEdge(_edgeAttributes.source, _edgeAttributes.target);
+		if (!_edgeAttributes.id.empty())
+			edge->setText(_edgeAttributes.id);
+
+		clearEdgeAttributes();
 	}
 }
 
@@ -464,8 +480,6 @@ void GraphmlGraphInput::xmlAttributes()
 
 bool GraphmlGraphInput::attributes(const wstring &element)
 {
-	clearAttributes();
-
 	while (1) {
 		switch (_token) {
 			case SLASH:
@@ -674,7 +688,7 @@ void GraphmlGraphInput::xml()
 			error();
 	}
 
-	setEncoding(_attributes.encoding);
+	setEncoding(_graphAttributes.encoding);
 	if (_string == L"graphml")
 		element(L"");
 	else
@@ -685,8 +699,8 @@ bool GraphmlGraphInput::parse()
 {
 	_line = 1;
 	_token = START;
-	_attributes.encoding = L"utf-8";
-	_attributes.edgedefault = L"directed";
+
+	initGraphAttributes();
 
 	nextToken();
 	xml();
@@ -719,7 +733,7 @@ IO::Error GraphmlGraphInput::readGraph(Graph *graph, const char *fileName,
 		if (!parse())
 			err = (_fs.fail()) ? ReadError : FormatError;
 		else
-			_graph->setDirected((_attributes.edgedefault == L"directed"));
+			_graph->setDirected((_graphAttributes.edgedefault == L"directed"));
 	}
 
 	_fs.close();

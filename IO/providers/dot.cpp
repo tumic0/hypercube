@@ -515,11 +515,11 @@ void DotGraphInput::graphType()
 {
 	switch (_token) {
 		case GRAPH:
-			_directed = 0;
+			_directed = false;
 			nextToken();
 			break;
 		case DIGRAPH:
-			_directed = 1;
+			_directed = true;
 			nextToken();
 			break;
 		default:

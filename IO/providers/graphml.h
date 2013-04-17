@@ -39,18 +39,28 @@ private:
 		std::wstring parent;
 	};
 
-	struct Attributes {
-		std::wstring id;
-		std::wstring source;
-		std::wstring target;
+	struct GraphAttributes {
 		std::wstring encoding;
 		std::wstring edgedefault;
 	};
 
+	struct NodeAttributes {
+		std::wstring id;
+	};
+
+	struct EdgeAttributes {
+		std::wstring id;
+		std::wstring source;
+		std::wstring target;
+	};
+
+
 	Vertex *addVertex(const std::wstring &id);
 	Edge *addEdge(const std::wstring &source, const std::wstring &target);
 
-	void clearAttributes();
+	void initGraphAttributes();
+	void clearNodeAttributes();
+	void clearEdgeAttributes();
 	void setAttribute(const std::wstring &element, const std::wstring &attr,
 	  const std::wstring &value);
 	void handleElement(const std::wstring &element);
@@ -92,7 +102,9 @@ private:
 	unsigned _line;
 	static const Relation relations[];
 
-	Attributes _attributes;
+	GraphAttributes _graphAttributes;
+	NodeAttributes _nodeAttributes;
+	EdgeAttributes _edgeAttributes;
 	std::map<std::wstring, Vertex*> _vertexes;
 	Graph *_graph;
 };
