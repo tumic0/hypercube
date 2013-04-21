@@ -238,7 +238,7 @@ void GraphmlGraphInput::nextToken()
 					state = 3;
 					break;
 				}
-				if (c == -1) {
+				if (c == EOF) {
 					_token = EOI;
 					return;
 				}
@@ -255,6 +255,10 @@ void GraphmlGraphInput::nextToken()
 				return;
 
 			case 2:
+				if (c == EOF) {
+					error();
+					return;
+				}
 				if (c == '"') {
 					_token = STRING;
 					return;
@@ -265,6 +269,10 @@ void GraphmlGraphInput::nextToken()
 				break;
 
 			case 3:
+				if (c == EOF) {
+					error();
+					return;
+				}
 				if (c == '\'') {
 					_token = STRING;
 					return;
@@ -287,17 +295,19 @@ void GraphmlGraphInput::compare(Token token)
 
 void GraphmlGraphInput::data()
 {
+	int c;
+
 	while (1) {
-		switch (_token) {
-			case LT:
-			case ERROR:
-				return;
-			case EOI:
-				error();
-				return;
-			default:
-				nextToken();
-		}
+		c = _fs.get();
+
+		if (c == '<') {
+			_token = LT;
+			return;
+		} else if (c == EOF) {
+			_token = EOI;
+			return;
+		} else if (c == '\n')
+			_line++;
 	}
 }
 
@@ -387,7 +397,7 @@ void GraphmlGraphInput::commentData()
 
 		switch (state) {
 			case 0:
-				if (c == -1) {
+				if (c == EOF) {
 					error();
 					return;
 				}
@@ -396,7 +406,7 @@ void GraphmlGraphInput::commentData()
 				break;
 
 			case 1:
-				if (c == -1) {
+				if (c == EOF) {
 					error();
 					return;
 				}
@@ -523,16 +533,18 @@ void GraphmlGraphInput::nextItem(const wstring &parent)
 			nextToken();
 			elementType(parent);
 			break;
-		case EOI:
-			error();
-		case ERROR:
-			break;
 		default:
-			data();
-			compare(LT);
-			elementType(parent);
-			break;
+			error();
 	}
+}
+
+void GraphmlGraphInput::elementEnd()
+{
+	if (_token != GT) {
+		error();
+		return;
+	}
+	data();
 }
 
 void GraphmlGraphInput::element(const wstring &parent)
@@ -545,7 +557,7 @@ void GraphmlGraphInput::element(const wstring &parent)
 	compare(IDENT);
 	checkRelation(start, parent);
 	closed = attributes(start);
-	compare(GT);
+	elementEnd();
 	handleElement(start);
 
 	if (closed)
@@ -558,7 +570,7 @@ void GraphmlGraphInput::element(const wstring &parent)
 	compare(SLASH);
 	end = _string;
 	compare(IDENT);
-	compare(GT);
+	elementEnd();
 
 	if (start != end)
 		error();

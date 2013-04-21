@@ -83,6 +83,7 @@ private:
 	void nextItem(const std::wstring &parent);
 	void elementType(const std::wstring &parent);
 	void element(const std::wstring &parent);
+	void elementEnd();
 	void prologSpecial();
 	void prologContent();
 	void prologComment();
