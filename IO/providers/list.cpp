@@ -50,7 +50,7 @@ void ListGraphInput::nextToken()
 					state = 2;
 					break;
 				}
-				if (c == -1) {
+				if (c == EOF) {
 					_token = EOI;
 					return;
 				}

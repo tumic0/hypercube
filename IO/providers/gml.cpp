@@ -97,7 +97,7 @@ void GmlGraphInput::nextToken()
 					state = 7;
 					break;
 				}
-				if (c == -1) {
+				if (c == EOF) {
 					_token = EOI;
 					return;
 				}
@@ -105,7 +105,7 @@ void GmlGraphInput::nextToken()
 				return;
 
 			case 1:
-				if (c == -1) {
+				if (c == EOF) {
 					_token = EOI;
 					return;
 				}
@@ -192,7 +192,7 @@ void GmlGraphInput::nextToken()
 				return;
 
 			case 7:
-				if (c == -1) {
+				if (c == EOF) {
 					error();
 					return;
 				}

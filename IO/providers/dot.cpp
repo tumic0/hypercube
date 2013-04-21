@@ -120,7 +120,7 @@ void DotGraphInput::nextToken()
 					state = 12;
 					break;
 				}
-				if (c == -1) {
+				if (c == EOF) {
 					_token = EOI;
 					return;
 				}
@@ -170,7 +170,7 @@ void DotGraphInput::nextToken()
 				return;
 
 			case 4:
-				if (c == -1) {
+				if (c == EOF) {
 					_token = EOI;
 					return;
 				}
@@ -181,7 +181,7 @@ void DotGraphInput::nextToken()
 				break;
 
 			case 5:
-				if (c == -1) {
+				if (c == EOF) {
 					error();
 					return;
 				}
@@ -192,7 +192,7 @@ void DotGraphInput::nextToken()
 				break;
 
 			case 6:
-				if (c == -1) {
+				if (c == EOF) {
 					error();
 					return;
 				}
@@ -205,7 +205,7 @@ void DotGraphInput::nextToken()
 				break;
 
 			case 7:
-				if (c == -1) {
+				if (c == EOF) {
 					error();
 					return;
 				}
@@ -223,7 +223,7 @@ void DotGraphInput::nextToken()
 				break;
 
 			case 8:
-				if (c == -1) {
+				if (c == EOF) {
 					error();
 					return;
 				}
@@ -269,7 +269,7 @@ void DotGraphInput::nextToken()
 				return;
 
 			case 12:
-				if (c == -1) {
+				if (c == EOF) {
 					error();
 					return;
 				}
