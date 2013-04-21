@@ -79,6 +79,9 @@ void SA::compute(Graph *g)
 	float temp = _initTemp;
 	int steps;
 
+	if (!g->vertex_size())
+		return;
+
 	LOG_START();
 
 	do {
