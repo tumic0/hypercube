@@ -94,6 +94,7 @@ private:
 	void xmlAttributes();
 	void xmlDecl();
 	void xml();
+	void bom();
 	bool parse();
 
 	std::wstring _string;

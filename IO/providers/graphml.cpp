@@ -15,6 +15,8 @@ using namespace std;
 	(isStartName((c)) || (c) == '-' || (c) == '.')
 
 
+const unsigned char BOM[] = {0xEF, 0xBB, 0xBF};
+
 const GraphmlGraphInput::Relation GraphmlGraphInput::relations[] = {
 	{L"graphml", L""},
 	{L"graph", L"graphml"},
@@ -689,10 +691,23 @@ void GraphmlGraphInput::xml()
 	}
 
 	setEncoding(_graphAttributes.encoding);
-	if (_string == L"graphml")
-		element(L"");
-	else
-		error();
+	element(L"");
+}
+
+void GraphmlGraphInput::bom()
+{
+	unsigned char bom[sizeof(BOM)];
+
+	if (_fs.peek() == BOM[0]) {
+		for (size_t i = 0; i < sizeof(BOM); i++)
+			bom[i] = _fs.get();
+		if (memcmp(bom, BOM, sizeof(BOM))) {
+			error();
+			return;
+		}
+	}
+
+	nextToken();
 }
 
 bool GraphmlGraphInput::parse()
@@ -702,7 +717,7 @@ bool GraphmlGraphInput::parse()
 
 	initGraphAttributes();
 
-	nextToken();
+	bom();
 	xml();
 
 	_vertexes.clear();
