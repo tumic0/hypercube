@@ -62,6 +62,13 @@ Edge* GraphmlGraphInput::addEdge(const wstring &source, const wstring &target)
 
 void GraphmlGraphInput::checkRelation(const wstring &node, const wstring &parent)
 {
+	if (parent.empty()) {
+		if (node != L"graphml") {
+			error();
+			return;
+		}
+	}
+
 	for (size_t i = 0; i < ARRAY_SIZE(relations); i++) {
 		if (node == relations[i].node) {
 			if (parent != relations[i].parent)
