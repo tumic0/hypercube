@@ -522,11 +522,13 @@ void GraphmlGraphInput::nextItem(const wstring &parent)
 			elementType(parent);
 			break;
 		case EOI:
+			error();
 		case ERROR:
 			break;
 		default:
 			data();
 			compare(LT);
+			elementType(parent);
 			break;
 	}
 }
@@ -542,16 +544,14 @@ void GraphmlGraphInput::element(const wstring &parent)
 	checkRelation(start, parent);
 	closed = attributes(start);
 	compare(GT);
-	if (_token == ERROR)
-		return;
-
 	handleElement(start);
 
 	if (closed)
 		return;
 
-	while (_token != ERROR && _token != SLASH)
+	do {
 		nextItem(start);
+	} while (_token != ERROR && _token != SLASH);
 
 	compare(SLASH);
 	end = _string;
