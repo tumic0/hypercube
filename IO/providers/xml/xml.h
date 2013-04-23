@@ -1,9 +1,7 @@
 #ifndef XML_H_
 #define XML_H_
 
-
 #include <string>
-#include <fstream>
 #include <vector>
 #include "IO/io.h"
 

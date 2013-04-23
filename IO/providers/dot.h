@@ -2,7 +2,6 @@
 #define DOT_H_
 
 #include <string>
-#include <fstream>
 #include <map>
 #include <set>
 #include "IO/io.h"
