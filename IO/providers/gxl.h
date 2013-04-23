@@ -1,5 +1,5 @@
-#ifndef GXL_H
-#define GXL_H
+#ifndef GXL_H_
+#define GXL_H_
 
 #include "IO/io.h"
 
@@ -10,4 +10,4 @@ public:
 	  Encoding *encoding);
 };
 
-#endif // GXL_H
+#endif // GXL_H_
