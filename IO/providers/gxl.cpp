@@ -3,15 +3,15 @@
 #include <stack>
 #include "CORE/misc.h"
 #include "IO/providers/xml/xml.h"
-#include "graphml.h"
+#include "gxl.h"
 
 using namespace std;
 
 
-class GraphmlHandler : public XmlHandler
+class GxlHandler : public XmlHandler
 {
 public:
-	GraphmlHandler(Graph *graph) : _graph(graph) {}
+	GxlHandler(Graph *graph) : _graph(graph) {}
 
 	virtual bool startDocument();
 	virtual bool endDocument();
@@ -26,7 +26,7 @@ private:
 	};
 
 	struct GraphAttributes {
-		wstring edgedefault;
+		wstring edgemode;
 	};
 
 	struct NodeAttributes {
@@ -35,8 +35,8 @@ private:
 
 	struct EdgeAttributes {
 		wstring id;
-		wstring source;
-		wstring target;
+		wstring from;
+		wstring to;
 	};
 
 	Vertex *addVertex(const wstring &id);
@@ -60,29 +60,31 @@ private:
 };
 
 
-const GraphmlHandler::Relation GraphmlHandler::relations[] = {
-	{L"graphml", L""},
-	{L"graph", L"graphml"},
+const GxlHandler::Relation GxlHandler::relations[] = {
+	{L"gxl", L""},
+	{L"graph", L"gxl"},
 	{L"node", L"graph"},
 	{L"edge", L"graph"}
 };
 
 
-bool GraphmlHandler::startDocument()
+bool GxlHandler::startDocument()
 {
 	initGraphAttributes();
 
 	return true;
 }
 
-bool GraphmlHandler::endDocument()
+bool GxlHandler::endDocument()
 {
-	_graph->setDirected((_graphAttributes.edgedefault == L"directed"));
+	bool directed = (_graphAttributes.edgemode == L"directed"
+	  || _graphAttributes.edgemode == L"defaultdirected") ? true : false;
+	_graph->setDirected(directed);
 
 	return true;
 }
 
-bool GraphmlHandler::startElement(const std::wstring &name, const XmlAttributes &atts)
+bool GxlHandler::startElement(const std::wstring &name, const XmlAttributes &atts)
 {
 	if (!checkRelation(name, _parent.empty() ? L"" : _parent.top()))
 		return false;
@@ -98,20 +100,20 @@ bool GraphmlHandler::startElement(const std::wstring &name, const XmlAttributes 
 	return true;
 }
 
-bool GraphmlHandler::endElement(const wstring &)
+bool GxlHandler::endElement(const wstring &)
 {
 	_parent.pop();
 
 	return true;
 }
 
-bool GraphmlHandler::data(const wstring &)
+bool GxlHandler::data(const wstring &)
 {
 	return true;
 }
 
 
-Vertex* GraphmlHandler::addVertex(const wstring &id)
+Vertex* GxlHandler::addVertex(const wstring &id)
 {
 	Vertex *v;
 	map<wstring, Vertex*>::const_iterator it;
@@ -127,7 +129,7 @@ Vertex* GraphmlHandler::addVertex(const wstring &id)
 	return v;
 }
 
-Edge* GraphmlHandler::addEdge(const wstring &source, const wstring &target)
+Edge* GxlHandler::addEdge(const wstring &source, const wstring &target)
 {
 	Vertex *src, *dst;
 
@@ -137,10 +139,10 @@ Edge* GraphmlHandler::addEdge(const wstring &source, const wstring &target)
 	return _graph->addEdge(src, dst);
 }
 
-bool GraphmlHandler::checkRelation(const wstring &node, const wstring &parent)
+bool GxlHandler::checkRelation(const wstring &node, const wstring &parent)
 {
 	if (parent.empty()) {
-		if (node != L"graphml")
+		if (node != L"gxl")
 			return false;
 	}
 
@@ -154,7 +156,7 @@ bool GraphmlHandler::checkRelation(const wstring &node, const wstring &parent)
 	return true;
 }
 
-void GraphmlHandler::setAttribute(const wstring &element, const wstring &attr,
+void GxlHandler::setAttribute(const wstring &element, const wstring &attr,
   const wstring &value)
 {
 	if (element == L"node") {
@@ -163,34 +165,34 @@ void GraphmlHandler::setAttribute(const wstring &element, const wstring &attr,
 	} else if (element == L"edge") {
 		if (attr == L"id")
 			_edgeAttributes.id = value;
-		if (attr == L"source")
-			_edgeAttributes.source = value;
-		if (attr == L"target")
-			_edgeAttributes.target = value;
+		if (attr == L"from")
+			_edgeAttributes.from = value;
+		if (attr == L"to")
+			_edgeAttributes.to = value;
 	} else if (element == L"graph") {
-		if (attr == L"edgedefault")
-			_graphAttributes.edgedefault = value;
+		if (attr == L"edgemode")
+			_graphAttributes.edgemode = value;
 	}
 }
 
-void GraphmlHandler::initGraphAttributes()
+void GxlHandler::initGraphAttributes()
 {
-	_graphAttributes.edgedefault = L"directed";
+	_graphAttributes.edgemode = L"directed";
 }
 
-void GraphmlHandler::clearNodeAttributes()
+void GxlHandler::clearNodeAttributes()
 {
 	_nodeAttributes.id.clear();
 }
 
-void GraphmlHandler::clearEdgeAttributes()
+void GxlHandler::clearEdgeAttributes()
 {
 	_edgeAttributes.id.clear();
-	_edgeAttributes.source.clear();
-	_edgeAttributes.target.clear();
+	_edgeAttributes.from.clear();
+	_edgeAttributes.to.clear();
 }
 
-bool GraphmlHandler::handleElement(const wstring &element)
+bool GxlHandler::handleElement(const wstring &element)
 {
 	Vertex *vertex;
 	Edge *edge;
@@ -204,9 +206,9 @@ bool GraphmlHandler::handleElement(const wstring &element)
 		clearNodeAttributes();
 	}
 	if (element == L"edge") {
-		if (_edgeAttributes.source.empty() || _edgeAttributes.target.empty())
+		if (_edgeAttributes.from.empty() || _edgeAttributes.to.empty())
 			return false;
-		edge = addEdge(_edgeAttributes.source, _edgeAttributes.target);
+		edge = addEdge(_edgeAttributes.from, _edgeAttributes.to);
 		if (!_edgeAttributes.id.empty())
 			edge->setText(_edgeAttributes.id);
 
@@ -217,13 +219,13 @@ bool GraphmlHandler::handleElement(const wstring &element)
 }
 
 
-IO::Error GraphmlGraphInput::readGraph(Graph *graph, const char *fileName,
+IO::Error GxlGraphInput::readGraph(Graph *graph, const char *fileName,
   Encoding *)
 {
 	XmlParser parser;
-	GraphmlHandler handler(graph);
+	GxlHandler handler(graph);
 
 	parser.setHandler(&handler);
-	parser.setErrorPrefix("GraphML");
+	parser.setErrorPrefix("Gxl");
 	return parser.parse(fileName);
 }

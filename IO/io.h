@@ -14,6 +14,11 @@ class IO
 public:
 	enum Error {Ok, OpenError, ReadError, WriteError, FormatError};
 	static std::ostringstream ioerr;
+
+protected:
+	static bool stringCaseCmp(const std::wstring &s1, const std::wstring &s2);
+	static void stringReplace(std::wstring &source, const std::wstring &find,
+	  const std::wstring &replace);
 };
 
 
@@ -22,9 +27,6 @@ class InputProvider : public IO
 public:
 	virtual Error readGraph(Graph *graph, const char *fileName,
 	  Encoding *encoding) = 0;
-
-protected:
-	static bool stringCaseCmp(const std::wstring &s1, const std::wstring &s2);
 };
 
 class OutputProvider : public IO
@@ -44,9 +46,6 @@ protected:
 	static CoordinatesF vertexTextPosition(const CoordinatesF &point,
 	  float size);
 	static Arrow arrow(LineF &line, float size);
-
-	static void stringReplace(std::wstring &source, const std::wstring &find,
-	  const std::wstring &replace);
 };
 
 class lexstream : public std::wifstream

@@ -1,13 +1,13 @@
-#ifndef GRAPHML_H_
-#define GRAPHML_H_
+#ifndef GXL_H
+#define GXL_H
 
 #include "IO/io.h"
 
-class GraphmlGraphInput : public InputProvider
+class GxlGraphInput : public InputProvider
 {
 public:
 	virtual Error readGraph(Graph *graph, const char *fileName,
 	  Encoding *encoding);
 };
 
-#endif // GRAPHML_H_
+#endif // GXL_H

@@ -53,7 +53,7 @@ OutputProvider::Arrow OutputProvider::arrow(LineF &line, float size)
 	return arrow;
 }
 
-void OutputProvider::stringReplace(wstring &source, const wstring &find,
+void IO::stringReplace(wstring &source, const wstring &find,
   const wstring &replace)
 {
 	size_t j = 0;
@@ -64,7 +64,7 @@ void OutputProvider::stringReplace(wstring &source, const wstring &find,
 	}
 }
 
-bool InputProvider::stringCaseCmp(const wstring &s1, const wstring &s2)
+bool IO::stringCaseCmp(const wstring &s1, const wstring &s2)
 {
 	if (s1.length() != s2.length())
 		return false;

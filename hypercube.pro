@@ -20,6 +20,7 @@ HEADERS += CORE/sa_log.h \
     IO/io.h \
     IO/modules.h \
     IO/encoding.h \
+    IO/providers/xml/xml.h \
     IO/providers/ps.h \
     IO/providers/ps/encodings/latin2.ps.h \
     IO/providers/ps/encodings/latin1.h \
@@ -40,6 +41,7 @@ HEADERS += CORE/sa_log.h \
     IO/providers/dot.h \
     IO/providers/gml.h \
     IO/providers/graphml.h \
+    IO/providers/gxl.h \
     IO/encodings/latin1cvt.h \
     IO/encodings/cp1250cvt.h \
     IO/encodings/latin1.h \
@@ -71,12 +73,14 @@ SOURCES += \
     IO/encodings/latin1cvt.cpp \
     IO/encodings/latin2cvt.cpp \
     IO/encodings/cp1250cvt.cpp \
+    IO/providers/xml/xml.cpp \
     IO/providers/ps/snippet.cpp \
     IO/providers/list.cpp \
     IO/providers/matrix.cpp \
     IO/providers/dot.cpp \
     IO/providers/gml.cpp \
     IO/providers/graphml.cpp \
+    IO/providers/gxl.cpp \
     IO/providers/ps.cpp \
     IO/providers/svg.cpp \
     IO/encodings/utf8cvt.cpp \

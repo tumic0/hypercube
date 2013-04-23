@@ -31,6 +31,8 @@ HEADERS += CORE/sa_log.h \
     IO/providers/ps/fonts/helvetica.h \
     IO/providers/ps/ce.h \
     IO/providers/ps/snippet.h \
+    IO/providers/xml/xml.h \
+    IO/providers/gxl.h \
     IO/providers/svg.h \
     IO/providers/matrix.h \
     IO/providers/list.h \
@@ -62,6 +64,8 @@ SOURCES += CORE/edge.cpp \
     IO/encodings/utf8cvt.cpp \
     IO/encodings/koi8rcvt.cpp \
     IO/modules.cpp \
+    IO/providers/xml/xml.cpp \
+    IO/providers/gxl.cpp \
     IO/providers/list.cpp \
     IO/providers/matrix.cpp \
     IO/providers/dot.cpp \
