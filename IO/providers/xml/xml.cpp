@@ -395,7 +395,7 @@ void XmlParser::attribute(bool xml)
 		if (attr == L"encoding")
 			_encoding = value;
 	} else
-		_attributes.add(attr, value);
+		_handler->attribute(attr, value);
 }
 
 void XmlParser::xmlAttributes()
@@ -413,8 +413,6 @@ void XmlParser::xmlAttributes()
 
 bool XmlParser::attributes(bool xml)
 {
-	_attributes.clear();
-
 	while (1) {
 		switch (_token) {
 			case SLASH:
@@ -478,10 +476,10 @@ void XmlParser::element()
 
 	start = _string;
 	compare(IDENT);
-	closed = attributes(false);
 	if (_token != ERROR)
-		if (!_handler->startElement(start, _attributes))
+		if (!_handler->startElement(start))
 			error();
+	closed = attributes(false);
 	elementEnd();
 
 	if (closed) {

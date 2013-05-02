@@ -9,16 +9,17 @@
 #include "encoding.h"
 
 
+std::wstring trim(const std::wstring &str);
+bool stringCaseCmp(const std::wstring &s1, const std::wstring &s2);
+void stringReplace(std::wstring &source, const std::wstring &find,
+  const std::wstring &replace);
+
+
 class IO
 {
 public:
 	enum Error {Ok, OpenError, ReadError, WriteError, FormatError};
 	static std::ostringstream ioerr;
-
-protected:
-	static bool stringCaseCmp(const std::wstring &s1, const std::wstring &s2);
-	static void stringReplace(std::wstring &source, const std::wstring &find,
-	  const std::wstring &replace);
 };
 
 

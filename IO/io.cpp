@@ -53,7 +53,19 @@ OutputProvider::Arrow OutputProvider::arrow(LineF &line, float size)
 	return arrow;
 }
 
-void IO::stringReplace(wstring &source, const wstring &find,
+
+wstring trim(const std::wstring &str)
+{
+	size_t s = str.find_first_not_of(L" \n\r\t");
+	size_t e = str.find_last_not_of (L" \n\r\t");
+
+	if ((wstring::npos == s) || (wstring::npos == e))
+		return L"";
+	else
+		return str.substr(s, e - s + 1);
+}
+
+void stringReplace(wstring &source, const wstring &find,
   const wstring &replace)
 {
 	size_t j = 0;
@@ -64,7 +76,7 @@ void IO::stringReplace(wstring &source, const wstring &find,
 	}
 }
 
-bool IO::stringCaseCmp(const wstring &s1, const wstring &s2)
+bool stringCaseCmp(const wstring &s1, const wstring &s2)
 {
 	if (s1.length() != s2.length())
 		return false;

@@ -33,7 +33,8 @@ private:
 		NODE,
 		EDGE,
 		ID,
-		LABEL,
+		NODE_LABEL,
+		EDGE_LABEL,
 		SOURCE,
 		TARGET,
 		DIRECTED

@@ -2,6 +2,7 @@
 #include <cerrno>
 #include <sstream>
 #include "CORE/misc.h"
+#include "CORE/config.h"
 #include "gml.h"
 
 using namespace std;
@@ -12,7 +13,8 @@ const GmlGraphInput::Keyword GmlGraphInput::keywords[] = {
 	{EDGE, L"edge"},
 	{GRAPH, L"graph"},
 	{ID, L"id"},
-	{LABEL, L"label"},
+	{NODE_LABEL, NODE_LABEL_ATTR},
+	{EDGE_LABEL, EDGE_LABEL_ATTR},
 	{SOURCE, L"source"},
 	{TARGET, L"target"},
 	{DIRECTED, L"directed"}
@@ -394,9 +396,9 @@ void GmlGraphInput::setIntAttribute(ValueType parent, ValueType key, int value)
 void GmlGraphInput::setStringAttribute(ValueType parent, ValueType key,
   const wstring &value)
 {
-	if (parent == NODE && key == LABEL)
+	if (parent == NODE && key == NODE_LABEL)
 		_nodeAttributes.label = value;
-	if (parent == EDGE && key == LABEL)
+	if (parent == EDGE && key == EDGE_LABEL)
 		_edgeAttributes.label = value;
 }
 

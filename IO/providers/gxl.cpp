@@ -1,7 +1,8 @@
 #include <string>
 #include <map>
-#include <stack>
+#include <deque>
 #include "CORE/misc.h"
+#include "CORE/config.h"
 #include "IO/providers/xml/xml.h"
 #include "gxl.h"
 
@@ -15,8 +16,9 @@ public:
 
 	virtual bool startDocument();
 	virtual bool endDocument();
-	virtual bool startElement(const std::wstring &name, const XmlAttributes &atts);
+	virtual bool startElement(const wstring &name);
 	virtual bool endElement(const wstring &name);
+	virtual bool attribute(const wstring &name, const wstring &value);
 	virtual bool data(const wstring &data);
 
 private:
@@ -39,6 +41,10 @@ private:
 		wstring to;
 	};
 
+	struct AttrAttributes {
+		wstring name;
+	};
+
 	Vertex *addVertex(const wstring &id);
 	Edge *addEdge(const wstring &source, const wstring &target);
 	bool checkRelation(const wstring &node, const wstring &parent);
@@ -48,13 +54,17 @@ private:
 	void setAttribute(const wstring &element, const wstring &attr,
 	  const wstring &value);
 	bool handleElement(const wstring &element);
+	bool handleData(const wstring &data);
 
 	Graph *_graph;
 	map<wstring, Vertex*> _vertexes;
-	stack<wstring> _parent;
+	deque<wstring> _elements;
 	GraphAttributes _graphAttributes;
 	NodeAttributes _nodeAttributes;
 	EdgeAttributes _edgeAttributes;
+	AttrAttributes _attrAttributes;
+	wstring _nodeLabel;
+	wstring _edgeLabel;
 
 	static const Relation relations[];
 };
@@ -64,7 +74,10 @@ const GxlHandler::Relation GxlHandler::relations[] = {
 	{L"gxl", L""},
 	{L"graph", L"gxl"},
 	{L"node", L"graph"},
-	{L"edge", L"graph"}
+	{L"edge", L"graph"},
+	{L"int", L"attr"},
+	{L"float", L"attr"},
+	{L"string", L"attr"}
 };
 
 
@@ -84,32 +97,41 @@ bool GxlHandler::endDocument()
 	return true;
 }
 
-bool GxlHandler::startElement(const std::wstring &name, const XmlAttributes &atts)
+bool GxlHandler::startElement(const wstring &name)
 {
-	if (!checkRelation(name, _parent.empty() ? L"" : _parent.top()))
+	if (!checkRelation(name, _elements.empty() ? L"" : _elements.back()))
 		return false;
 
-	for (size_t i = 0; i < atts.count(); i++)
-		setAttribute(name, atts.name(i), atts.value(i));
+	_elements.push_back(name);
+
+	return true;
+}
+
+bool GxlHandler::endElement(const wstring &name)
+{
 
 	if (!handleElement(name))
 		return false;
 
-	_parent.push(name);
+	_elements.pop_back();
 
 	return true;
 }
 
-bool GxlHandler::endElement(const wstring &)
+bool GxlHandler::attribute(const wstring &name, const wstring &value)
 {
-	_parent.pop();
+	setAttribute(_elements.back(), name, value);
 
 	return true;
 }
 
-bool GxlHandler::data(const wstring &)
+bool GxlHandler::data(const wstring &data)
 {
-	return true;
+	wstring str = trim(data);
+	if (str.empty())
+		return true;
+	else
+		return handleData(str);
 }
 
 
@@ -172,6 +194,9 @@ void GxlHandler::setAttribute(const wstring &element, const wstring &attr,
 	} else if (element == L"graph") {
 		if (attr == L"edgemode")
 			_graphAttributes.edgemode = value;
+	} else if (element == L"attr") {
+		if (attr == L"name")
+			_attrAttributes.name = value;
 	}
 }
 
@@ -201,18 +226,39 @@ bool GxlHandler::handleElement(const wstring &element)
 		if (_nodeAttributes.id.empty())
 			return false;
 		vertex = addVertex(_nodeAttributes.id);
-		vertex->setText(_nodeAttributes.id);
+		if (_nodeLabel.empty())
+			vertex->setText(_nodeAttributes.id);
+		else
+			vertex->setText(_nodeLabel);
 
 		clearNodeAttributes();
-	}
-	if (element == L"edge") {
+		_nodeLabel.clear();
+
+	} else if (element == L"edge") {
 		if (_edgeAttributes.from.empty() || _edgeAttributes.to.empty())
 			return false;
 		edge = addEdge(_edgeAttributes.from, _edgeAttributes.to);
-		if (!_edgeAttributes.id.empty())
+		if (_edgeLabel.empty())
 			edge->setText(_edgeAttributes.id);
+		else
+			edge->setText(_edgeLabel);
 
 		clearEdgeAttributes();
+		_edgeLabel.clear();
+	}
+
+	return true;
+}
+
+bool GxlHandler::handleData(const wstring &data)
+{
+	const wstring &element = _elements.back();
+
+	if (element == L"int" || element == L"float" || element == L"string") {
+		if (_attrAttributes.name == NODE_LABEL_ATTR)
+			_nodeLabel = data;
+		if (_attrAttributes.name == EDGE_LABEL_ATTR)
+			_edgeLabel = data;
 	}
 
 	return true;
