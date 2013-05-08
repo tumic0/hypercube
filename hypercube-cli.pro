@@ -78,4 +78,7 @@ SOURCES += CORE/edge.cpp \
     CLI/cli.cpp \
     CLI/main.cpp
 INCLUDEPATH += ./
-win32:DEFINES += _CRT_SECURE_NO_WARNINGS
+win32 {
+    RC_FILE = hypercube-cli.rc
+    DEFINES += _CRT_SECURE_NO_WARNINGS
+}
