@@ -52,6 +52,7 @@ protected:
 	static Arrow arrow(LineF &line, float size);
 };
 
+
 class lexstream : public std::wifstream
 {
 public:
@@ -72,7 +73,7 @@ public:
 		return good() ? _last : -1;
 	}
 	void unget() {
-		if (is_open())
+		if (good() && is_open())
 			_unget = true;
 		else
 			setstate(std::ios_base::badbit);
