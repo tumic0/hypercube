@@ -2,23 +2,20 @@
 #include <cerrno>
 #include <sstream>
 #include "CORE/misc.h"
-#include "CORE/config.h"
 #include "gml.h"
 
 using namespace std;
 
 
-const GmlGraphInput::Keyword GmlGraphInput::keywords[] = {
-	{NODE, L"node"},
-	{EDGE, L"edge"},
-	{GRAPH, L"graph"},
-	{ID, L"id"},
-	{NODE_LABEL, NODE_LABEL_ATTR},
-	{EDGE_LABEL, EDGE_LABEL_ATTR},
-	{SOURCE, L"source"},
-	{TARGET, L"target"},
-	{DIRECTED, L"directed"}
-};
+#define ROOT     L""
+#define GRAPH    L"graph"
+#define NODE     L"node"
+#define EDGE     L"edge"
+#define TARGET   L"target"
+#define SOURCE   L"source"
+#define DIRECTED L"directed"
+#define ID       L"id"
+
 
 const GmlGraphInput::Relation GmlGraphInput::relations[] = {
 	{NODE, GRAPH},
@@ -216,7 +213,7 @@ void GmlGraphInput::compare(Token token)
 		error();
 }
 
-void GmlGraphInput::value(ValueType parent, ValueType key)
+void GmlGraphInput::value(const wstring &parent, const wstring &key)
 {
 	switch (_token) {
 		case INT:
@@ -240,18 +237,21 @@ void GmlGraphInput::value(ValueType parent, ValueType key)
 	}
 }
 
-void GmlGraphInput::list(ValueType parent)
+void GmlGraphInput::list(const wstring &parent)
 {
-	ValueType type = UNKNOWN;
+	wstring key;
 
 	while (1) {
 		switch (_token) {
 			case KEY:
-				type = valueType();
-				checkRelation(type, parent);
+				key = _string;
+				if (!checkRelation(key, parent)) {
+					error();
+					return;
+				}
 				nextToken();
-				value(parent, type);
-				if (!handleKey(type))
+				value(parent, key);
+				if (!handleKey(key))
 					error();
 				break;
 			case RBRK:
@@ -274,7 +274,7 @@ bool GmlGraphInput::parse()
 	initGraphAttributes();
 
 	nextToken();
-	list(ROOT);
+	list(L"");
 
 	_vertexes.clear();
 
@@ -286,51 +286,42 @@ bool GmlGraphInput::parse()
 	}
 }
 
-GmlGraphInput::ValueType GmlGraphInput::valueType()
-{
-	for (size_t i = 0; i < ARRAY_SIZE(keywords) ; i++)
-		if (_string == keywords[i].name)
-			return keywords[i].value;
 
-	return UNKNOWN;
-}
-
-void GmlGraphInput::checkRelation(ValueType key, ValueType parent)
+bool GmlGraphInput::checkRelation(const wstring &node, const wstring &parent)
 {
 	for (size_t i = 0; i < ARRAY_SIZE(relations); i++) {
-		if (key == relations[i].key) {
+		if (node == relations[i].node) {
 			if (parent != relations[i].parent)
-				error();
-			return;
+				return false;
 		}
 	}
+
+	return true;
 }
 
-bool GmlGraphInput::handleKey(ValueType type)
+bool GmlGraphInput::handleKey(const wstring &key)
 {
-	Vertex *v;
-	Edge *e ;
+	if (key == NODE) {
+		Vertex *v;
 
-	switch (type) {
-		case NODE:
-			if (_nodeAttributes.id < 0)
-				return false;
-			v = addVertex(_nodeAttributes.id);
-			setVertexAttributes(v);
-			clearNodeAttributes();
-			return true;
+		if (_nodeAttributes.id < 0)
+			return false;
+		v = addVertex(_nodeAttributes.id);
+		setVertexAttributes(v);
 
-		case EDGE:
-			if (_edgeAttributes.source < 0 || _edgeAttributes.target < 0)
-				return false;
-			e = addEdge(_edgeAttributes.source, _edgeAttributes.target);
-			setEdgeAttributes(e);
-			clearEdgeAttributes();
-			return true;
+		clearNodeAttributes();
+	} else if (key == EDGE) {
+		Edge *e;
 
-		default:
-			return true;
+		if (_edgeAttributes.source < 0 || _edgeAttributes.target < 0)
+			return false;
+		e = addEdge(_edgeAttributes.source, _edgeAttributes.target);
+		setEdgeAttributes(e);
+
+		clearEdgeAttributes();
 	}
+
+	return true;
 }
 
 Vertex* GmlGraphInput::addVertex(int id)
@@ -377,7 +368,8 @@ void GmlGraphInput::initGraphAttributes()
 	_graphAttributes.directed = 0;
 }
 
-void GmlGraphInput::setIntAttribute(ValueType parent, ValueType key, int value)
+void GmlGraphInput::setIntAttribute(const wstring &parent, const wstring &key,
+  int value)
 {
 	if (parent == NODE) {
 		if (key == ID)
@@ -393,12 +385,12 @@ void GmlGraphInput::setIntAttribute(ValueType parent, ValueType key, int value)
 	}
 }
 
-void GmlGraphInput::setStringAttribute(ValueType parent, ValueType key,
-  const wstring &value)
+void GmlGraphInput::setStringAttribute(const wstring &parent,
+  const wstring &key, const wstring &value)
 {
-	if (parent == NODE && key == NODE_LABEL)
+	if (parent == NODE && key == _nodeLabelAttr)
 		_nodeAttributes.label = value;
-	if (parent == EDGE && key == EDGE_LABEL)
+	else if (parent == EDGE && key == _edgeLabelAttr)
 		_edgeAttributes.label = value;
 }
 
@@ -418,15 +410,29 @@ void GmlGraphInput::setEdgeAttributes(Edge *edge)
 }
 
 
-IO::Error GmlGraphInput::readGraph(Graph *graph, const char *fileName,
-  Encoding *encoding)
+void GmlGraphInput::setInputEncoding(Encoding *encoding)
+{
+	_encoding = encoding;
+}
+
+void GmlGraphInput::setNodeLabelAttribute(const char *name)
+{
+	_nodeLabelAttr = s2w(name);
+}
+
+void GmlGraphInput::setEdgeLabelAttribute(const char *name)
+{
+	_edgeLabelAttr = s2w(name);
+}
+
+IO::Error GmlGraphInput::readGraph(Graph *graph, const char *fileName)
 {
 	IO::Error err = Ok;
 
 	_graph = graph;
 
-	if (encoding) {
-		locale lc(locale(), encoding->cvt());
+	if (_encoding) {
+		locale lc(locale(), _encoding->cvt());
 		_fs.imbue(lc);
 	}
 

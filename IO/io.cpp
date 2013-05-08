@@ -9,6 +9,20 @@ static const float C1 = 0.866025f; /* sqrt(3)/2 */
 
 ostringstream IO::ioerr;
 
+
+void InputProvider::setInputEncoding(Encoding *)
+{
+}
+
+void InputProvider::setNodeLabelAttribute(const char *)
+{
+}
+
+void InputProvider::setEdgeLabelAttribute(const char *)
+{
+}
+
+
 CoordinatesF OutputProvider::edgeTextPosition(const LineF &line, float size,
   const CoordinatesF &textBox)
 {
@@ -86,4 +100,12 @@ bool stringCaseCmp(const wstring &s1, const wstring &s2)
 			return false;
 
 	return true;
+}
+
+wstring s2w(const string &s)
+{
+	wstring w(s.length(), L' ');
+	copy(s.begin(), s.end(), w.begin());
+
+	return w;
 }

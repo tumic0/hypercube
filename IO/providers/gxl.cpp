@@ -2,17 +2,36 @@
 #include <map>
 #include <deque>
 #include "CORE/misc.h"
-#include "CORE/config.h"
 #include "IO/providers/xml/xml.h"
 #include "gxl.h"
 
 using namespace std;
 
 
+#define ROOT            L""
+#define GXL             L"gxl"
+#define GRAPH           L"graph"
+#define NODE            L"node"
+#define EDGE            L"edge"
+#define ATTR            L"attr"
+#define INT             L"int"
+#define FLOAT           L"float"
+#define STRING          L"string"
+#define DIRECTED        L"directed"
+#define DEFAULTDIRECTED L"defaultdirected"
+#define ID              L"id"
+#define FROM            L"from"
+#define TO              L"to"
+#define EDGEMODE        L"edgemode"
+#define NAME            L"name"
+
+
 class GxlHandler : public XmlHandler
 {
 public:
 	GxlHandler(Graph *graph) : _graph(graph) {}
+	void setNodeLabelAttribute(const wstring &name) {_nodeLabelAttr = name;}
+	void setEdgeLabelAttribute(const wstring &name) {_edgeLabelAttr = name;}
 
 	virtual bool startDocument();
 	virtual bool endDocument();
@@ -63,21 +82,21 @@ private:
 	NodeAttributes _nodeAttributes;
 	EdgeAttributes _edgeAttributes;
 	AttrAttributes _attrAttributes;
-	wstring _nodeLabel;
-	wstring _edgeLabel;
+	wstring _nodeLabel, _edgeLabel;
+	wstring _nodeLabelAttr, _edgeLabelAttr;
 
 	static const Relation relations[];
 };
 
 
 const GxlHandler::Relation GxlHandler::relations[] = {
-	{L"gxl", L""},
-	{L"graph", L"gxl"},
-	{L"node", L"graph"},
-	{L"edge", L"graph"},
-	{L"int", L"attr"},
-	{L"float", L"attr"},
-	{L"string", L"attr"}
+	{GXL, ROOT},
+	{GRAPH, GXL},
+	{NODE, GRAPH},
+	{EDGE, GRAPH},
+	{INT, ATTR},
+	{FLOAT, ATTR},
+	{STRING, ATTR}
 };
 
 
@@ -90,8 +109,8 @@ bool GxlHandler::startDocument()
 
 bool GxlHandler::endDocument()
 {
-	bool directed = (_graphAttributes.edgemode == L"directed"
-	  || _graphAttributes.edgemode == L"defaultdirected") ? true : false;
+	bool directed = (_graphAttributes.edgemode == DIRECTED
+	  || _graphAttributes.edgemode == DEFAULTDIRECTED) ? true : false;
 	_graph->setDirected(directed);
 
 	return true;
@@ -164,7 +183,7 @@ Edge* GxlHandler::addEdge(const wstring &source, const wstring &target)
 bool GxlHandler::checkRelation(const wstring &node, const wstring &parent)
 {
 	if (parent.empty()) {
-		if (node != L"gxl")
+		if (node != GXL)
 			return false;
 	}
 
@@ -181,28 +200,28 @@ bool GxlHandler::checkRelation(const wstring &node, const wstring &parent)
 void GxlHandler::setAttribute(const wstring &element, const wstring &attr,
   const wstring &value)
 {
-	if (element == L"node") {
-		if (attr == L"id")
+	if (element == NODE) {
+		if (attr == ID)
 			_nodeAttributes.id = value;
-	} else if (element == L"edge") {
-		if (attr == L"id")
+	} else if (element == EDGE) {
+		if (attr == ID)
 			_edgeAttributes.id = value;
-		if (attr == L"from")
+		if (attr == FROM)
 			_edgeAttributes.from = value;
-		if (attr == L"to")
+		if (attr == TO)
 			_edgeAttributes.to = value;
-	} else if (element == L"graph") {
-		if (attr == L"edgemode")
+	} else if (element == GRAPH) {
+		if (attr == EDGEMODE)
 			_graphAttributes.edgemode = value;
-	} else if (element == L"attr") {
-		if (attr == L"name")
+	} else if (element == ATTR) {
+		if (attr == NAME)
 			_attrAttributes.name = value;
 	}
 }
 
 void GxlHandler::initGraphAttributes()
 {
-	_graphAttributes.edgemode = L"directed";
+	_graphAttributes.edgemode = DIRECTED;
 }
 
 void GxlHandler::clearNodeAttributes()
@@ -222,7 +241,7 @@ bool GxlHandler::handleElement(const wstring &element)
 	Vertex *vertex;
 	Edge *edge;
 
-	if (element == L"node") {
+	if (element == NODE) {
 		if (_nodeAttributes.id.empty())
 			return false;
 		vertex = addVertex(_nodeAttributes.id);
@@ -234,7 +253,7 @@ bool GxlHandler::handleElement(const wstring &element)
 		clearNodeAttributes();
 		_nodeLabel.clear();
 
-	} else if (element == L"edge") {
+	} else if (element == EDGE) {
 		if (_edgeAttributes.from.empty() || _edgeAttributes.to.empty())
 			return false;
 		edge = addEdge(_edgeAttributes.from, _edgeAttributes.to);
@@ -254,10 +273,10 @@ bool GxlHandler::handleData(const wstring &data)
 {
 	const wstring &element = _elements.back();
 
-	if (element == L"int" || element == L"float" || element == L"string") {
-		if (_attrAttributes.name == NODE_LABEL_ATTR)
+	if (element == INT || element == FLOAT || element == STRING) {
+		if (_attrAttributes.name == _nodeLabelAttr)
 			_nodeLabel = data;
-		if (_attrAttributes.name == EDGE_LABEL_ATTR)
+		if (_attrAttributes.name == _edgeLabelAttr)
 			_edgeLabel = data;
 	}
 
@@ -265,13 +284,24 @@ bool GxlHandler::handleData(const wstring &data)
 }
 
 
-IO::Error GxlGraphInput::readGraph(Graph *graph, const char *fileName,
-  Encoding *)
+void GxlGraphInput::setNodeLabelAttribute(const char *name)
 {
-	XmlParser parser;
-	GxlHandler handler(graph);
+	_nodeLabelAttr = s2w(name);
+}
 
-	parser.setHandler(&handler);
+void GxlGraphInput::setEdgeLabelAttribute(const char *name)
+{
+	_edgeLabelAttr = s2w(name);
+}
+
+IO::Error GxlGraphInput::readGraph(Graph *graph, const char *fileName)
+{
+	GxlHandler handler(graph);
+	XmlParser parser(&handler);
+
+	handler.setNodeLabelAttribute(_nodeLabelAttr);
+	handler.setEdgeLabelAttribute(_edgeLabelAttr);
 	parser.setErrorPrefix("Gxl");
+
 	return parser.parse(fileName);
 }

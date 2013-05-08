@@ -37,18 +37,25 @@ GraphTab::~GraphTab()
 IO::Error GraphTab::readGraph(const QString &fileName)
 {
 	IO::Error error;
-	QByteArray ba = fileName.toLocal8Bit();
-	const char *cFileName = ba.data();
 
-	InputProvider **p = inputProviders;
-	while (*p) {
-		error = (*p)->readGraph(_graph, cFileName, _inputEncoding);
+	QByteArray b1 = fileName.toLocal8Bit();
+	const char *cFileName = b1.data();
+	QByteArray b2 = _nodeLabelAttr.toLocal8Bit();
+	const char *cNodeLabelAttr = b2.data();
+	QByteArray b3 = _edgeLabelAttr.toLocal8Bit();
+	const char *cEdgeLabelAttr = b3.data();
+
+	for (InputProvider **p = inputProviders; *p; p++) {
+		(*p)->setInputEncoding(_inputEncoding);
+		(*p)->setNodeLabelAttribute(cNodeLabelAttr);
+		(*p)->setEdgeLabelAttribute(cEdgeLabelAttr);
+
+		error = (*p)->readGraph(_graph, cFileName);
 		if (error == IO::Ok) {
 			_inputProvider = *p;
 			break;
 		} else if (error != IO::FormatError)
 			return error;
-		p++;
 	}
 
 	if (!_inputProvider)
@@ -67,11 +74,18 @@ IO::Error GraphTab::readGraph()
 {
 	_graph->clear();
 
-	QByteArray ba = _inputFileName.toLocal8Bit();
-	const char *cFileName = ba.data();
+	QByteArray b1 = _inputFileName.toLocal8Bit();
+	const char *cFileName = b1.data();
+	QByteArray b2 = _nodeLabelAttr.toLocal8Bit();
+	const char *cNodeLabelAttr = b2.data();
+	QByteArray b3 = _edgeLabelAttr.toLocal8Bit();
+	const char *cEdgeLabelAttr = b3.data();
 
-	IO::Error error = _inputProvider->readGraph(_graph, cFileName,
-	  _inputEncoding);
+	_inputProvider->setNodeLabelAttribute(cNodeLabelAttr);
+	_inputProvider->setEdgeLabelAttribute(cEdgeLabelAttr);
+	_inputProvider->setInputEncoding(_inputEncoding);
+
+	IO::Error error = _inputProvider->readGraph(_graph, cFileName);
 	if (error != IO::Ok)
 		return error;
 
@@ -209,15 +223,6 @@ void GraphTab::setDirectedGraph(bool state)
 void GraphTab::setEdgeZValue(int value)
 {
 	_view->setEdgeZValue(value);
-}
-
-void GraphTab::setInputEncoding(Encoding *encoding)
-{
-	_inputEncoding = encoding;
-	if (_inputProvider) {
-		readGraph();
-		transformGraph();
-	}
 }
 
 bool GraphTab::antialiasing() const

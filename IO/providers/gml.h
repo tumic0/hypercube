@@ -8,8 +8,11 @@
 class GmlGraphInput : public InputProvider
 {
 public:
-	virtual Error readGraph(Graph *graph, const char *fileName,
-	  Encoding *encoding);
+	GmlGraphInput() : _encoding(0) {}
+	virtual Error readGraph(Graph *graph, const char *fileName);
+	virtual void setInputEncoding(Encoding *encoding);
+	virtual void setNodeLabelAttribute(const char *name);
+	virtual void setEdgeLabelAttribute(const char *name);
 
 private:
 	enum Token {
@@ -26,28 +29,9 @@ private:
 		RBRK		/* ']' */
 	};
 
-	enum ValueType {
-		UNKNOWN,
-		ROOT,
-		GRAPH,
-		NODE,
-		EDGE,
-		ID,
-		NODE_LABEL,
-		EDGE_LABEL,
-		SOURCE,
-		TARGET,
-		DIRECTED
-	};
-
-	struct Keyword {
-		ValueType value;
-		std::wstring name;
-	};
-
 	struct Relation {
-		ValueType key;
-		ValueType parent;
+		std::wstring node;
+		std::wstring parent;
 	};
 
 	struct NodeAttributes {
@@ -68,28 +52,25 @@ private:
 	void error();
 	void nextToken();
 	void compare(Token token);
-	void value(ValueType parent, ValueType key);
-	void list(ValueType parent);
+	void value(const std::wstring & parent, const std::wstring &key);
+	void list(const std::wstring &parent);
 	bool parse();
 
-	ValueType valueType();
-	void checkRelation(ValueType key, ValueType parent);
-	bool handleKey(ValueType type);
+	bool checkRelation(const std::wstring &key, const std::wstring &parent);
+	bool handleKey(const std::wstring &key);
 
 	void clearNodeAttributes();
 	void clearEdgeAttributes();
 	void initGraphAttributes();
-	void setIntAttribute(ValueType parent, ValueType key, int value);
-	void setStringAttribute(ValueType parent, ValueType key,
+	void setIntAttribute(const std::wstring &parent, const std::wstring &key,
+	  int value);
+	void setStringAttribute(const std::wstring &parent, const std::wstring &key,
 	  const std::wstring &value);
 	void setVertexAttributes(Vertex *vertex);
 	void setEdgeAttributes(Edge *edge);
 
 	Vertex *addVertex(int id);
 	Edge *addEdge(int source, int target);
-
-	static const Keyword keywords[];
-	static const Relation relations[];
 
 	std::wstring _string;
 	lexstream _fs;
@@ -101,10 +82,14 @@ private:
 	GraphAttributes _graphAttributes;
 	NodeAttributes _nodeAttributes;
 	EdgeAttributes _edgeAttributes;
+	std::wstring _nodeLabelAttr, _edgeLabelAttr;
 
 	std::map<int, Vertex*> _vertexes;
 
 	Graph *_graph;
+	Encoding *_encoding;
+
+	static const Relation relations[];
 };
 
 #endif // GML_H_

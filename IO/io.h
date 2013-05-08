@@ -13,6 +13,7 @@ std::wstring trim(const std::wstring &str);
 bool stringCaseCmp(const std::wstring &s1, const std::wstring &s2);
 void stringReplace(std::wstring &source, const std::wstring &find,
   const std::wstring &replace);
+std::wstring s2w(const std::string &s);
 
 
 class IO
@@ -26,8 +27,10 @@ public:
 class InputProvider : public IO
 {
 public:
-	virtual Error readGraph(Graph *graph, const char *fileName,
-	  Encoding *encoding) = 0;
+	virtual Error readGraph(Graph *graph, const char *fileName) = 0;
+	virtual void setInputEncoding(Encoding *encoding);
+	virtual void setNodeLabelAttribute(const char *name);
+	virtual void setEdgeLabelAttribute(const char *name);
 };
 
 class OutputProvider : public IO

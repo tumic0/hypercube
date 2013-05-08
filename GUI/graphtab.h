@@ -30,7 +30,11 @@ public:
 	GraphView *view() const {return _view;}
 
 	Encoding *inputEncoding() const {return _inputEncoding;}
-	void setInputEncoding(Encoding *encoding);
+	void setInputEncoding(Encoding *encoding) {_inputEncoding = encoding;}
+	const QString &nodeLabelAttr() const {return _nodeLabelAttr;}
+	void setNodeLabelAttr(const QString &name) {_nodeLabelAttr = name;}
+	const QString &edgeLabelAttr() const {return _edgeLabelAttr;}
+	void setEdgeLabelAttr(const QString &name) {_edgeLabelAttr = name;}
 	bool antialiasing() const;
 	void setAntialiasing(bool value);
 
@@ -99,9 +103,12 @@ private:
 
 	QString _inputFileName;
 	QString _outputFileName;
-	Encoding *_inputEncoding;
 	InputProvider *_inputProvider;
 	OutputProvider *_outputProvider;
+
+	Encoding *_inputEncoding;
+	QString _nodeLabelAttr;
+	QString _edgeLabelAttr;
 
 	QPoint _dimensions;
 	QColor _vertexColor;

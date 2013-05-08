@@ -132,8 +132,13 @@ bool MatrixGraphInput::parse()
 	}
 }
 
-IO::Error MatrixGraphInput::readGraph(Graph *graph, const char *fileName,
-  Encoding*)
+
+void MatrixGraphInput::setInputEncoding(Encoding *encoding)
+{
+	_encoding = encoding;
+}
+
+IO::Error MatrixGraphInput::readGraph(Graph *graph, const char *fileName)
 {
 	IO::Error err = Ok;
 

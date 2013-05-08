@@ -194,15 +194,19 @@ Vertex* ListGraphInput::addVertex(const wstring &vertex)
 }
 
 
-IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName,
-  Encoding *encoding)
+void ListGraphInput::setInputEncoding(Encoding *encoding)
+{
+	_encoding = encoding;
+}
+
+IO::Error ListGraphInput::readGraph(Graph *graph, const char *fileName)
 {
 	IO::Error err = Ok;
 
 	_graph = graph;
 
-	if (encoding) {
-		locale lc(std::locale(), encoding->cvt());
+	if (_encoding) {
+		locale lc(std::locale(), _encoding->cvt());
 		_fs.imbue(lc);
 	}
 

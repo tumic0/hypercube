@@ -595,7 +595,7 @@ void DotGraphInput::setEdgeAttributes(Edge *edge, const Attributes &attr)
 Vertex* DotGraphInput::addVertex(const wstring &vertex)
 {
 	Vertex *v;
-	map<std::wstring, Vertex*>::const_iterator it;
+	map<wstring, Vertex*>::const_iterator it;
 
 	it = _vertexes.find(vertex);
 	if (it != _vertexes.end())
@@ -615,15 +615,19 @@ Edge* DotGraphInput::addEdge(const wstring &src, const wstring &dst)
 }
 
 
-IO::Error DotGraphInput::readGraph(Graph *graph, const char *fileName,
-  Encoding *encoding)
+void DotGraphInput::setInputEncoding(Encoding *encoding)
+{
+	_encoding = encoding;
+}
+
+IO::Error DotGraphInput::readGraph(Graph *graph, const char *fileName)
 {
 	IO::Error err = Ok;
 
 	_graph = graph;
 
-	if (encoding) {
-		locale lc(std::locale(), encoding->cvt());
+	if (_encoding) {
+		locale lc(locale(), _encoding->cvt());
 		_fs.imbue(lc);
 	}
 

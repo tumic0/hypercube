@@ -4,6 +4,7 @@
 #include <QMenuBar>
 #include <QStatusBar>
 #include <QGroupBox>
+#include <QLineEdit>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QSettings>
@@ -211,22 +212,31 @@ void GUI::createProperties()
 
 void GUI::createMiscProperties()
 {
-	QGroupBox *encodingBox = new QGroupBox(tr("Encoding"));
+	QGroupBox *inputBox = new QGroupBox(tr("Input"));
 
 	_inputEncoding = new QComboBox();
+	_nodeLabelAttr = new QLineEdit();
+	_edgeLabelAttr = new QLineEdit();
+
 
 	for (Encoding **ep = encodings; *ep; ep++)
 		_inputEncoding->addItem((*ep)->name());
 
 	connect(_inputEncoding, SIGNAL(currentIndexChanged(int)), this,
 	  SLOT(setInputEncoding(int)));
+	connect(_nodeLabelAttr, SIGNAL(editingFinished()), this,
+	  SLOT(setNodeLabelAttr()));
+	connect(_edgeLabelAttr, SIGNAL(editingFinished()), this,
+	  SLOT(setEdgeLabelAttr()));
 
-	QVBoxLayout *encodingLayout = new QVBoxLayout;
-	QFormLayout *encodingFormLayout = new QFormLayout;
-	encodingFormLayout->addRow(tr("Input encoding:"), _inputEncoding);
-	encodingLayout->addLayout(encodingFormLayout);
-	encodingLayout->addStretch();
-	encodingBox->setLayout(encodingLayout);
+	QVBoxLayout *inputLayout = new QVBoxLayout;
+	QFormLayout *inputFormLayout = new QFormLayout;
+	inputFormLayout->addRow(tr("Encoding:"), _inputEncoding);
+	inputFormLayout->addRow(tr("Node attribute:"), _nodeLabelAttr);
+	inputFormLayout->addRow(tr("Edge attribute:"), _edgeLabelAttr);
+	inputLayout->addLayout(inputFormLayout);
+	inputLayout->addStretch();
+	inputBox->setLayout(inputLayout);
 
 
 	QGroupBox *displayBox = new QGroupBox(tr("Display"));
@@ -261,7 +271,7 @@ void GUI::createMiscProperties()
 
 
 	QVBoxLayout *layout = new QVBoxLayout;
-	layout->addWidget(encodingBox);
+	layout->addWidget(inputBox);
 	layout->addWidget(displayBox);
 	layout->addWidget(argumentsBox);
 
@@ -686,6 +696,9 @@ void GUI::transformGraph()
 
 void GUI::reloadGraph()
 {
+	setNodeLabelAttr();
+	setEdgeLabelAttr();
+
 	IO::ioerr.str("");
 	IO::Error error = TAB()->readGraph();
 	if (error) {
@@ -919,6 +932,20 @@ void GUI::setInputEncoding(int index)
 	getArguments();
 }
 
+void GUI::setNodeLabelAttr()
+{
+	if (TAB())
+		TAB()->setNodeLabelAttr(_nodeLabelAttr->text());
+	getArguments();
+}
+
+void GUI::setEdgeLabelAttr()
+{
+	if (TAB())
+		TAB()->setEdgeLabelAttr(_edgeLabelAttr->text());
+	getArguments();
+}
+
 void GUI::setAntialiasing(int state)
 {
 	if (TAB())
@@ -938,6 +965,8 @@ void GUI::setMiscProperties(GraphTab *tab)
 	tab->setInputEncoding(encoding);
 	tab->setAntialiasing((_antialiasing->checkState() == Qt::Checked)
 	  ? true : false);
+	tab->setNodeLabelAttr(_nodeLabelAttr->text());
+	tab->setEdgeLabelAttr(_edgeLabelAttr->text());
 }
 
 void GUI::setAlgorithmProperties(GraphTab *tab)
@@ -1041,6 +1070,8 @@ void GUI::getMiscProperties(GraphTab *tab)
 
 	BLOCK(_inputEncoding, setCurrentIndex(index));
 	BLOCK(_antialiasing, setChecked(tab->antialiasing()));
+	BLOCK(_nodeLabelAttr, setText(tab->nodeLabelAttr()));
+	BLOCK(_edgeLabelAttr, setText(tab->edgeLabelAttr()));
 
 	getArguments();
 }
@@ -1128,6 +1159,8 @@ void GUI::writeSettings()
 	settings.setValue(INPUT_ENCODING_SETTING, _inputEncoding->currentText());
 	settings.setValue(ANTIALIASING_SETTING, _antialiasing->checkState());
 	settings.setValue(ESCAPE_SPECIALS_SETTING, _argumentsEscape->checkState());
+	settings.setValue(NODE_LABEL_ATTR_SETTING, _nodeLabelAttr->text());
+	settings.setValue(EDGE_LABEL_ATTR_SETTING, _edgeLabelAttr->text());
 	settings.endGroup();
 }
 
@@ -1197,6 +1230,10 @@ void GUI::readSettings()
 			break;
 		}
 	}
+	_nodeLabelAttr->setText(settings.value(
+	  NODE_LABEL_ATTR_SETTING, NODE_LABEL_ATTR).toString());
+	_edgeLabelAttr->setText(settings.value(
+	  EDGE_LABEL_ATTR_SETTING, EDGE_LABEL_ATTR).toString());
 	_antialiasing->setChecked((Qt::CheckState)settings.value(
 	  ANTIALIASING_SETTING, Qt::Checked).toBool());
 	_argumentsEscape->setChecked((Qt::CheckState)settings.value(

@@ -2,17 +2,35 @@
 #include <map>
 #include <deque>
 #include "CORE/misc.h"
-#include "CORE/config.h"
 #include "IO/providers/xml/xml.h"
 #include "graphml.h"
 
 using namespace std;
 
 
+#define ROOT        L""
+#define GRAPHML     L"graphml"
+#define GRAPH       L"graph"
+#define NODE        L"node"
+#define EDGE        L"edge"
+#define KEY         L"key"
+#define DEFAULT     L"default"
+#define EDGEDEFAULT L"edgedefault"
+#define DIRECTED    L"directed"
+#define NAME        L"attr.name"
+#define ID          L"id"
+#define SOURCE      L"source"
+#define TARGET      L"target"
+#define DATA        L"data"
+#define FOR         L"for"
+
+
 class GraphmlHandler : public XmlHandler
 {
 public:
 	GraphmlHandler(Graph *graph) : _graph(graph) {}
+	void setNodeLabelAttribute(const wstring &name) {_nodeLabelAttr = name;}
+	void setEdgeLabelAttribute(const wstring &name) {_edgeLabelAttr = name;}
 
 	virtual bool startDocument();
 	virtual bool endDocument();
@@ -80,18 +98,19 @@ private:
 	DataAttributes _dataAttributes;
 	KeyAttributes _keyAttributes;
 	Label _nodeLabel, _edgeLabel;
+	wstring _nodeLabelAttr, _edgeLabelAttr;
 
 	static const Relation relations[];
 };
 
 
 const GraphmlHandler::Relation GraphmlHandler::relations[] = {
-	{L"graphml", L""},
-	{L"graph", L"graphml"},
-	{L"node", L"graph"},
-	{L"edge", L"graph"},
-	{L"key", L"graphml"},
-	{L"default", L"key"}
+	{GRAPHML, ROOT},
+	{GRAPH, GRAPHML},
+	{KEY, GRAPHML},
+	{NODE, GRAPH},
+	{EDGE, GRAPH},
+	{DEFAULT, KEY}
 };
 
 
@@ -104,7 +123,7 @@ bool GraphmlHandler::startDocument()
 
 bool GraphmlHandler::endDocument()
 {
-	_graph->setDirected((_graphAttributes.edgedefault == L"directed"));
+	_graph->setDirected((_graphAttributes.edgedefault == DIRECTED));
 
 	return true;
 }
@@ -175,7 +194,7 @@ Edge* GraphmlHandler::addEdge(const wstring &source, const wstring &target)
 bool GraphmlHandler::checkRelation(const wstring &node, const wstring &parent)
 {
 	if (parent.empty()) {
-		if (node != L"graphml")
+		if (node != GRAPHML)
 			return false;
 	}
 
@@ -192,35 +211,35 @@ bool GraphmlHandler::checkRelation(const wstring &node, const wstring &parent)
 void GraphmlHandler::setAttribute(const wstring &element, const wstring &attr,
   const wstring &value)
 {
-	if (element == L"node") {
-		if (attr == L"id")
+	if (element == NODE) {
+		if (attr == ID)
 			_nodeAttributes.id = value;
-	} else if (element == L"edge") {
-		if (attr == L"id")
+	} else if (element == EDGE) {
+		if (attr == ID)
 			_edgeAttributes.id = value;
-		else if (attr == L"source")
+		else if (attr == SOURCE)
 			_edgeAttributes.source = value;
-		else if (attr == L"target")
+		else if (attr == TARGET)
 			_edgeAttributes.target = value;
-	} else if (element == L"graph") {
-		if (attr == L"edgedefault")
+	} else if (element == GRAPH) {
+		if (attr == EDGEDEFAULT)
 			_graphAttributes.edgedefault = value;
-	} else if (element == L"data") {
-		if (attr == L"key")
+	} else if (element == DATA) {
+		if (attr == KEY)
 			_dataAttributes.key = value;
-	} else if (element == L"key") {
-		if (attr == L"id")
+	} else if (element == KEY) {
+		if (attr == ID)
 			_keyAttributes.id = value;
-		else if (attr == L"for")
+		else if (attr == FOR)
 			_keyAttributes.xfor = value;
-		else if (attr == L"attr.name")
+		else if (attr == NAME)
 			_keyAttributes.name =value;
 	}
 }
 
 void GraphmlHandler::initGraphAttributes()
 {
-	_graphAttributes.edgedefault = L"directed";
+	_graphAttributes.edgedefault = DIRECTED;
 }
 
 void GraphmlHandler::clearNodeAttributes()
@@ -247,7 +266,7 @@ bool GraphmlHandler::handleElement(const wstring &element)
 	Vertex *vertex;
 	Edge *edge;
 
-	if (element == L"node") {
+	if (element == NODE) {
 		if (_nodeAttributes.id.empty())
 			return false;
 		vertex = addVertex(_nodeAttributes.id);
@@ -264,7 +283,7 @@ bool GraphmlHandler::handleElement(const wstring &element)
 		clearNodeAttributes();
 		_nodeLabel.value.clear();
 
-	} else if (element == L"edge") {
+	} else if (element == EDGE) {
 		if (_edgeAttributes.source.empty() || _edgeAttributes.target.empty())
 			return false;
 		edge = addEdge(_edgeAttributes.source, _edgeAttributes.target);
@@ -281,12 +300,12 @@ bool GraphmlHandler::handleElement(const wstring &element)
 		clearEdgeAttributes();
 		_edgeLabel.value.clear();
 
-	} else if (element == L"key") {
-		if (_keyAttributes.xfor == L"node"
-		  && _keyAttributes.name == NODE_LABEL_ATTR)
+	} else if (element == KEY) {
+		if (_keyAttributes.xfor == NODE
+		  && _keyAttributes.name == _nodeLabelAttr)
 			_nodeLabel.id = _keyAttributes.id;
-		else if (_keyAttributes.xfor == L"edge"
-		  && _keyAttributes.name == EDGE_LABEL_ATTR)
+		else if (_keyAttributes.xfor == EDGE
+		  && _keyAttributes.name == _edgeLabelAttr)
 			_edgeLabel.id = _keyAttributes.id;
 
 		clearKeyAttributes();
@@ -297,17 +316,17 @@ bool GraphmlHandler::handleElement(const wstring &element)
 
 bool GraphmlHandler::handleData(const wstring &data)
 {
-	if (_elements.back() == L"data") {
+	if (_elements.back() == DATA) {
 		wstring &parent = _elements.at(_elements.size() - 2);
 
-		if (parent == L"node" && _dataAttributes.key == _nodeLabel.id)
+		if (parent == NODE && _dataAttributes.key == _nodeLabel.id)
 			_nodeLabel.value = data;
-		if (parent == L"edge" && _dataAttributes.key == _edgeLabel.id)
+		if (parent == EDGE && _dataAttributes.key == _edgeLabel.id)
 			_edgeLabel.value = data;
-	} else if (_elements.back() == L"default") {
-		if (_keyAttributes.xfor == L"node")
+	} else if (_elements.back() == DEFAULT) {
+		if (_keyAttributes.xfor == NODE)
 			_nodeLabel.defval = data;
-		else if (_keyAttributes.xfor == L"edge")
+		else if (_keyAttributes.xfor == EDGE)
 			_edgeLabel.defval = data;
 	}
 
@@ -315,13 +334,24 @@ bool GraphmlHandler::handleData(const wstring &data)
 }
 
 
-IO::Error GraphmlGraphInput::readGraph(Graph *graph, const char *fileName,
-  Encoding *)
+void GraphmlGraphInput::setNodeLabelAttribute(const char *name)
 {
-	XmlParser parser;
-	GraphmlHandler handler(graph);
+	_nodeLabelAttr = s2w(name);
+}
 
-	parser.setHandler(&handler);
+void GraphmlGraphInput::setEdgeLabelAttribute(const char *name)
+{
+	_edgeLabelAttr = s2w(name);
+}
+
+IO::Error GraphmlGraphInput::readGraph(Graph *graph, const char *fileName)
+{
+	GraphmlHandler handler(graph);
+	XmlParser parser(&handler);
+
+	handler.setNodeLabelAttribute(_nodeLabelAttr);
+	handler.setEdgeLabelAttribute(_edgeLabelAttr);
 	parser.setErrorPrefix("GraphML");
+
 	return parser.parse(fileName);
 }

@@ -21,7 +21,7 @@ public:
 class XmlParser : public IO
 {
 public:
-	void setHandler(XmlHandler *handler);
+	XmlParser(XmlHandler *handler) : _handler(handler) {};
 	void setErrorPrefix(const std::string &prefix);
 	IO::Error parse(const char *fileName);
 

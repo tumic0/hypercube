@@ -70,6 +70,8 @@ private slots:
 	void directGraph(int state);
 
 	void setInputEncoding(int index);
+	void setNodeLabelAttr();
+	void setEdgeLabelAttr();
 	void setAntialiasing(int state);
 	void setSpecialsEscaping();
 
@@ -170,6 +172,8 @@ private:
 	QCheckBox *_debug;
 
 	QComboBox *_inputEncoding;
+	QLineEdit *_nodeLabelAttr;
+	QLineEdit *_edgeLabelAttr;
 	QCheckBox *_antialiasing;
 	QLabel *_arguments;
 	QCheckBox *_argumentsEscape;

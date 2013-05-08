@@ -36,6 +36,8 @@ private:
 	std::string _outputFileName;
 	std::string _format;
 	std::string _encoding;
+	std::string _vertexAttribute;
+	std::string _edgeAttribute;
 
 	Coordinates _dimensions;
 	Color _vertexColor;

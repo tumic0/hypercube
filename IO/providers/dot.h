@@ -6,11 +6,13 @@
 #include <set>
 #include "IO/io.h"
 
+
 class DotGraphInput: public InputProvider
 {
 public:
-	virtual Error readGraph(Graph *graph, const char *fileName,
-	  Encoding *encoding);
+	DotGraphInput() : _encoding(0) {}
+	virtual Error readGraph(Graph *graph, const char *fileName);
+	virtual void setInputEncoding(Encoding *encoding);
 
 private:
 	enum Token {
@@ -91,6 +93,7 @@ private:
 	bool _directed;
 
 	Graph *_graph;
+	Encoding *_encoding;
 };
 
 #endif // DOT_H_

@@ -13,8 +13,9 @@ class Edge;
 class ListGraphInput: public InputProvider
 {
 public:
-	virtual Error readGraph(Graph *graph, const char *fileName,
-	  Encoding *encoding);
+	ListGraphInput() : _encoding(0) {}
+	virtual Error readGraph(Graph *graph, const char *fileName);
+	virtual void setInputEncoding(Encoding *encoding);
 
 private:
 	enum Token {
@@ -42,6 +43,7 @@ private:
 
 	std::map<std::wstring, Vertex*> _vertexes;
 	Graph *_graph;
+	Encoding *_encoding;
 };
 
 #endif /* LIST_H_ */

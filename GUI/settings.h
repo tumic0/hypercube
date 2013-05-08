@@ -36,6 +36,8 @@
 
 #define MISC_GROUP "Misc"
 #define INPUT_ENCODING_SETTING "inputEncoding"
+#define NODE_LABEL_ATTR_SETTING "nodeLabelAttribute"
+#define EDGE_LABEL_ATTR_SETTING "edgeLabelAttribute"
 #define ANTIALIASING_SETTING "antialiasing"
 #define ESCAPE_SPECIALS_SETTING "escapeSpecials"
 

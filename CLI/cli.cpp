@@ -50,6 +50,9 @@ CLI::CLI(int argc, char *argv[])
 	_coloredEdges = false;
 	_forceDirected = false;
 	_forceUndirected = false;
+
+	_vertexAttribute = NODE_LABEL_ATTR;
+	_edgeAttribute = EDGE_LABEL_ATTR;
 }
 
 CLI::~CLI()
@@ -82,29 +85,29 @@ int CLI::exec()
 bool CLI::readGraph()
 {
 	Encoding **e = encodings;
-	InputProvider **p = inputProviders;
 	IO::Error error = IO::FormatError;
 	int found = 0;
 
-	if (_encoding == string())
+	if (_encoding.empty())
 		_encoding = (*e)->name();
 
-	while (*e) {
+	for (e = encodings; *e; e++)
 		if ((found = !_encoding.compare((*e)->name())))
 			break;
-		e++;
-	}
 
 	if (!found) {
 		cerr << "Unknown input encoding: " << _encoding << endl;
 		return false;
 	}
 
-	while (*p) {
-		error = (*p)->readGraph(_graph, _inputFileName.c_str(), *e);
+	for (InputProvider **p = inputProviders; *p; p++) {
+		(*p)->setInputEncoding(*e);
+		(*p)->setNodeLabelAttribute(_vertexAttribute.c_str());
+		(*p)->setEdgeLabelAttribute(_edgeAttribute.c_str());
+
+		error = (*p)->readGraph(_graph, _inputFileName.c_str());
 		if (error != IO::FormatError)
 			break;
-		p++;
 	}
 
 	if (error) {
@@ -130,16 +133,14 @@ bool CLI::writeGraph()
 	IO::Error error;
 	int found = 0;
 
-	if (_format == string())
+	if (_format.empty())
 		_format = (*p)->type();
-	if (_outputFileName == string())
+	if (_outputFileName.empty())
 		_outputFileName = replaceExtension(_inputFileName, _format);
 
-	while (*p) {
+	for (p = outputProviders; *p; p++)
 		if ((found = !_format.compare((*p)->type())))
 			break;
-		p++;
-	}
 
 	if (!found) {
 		cerr << "Unknown output format: " << _format << endl;
@@ -174,6 +175,8 @@ void CLI::usage()
 	cout << " -s <dimensions>  set image size to <dimensions>" << endl;
 	cout << " -f <format>      set output format to <format>" << endl;
 	cout << " -e <encoding>    set input file encoding to <encoding>" << endl;
+	cout << " -va <attribute>  use <attribute> for vertex labels" << endl;
+	cout << " -ea <attribute>  use <attribute> for edge labels" << endl;
 	cout << " -o <file>        set the output file to <file>" << endl;
 	cout << " -vc <color>      set vertex color to <color>" << endl;
 	cout << " -ec <color>      set edge color to <color>" << endl;
@@ -220,8 +223,10 @@ int CLI::argument(int i)
 	}
 
 	ARG("-f", _format);
-	ARG("-e", _encoding);
 	ARG("-o", _outputFileName);
+	ARG("-e", _encoding);
+	ARG("-va", _vertexAttribute);
+	ARG("-ea", _edgeAttribute);
 
 	ARG("-s", _dimensions);
 	ARG("-vc", _vertexColor);

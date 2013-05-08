@@ -25,8 +25,8 @@
 #define EDGE_FONT_SIZE     14
 #define MIN_FONT_SIZE      8
 
-#define NODE_LABEL_ATTR    L"label"
-#define EDGE_LABEL_ATTR    L"label"
+#define NODE_LABEL_ATTR    "label"
+#define EDGE_LABEL_ATTR    "label"
 
 #ifdef SA_LOG_SUPPORT
 #define SA_PROGRESS_LOG    "progress.log"

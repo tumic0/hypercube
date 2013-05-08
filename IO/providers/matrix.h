@@ -7,8 +7,9 @@
 class MatrixGraphInput: public InputProvider
 {
 public:
-	virtual Error readGraph(Graph *graph, const char *fileName,
-	  Encoding *encoding);
+	MatrixGraphInput() : _encoding(0) {}
+	virtual Error readGraph(Graph *graph, const char *fileName);
+	virtual void setInputEncoding(Encoding *encoding);
 
 private:
 	enum Token {
@@ -30,7 +31,9 @@ private:
 	Token _token;
 	unsigned _line;
 	unsigned _id;
+
 	Graph *_graph;
+	Encoding *_encoding;
 };
 
 #endif /* MATRIX_H_ */

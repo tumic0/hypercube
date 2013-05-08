@@ -18,15 +18,6 @@ using namespace std;
 const unsigned char BOM[] = {0xEF, 0xBB, 0xBF};
 
 
-static std::wstring s2w(const string &s)
-{
-	wstring w(s.length(), L' ');
-	copy(s.begin(), s.end(), w.begin());
-
-	return w;
-}
-
-
 void XmlParser::setEncoding(const wstring &encoding)
 {
 	codecvt<wchar_t,char,mbstate_t> *cvt = 0;
@@ -672,11 +663,6 @@ bool XmlParser::start()
 	}
 }
 
-
-void XmlParser::setHandler(XmlHandler *handler)
-{
-	_handler = handler;
-}
 
 void XmlParser::setErrorPrefix(const std::string &prefix)
 {
