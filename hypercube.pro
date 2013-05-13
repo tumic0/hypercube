@@ -22,18 +22,22 @@ HEADERS += CORE/sa_log.h \
     IO/encoding.h \
     IO/providers/xml/xml.h \
     IO/providers/ps.h \
-    IO/providers/ps/encodings/latin2.ps.h \
-    IO/providers/ps/encodings/latin1.h \
+    IO/providers/ps/encodings/iso2.ps.h \
+    IO/providers/ps/encodings/iso7.ps.h \
     IO/providers/ps/encodings/koi8r.ps.h \
-    IO/providers/ps/encodings/latin2.h \
+    IO/providers/ps/encodings/iso1.h \
+    IO/providers/ps/encodings/iso2.h \
+    IO/providers/ps/encodings/iso7.h \
     IO/providers/ps/encodings/koi8r.h \
-    IO/providers/ps/default.h \
+    IO/providers/ps/western.h \
     IO/providers/ps/cyrillic.h \
-    IO/providers/ps/fonts/nimbus.pfa.h \
-    IO/providers/ps/fonts/nimbus.h \
-    IO/providers/ps/fonts/helvetica_ce.h \
-    IO/providers/ps/fonts/helvetica.h \
+    IO/providers/ps/greek.h \
     IO/providers/ps/ce.h \
+    IO/providers/ps/fonts/moderna.pfa.h \
+    IO/providers/ps/fonts/nimbus.pfa.h \
+    IO/providers/ps/fonts/moderna.h \
+    IO/providers/ps/fonts/nimbus.h \
+    IO/providers/ps/fonts/helvetica.h \
     IO/providers/ps/snippet.h \
     IO/providers/svg.h \
     IO/providers/matrix.h \
@@ -42,16 +46,21 @@ HEADERS += CORE/sa_log.h \
     IO/providers/gml.h \
     IO/providers/graphml.h \
     IO/providers/gxl.h \
-    IO/encodings/latin1cvt.h \
-    IO/encodings/cp1250cvt.h \
-    IO/encodings/latin1.h \
-    IO/encodings/utf8.h \
-    IO/encodings/latin2cvt.h \
+    IO/encodings/8bit.h \
+    IO/encodings/iso1cvt.h \
+    IO/encodings/iso2cvt.h \
+    IO/encodings/iso7cvt.h \
     IO/encodings/koi8rcvt.h \
-    IO/encodings/latin2.h \
-    IO/encodings/cp1250.h \
-    IO/encodings/koi8r.h \
+    IO/encodings/cp1250cvt.h \
+    IO/encodings/cp1251cvt.h \
     IO/encodings/utf8cvt.h \
+    IO/encodings/iso1.h \
+    IO/encodings/iso2.h \
+    IO/encodings/iso7.h \
+    IO/encodings/cp1250.h \
+    IO/encodings/cp1251.h \
+    IO/encodings/koi8r.h \
+    IO/encodings/utf8.h \
     GUI/vertexitem.h \
     GUI/icons.h \
     GUI/graphview.h \
@@ -69,10 +78,14 @@ SOURCES += \
     CORE/colormap.cpp \
     CORE/line.cpp \
     IO/modules.cpp \
+    IO/encodings/8bit.cpp \
     IO/encodings/koi8rcvt.cpp \
-    IO/encodings/latin1cvt.cpp \
-    IO/encodings/latin2cvt.cpp \
+    IO/encodings/iso1cvt.cpp \
+    IO/encodings/iso2cvt.cpp \
+    IO/encodings/iso7cvt.cpp \
     IO/encodings/cp1250cvt.cpp \
+    IO/encodings/cp1251cvt.cpp \
+    IO/encodings/utf8cvt.cpp \
     IO/providers/xml/xml.cpp \
     IO/providers/ps/snippet.cpp \
     IO/providers/list.cpp \
@@ -83,7 +96,6 @@ SOURCES += \
     IO/providers/gxl.cpp \
     IO/providers/ps.cpp \
     IO/providers/svg.cpp \
-    IO/encodings/utf8cvt.cpp \
     IO/io.cpp \
     GUI/main.cpp \
     GUI/vertexitem.cpp \

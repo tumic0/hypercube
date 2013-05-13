@@ -6,8 +6,8 @@
 class Helvetica : public PsFont
 {
 public:
-	virtual const char *name() {return "Helvetica";}
-	virtual const char *font() {return 0;}
+	virtual const char *name() const {return "Helvetica";}
+	virtual const char *font() const {return 0;}
 };
 
 #endif /* HELVETICA_H_ */

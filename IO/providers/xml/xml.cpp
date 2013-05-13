@@ -3,7 +3,7 @@
 #include "CORE/misc.h"
 #include "IO/modules.h"
 #include "IO/encodings/utf8cvt.h"
-#include "IO/encodings/latin1.h"
+#include "IO/encodings/iso1.h"
 #include "xml.h"
 
 using namespace std;
@@ -673,7 +673,7 @@ IO::Error XmlParser::parse(const char *fileName)
 {
 	IO::Error err = Ok;
 
-	locale lc(std::locale(), new latin1cvt);
+	locale lc(std::locale(), new iso1cvt);
 	_fs.imbue(lc);
 
 	_fs.open(fileName);

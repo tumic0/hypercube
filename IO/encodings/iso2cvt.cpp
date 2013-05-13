@@ -1,17 +1,12 @@
-#include <cstdlib>
-#include "latin2cvt.h"
-
+#include "8bit.h"
+#include "iso2cvt.h"
 
 using namespace std;
 
-struct cw {
-	unsigned char c;
-	wchar_t w;
-};
 
-static const wchar_t latin2ucs[] = {
-	0x00A0, 0x0104,	0x02D8,	0x0141, 0x00A4, 0x013D,	0x015A,	0x00A7,
-	0x00A8, 0x0160,	0x015E, 0x0164, 0x0179, 0x00AD, 0x017D, 0x017B,
+static const wchar_t iso2ucs[] = {
+	0x00A0, 0x0104, 0x02D8, 0x0141, 0x00A4, 0x013D, 0x015A, 0x00A7,
+	0x00A8, 0x0160, 0x015E, 0x0164, 0x0179, 0x00AD, 0x017D, 0x017B,
 	0x00B0, 0x0105, 0x02DB, 0x0142, 0x00B4, 0x013E, 0x015B, 0x02C7,
 	0x00B8, 0x0161, 0x015F, 0x0165, 0x017A, 0x02DD, 0x017E, 0x017C,
 	0x0154, 0x00C1, 0x00C2, 0x0102, 0x00C4, 0x0139, 0x0106, 0x00C7,
@@ -24,7 +19,7 @@ static const wchar_t latin2ucs[] = {
 	0x0159, 0x016F, 0x00FA, 0x0171, 0x00FC, 0x00FD, 0x0163, 0x02D9
 };
 
-static const struct cw ucs2latin[] = {
+static const struct cw ucs2iso[] = {
 	{0xA0, 0x00A0}, {0xA4, 0x00A4}, {0xA7, 0x00A7}, {0xA8, 0x00A8},
 	{0xAD, 0x00AD}, {0xB0, 0x00B0}, {0xB4, 0x00B4}, {0xB8, 0x00B8},
 	{0xC1, 0x00C1}, {0xC2, 0x00C2}, {0xC4, 0x00C4}, {0xC7, 0x00C7},
@@ -51,55 +46,24 @@ static const struct cw ucs2latin[] = {
 	{0xA2, 0x02D8}, {0xFF, 0x02D9}, {0xB2, 0x02DB}, {0xBD, 0x02DD}
 };
 
-static int cmp(const void *p1, const void *p2)
-{
-	struct cw *cw1 = (struct cw*) p1;
-	struct cw *cw2 = (struct cw*) p2;
 
-	return (int)cw1->w - (int)cw2->w;
-}
-
-
-codecvt_base::result latin2cvt::do_in(mbstate_t&, const char* from,
+codecvt_base::result iso2cvt::do_in(mbstate_t&, const char* from,
   const char* from_end, const char*& from_next, wchar_t* to,
   wchar_t* to_limit, wchar_t*& to_next) const
 {
-	for (from_next = from, to_next = to; from_next < from_end
-	  && to_next < to_limit; from_next++, to_next++) {
-		if ((unsigned char)*from_next < 0xA0)
-			*to_next = (unsigned char)*from_next;
-		else
-			*to_next = latin2ucs[(unsigned char)*from_next - 0xA0];
-	}
-
-	return codecvt_base::ok;
+	return ::do_in(from, from_end, from_next, to, to_limit, to_next, 0xA0,
+	  iso2ucs) ? codecvt_base::error : codecvt_base::ok;
 }
 
-codecvt_base::result latin2cvt::do_out(mbstate_t&, const wchar_t* from,
+codecvt_base::result iso2cvt::do_out(mbstate_t&, const wchar_t* from,
   const wchar_t* from_end, const wchar_t*& from_next, char* to,
   char* to_limit, char*& to_next) const
 {
-	cw key, *res;
-
-	for (from_next = from, to_next = to; from_next < from_end
-	  && to_next < to_limit; from_next++, to_next++) {
-		if (*from_next < 0xA0)
-			*to_next = (char)*from_next;
-		else {
-			key.w = *from_next;
-			if ((res = (struct cw*) bsearch(&key, ucs2latin,
-			  sizeof(ucs2latin) / sizeof(struct cw),
-			  sizeof(struct cw), cmp)) == NULL)
-				return codecvt_base::error;
-
-			*to_next = res->c;
-		}
-	}
-
-	return codecvt_base::ok;
+	return ::do_out(from, from_end, from_next, to, to_limit, to_next, 0xA0,
+	  ucs2iso, sizeof(ucs2iso)) ? codecvt_base::error : codecvt_base::ok;
 }
 
-codecvt_base::result latin2cvt::do_unshift(mbstate_t&, char* to, char*,
+codecvt_base::result iso2cvt::do_unshift(mbstate_t&, char* to, char*,
   char*& to_next) const
 {
 	to_next = to;

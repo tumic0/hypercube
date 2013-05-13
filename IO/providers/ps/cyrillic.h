@@ -12,8 +12,8 @@ class Cyrillic : public PsSnippet
 
 public:
 	Cyrillic() {_encoding = new PsKOI8R; _font = new Nimbus;}
-	virtual PsEncoding *encoding() {return _encoding;}
-	virtual PsFont *font() {return _font;}
+	virtual PsEncoding *encoding() const {return _encoding;}
+	virtual PsFont *font() const {return _font;}
 };
 
 #endif /* CYRILLIC_H_ */

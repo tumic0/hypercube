@@ -1,9 +1,9 @@
-#ifndef KOIRCVT_H_
-#define KOIRCVT_H_
+#ifndef ISO2CVT_H_
+#define ISO2CVT_H_
 
 #include <locale>
 
-class koi8rcvt : public std::codecvt<wchar_t,char,mbstate_t>
+class iso2cvt : public std::codecvt<wchar_t,char,mbstate_t>
 {
 protected:
 	virtual bool do_always_noconv() const throw() { return false; }
@@ -21,4 +21,4 @@ protected:
 	  char*& to_next) const;
 };
 
-#endif /* KOIRCVT_H_ */
+#endif /* ISO2CVT_H_ */

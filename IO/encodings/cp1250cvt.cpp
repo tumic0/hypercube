@@ -1,13 +1,8 @@
-#include <cstdlib>
+#include "8bit.h"
 #include "cp1250cvt.h"
-
 
 using namespace std;
 
-struct cw {
-	unsigned char c;
-	wchar_t w;
-};
 
 static const wchar_t cp2ucs[] = {
 	0x20AC, 0x0000, 0x201A, 0x0000, 0x201E, 0x2026, 0x2020, 0x2021,
@@ -62,52 +57,21 @@ static const struct cw ucs2cp[] = {
 	{0x9B, 0x203A}, {0x80, 0x20AC}, {0x99, 0x2122}
 };
 
-static int cmp(const void *p1, const void *p2)
-{
-	struct cw *cw1 = (struct cw*) p1;
-	struct cw *cw2 = (struct cw*) p2;
-
-	return (int)cw1->w - (int)cw2->w;
-}
-
 
 codecvt_base::result cp1250cvt::do_in(mbstate_t&, const char* from,
   const char* from_end, const char*& from_next, wchar_t* to,
   wchar_t* to_limit, wchar_t*& to_next) const
 {
-	for (from_next = from, to_next = to; from_next < from_end
-	  && to_next < to_limit; from_next++, to_next++) {
-		if ((unsigned char)*from_next < 0x80)
-			*to_next = (unsigned char)*from_next;
-		else
-			*to_next = cp2ucs[(unsigned char)*from_next - 0x80];
-	}
-
-	return codecvt_base::ok;
+	return ::do_in(from, from_end, from_next, to, to_limit, to_next, 0x80,
+	  cp2ucs) ? codecvt_base::error : codecvt_base::ok;
 }
 
 codecvt_base::result cp1250cvt::do_out(mbstate_t&, const wchar_t* from,
   const wchar_t* from_end, const wchar_t*& from_next, char* to,
   char* to_limit, char*& to_next) const
 {
-	cw key, *res;
-
-	for (from_next = from, to_next = to; from_next < from_end
-	  && to_next < to_limit; from_next++, to_next++) {
-		if (*from_next < 0x80)
-			*to_next = (char)*from_next;
-		else {
-			key.w = *from_next;
-			if ((res = (struct cw*) bsearch(&key, ucs2cp,
-			  sizeof(ucs2cp) / sizeof(struct cw),
-			  sizeof(struct cw), cmp)) == NULL)
-				return codecvt_base::error;
-
-			*to_next = res->c;
-		}
-	}
-
-	return codecvt_base::ok;
+	return ::do_out(from, from_end, from_next, to, to_limit, to_next, 0x80,
+	  ucs2cp, sizeof(ucs2cp)) ? codecvt_base::error : codecvt_base::ok;
 }
 
 codecvt_base::result cp1250cvt::do_unshift(mbstate_t&, char* to, char*,

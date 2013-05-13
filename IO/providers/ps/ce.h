@@ -2,8 +2,8 @@
 #define CE_H_
 
 #include "snippet.h"
-#include "encodings/latin2.h"
-#include "fonts/helvetica_ce.h"
+#include "encodings/iso2.h"
+#include "fonts/nimbus.h"
 
 class CE : public PsSnippet
 {
@@ -11,9 +11,9 @@ class CE : public PsSnippet
 	PsFont *_font;
 
 public:
-	CE() {_encoding = new PsLatin2; _font = new HelveticaCE;}
-	virtual PsEncoding *encoding() {return _encoding;}
-	virtual PsFont *font() {return _font;}
+	CE() {_encoding = new PsISO2; _font = new Nimbus;}
+	virtual PsEncoding *encoding() const {return _encoding;}
+	virtual PsFont *font() const {return _font;}
 };
 
 #endif /* CE_H_ */

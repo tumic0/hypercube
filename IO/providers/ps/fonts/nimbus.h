@@ -7,8 +7,8 @@
 class Nimbus : public PsFont
 {
 public:
-	virtual const char *name() {return "NimbusSanL-Regu";}
-	virtual const char *font() {return nimbus_pfa;}
+	virtual const char *name() const {return "NimbusSanL-Regu";}
+	virtual const char *font() const {return nimbus_pfa;}
 };
 
 #endif /* NIMBUS_H_ */

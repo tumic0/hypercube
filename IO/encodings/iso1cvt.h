@@ -1,9 +1,9 @@
-#ifndef LATIN2CVT_H_
-#define LATIN2CVT_H_
+#ifndef ISO1CVT_H_
+#define ISO1CVT_H_
 
 #include <locale>
 
-class latin2cvt : public std::codecvt<wchar_t,char,mbstate_t>
+class iso1cvt : public std::codecvt<wchar_t,char,mbstate_t>
 {
 protected:
 	virtual bool do_always_noconv() const throw() { return false; }
@@ -21,4 +21,4 @@ protected:
 	  char*& to_next) const;
 };
 
-#endif /* LATIN2CVT_H_ */
+#endif /* ISO1CVT_H_ */

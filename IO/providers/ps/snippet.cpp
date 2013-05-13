@@ -1,12 +1,14 @@
 #include "snippet.h"
-#include "default.h"
+#include "western.h"
 #include "ce.h"
 #include "cyrillic.h"
+#include "greek.h"
 
 
 PsSnippet* snippets[] = {
-	new Default,
+	new Western,
 	new CE,
 	new Cyrillic,
+	new Greek,
 	0
 };

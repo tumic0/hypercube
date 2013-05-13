@@ -1,10 +1,10 @@
 #include <cstdlib>
-#include "latin1cvt.h"
+#include "iso1cvt.h"
 
 
 using namespace std;
 
-codecvt_base::result latin1cvt::do_in(mbstate_t&, const char* from,
+codecvt_base::result iso1cvt::do_in(mbstate_t&, const char* from,
   const char* from_end, const char*& from_next, wchar_t* to,
   wchar_t* to_limit, wchar_t*& to_next) const
 {
@@ -15,7 +15,7 @@ codecvt_base::result latin1cvt::do_in(mbstate_t&, const char* from,
 	return codecvt_base::ok;
 }
 
-codecvt_base::result latin1cvt::do_out(mbstate_t&, const wchar_t* from,
+codecvt_base::result iso1cvt::do_out(mbstate_t&, const wchar_t* from,
   const wchar_t* from_end, const wchar_t*& from_next, char* to,
   char* to_limit, char*& to_next) const
 {
@@ -30,7 +30,7 @@ codecvt_base::result latin1cvt::do_out(mbstate_t&, const wchar_t* from,
 	return codecvt_base::ok;
 }
 
-codecvt_base::result latin1cvt::do_unshift(mbstate_t&, char* to, char*,
+codecvt_base::result iso1cvt::do_unshift(mbstate_t&, char* to, char*,
   char*& to_next) const
 {
 	to_next = to;
