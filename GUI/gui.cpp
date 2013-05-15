@@ -801,6 +801,7 @@ void GUI::setSize(int value)
 
 	if (TAB())
 		TAB()->setSize(_sizeSlider->value());
+	getArguments();
 }
 
 void GUI::setPlanarity(int value)
@@ -813,6 +814,7 @@ void GUI::setPlanarity(int value)
 
 	if (TAB())
 		TAB()->setPlanarity(_planaritySlider->value());
+	getArguments();
 }
 
 void GUI::setQuality(int value)
@@ -829,6 +831,7 @@ void GUI::setQuality(int value)
 
 	if (TAB())
 		TAB()->setQuality(_qualitySlider->value());
+	getArguments();
 }
 
 #ifdef SA_LOG_SUPPORT
@@ -1053,6 +1056,10 @@ void GUI::getArguments()
 	if (_inputEncoding->currentIndex() > 0)
 		args.append(QString(" -e %1").arg(_inputEncoding->itemText(
 		  _inputEncoding->currentIndex())));
+	if (_nodeLabelAttr->text() != NODE_LABEL_ATTR)
+		args.append(QString(" -va %1").arg(_nodeLabelAttr->text()));
+	if (_edgeLabelAttr->text() != EDGE_LABEL_ATTR)
+		args.append(QString(" -ea %1").arg(_edgeLabelAttr->text()));
 
 	if (_argumentsEscape->isChecked())
 		args = args.replace("#", "\\#");
@@ -1072,8 +1079,6 @@ void GUI::getMiscProperties(GraphTab *tab)
 	BLOCK(_antialiasing, setChecked(tab->antialiasing()));
 	BLOCK(_nodeLabelAttr, setText(tab->nodeLabelAttr()));
 	BLOCK(_edgeLabelAttr, setText(tab->edgeLabelAttr()));
-
-	getArguments();
 }
 
 void GUI::getAlgorithmProperties(GraphTab *tab)
@@ -1239,6 +1244,8 @@ void GUI::readSettings()
 	_argumentsEscape->setChecked((Qt::CheckState)settings.value(
 	  ESCAPE_SPECIALS_SETTING, Qt::Unchecked).toBool());
 	settings.endGroup();
+
+	getArguments();
 }
 
 void GUI::closeEvent(QCloseEvent *event)

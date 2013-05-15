@@ -7,8 +7,9 @@
 class KOI8R : public Encoding
 {
 public:
-	virtual std::codecvt<wchar_t,char,mbstate_t>* cvt() {return new koi8rcvt;}
-	virtual const char *name() {return "koi8-r";}
+	virtual std::codecvt<wchar_t,char,mbstate_t>* cvt() const
+	  {return new koi8rcvt;}
+	virtual const char *name() const {return "koi8-r";}
 };
 
 #endif /* KOI8R_H_ */

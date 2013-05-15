@@ -7,8 +7,9 @@
 class CP1250 : public Encoding
 {
 public:
-	virtual std::codecvt<wchar_t,char,mbstate_t>* cvt() {return new cp1250cvt;}
-	virtual const char *name() {return "windows-1250";}
+	virtual std::codecvt<wchar_t,char,mbstate_t>* cvt() const
+	  {return new cp1250cvt;}
+	virtual const char *name() const {return "windows-1250";}
 };
 
 #endif /* CP1250_H_ */

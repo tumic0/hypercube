@@ -7,8 +7,9 @@
 class ISO1 : public Encoding
 {
 public:
-	virtual std::codecvt<wchar_t,char,mbstate_t>* cvt() {return new iso1cvt;}
-	virtual const char *name() {return "iso-8859-1";}
+	virtual std::codecvt<wchar_t,char,mbstate_t>* cvt() const
+	  {return new iso1cvt;}
+	virtual const char *name() const {return "iso-8859-1";}
 };
 
 #endif /* ISO1_H_ */

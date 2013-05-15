@@ -7,8 +7,9 @@
 class UTF8 : public Encoding
 {
 public:
-	virtual std::codecvt<wchar_t,char,mbstate_t>* cvt() {return new utf8cvt;}
-	virtual const char *name() {return "utf-8";}
+	virtual std::codecvt<wchar_t,char,mbstate_t>* cvt() const
+	  {return new utf8cvt;}
+	virtual const char *name() const {return "utf-8";}
 };
 
 #endif /* UTF8_H_ */
