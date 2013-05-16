@@ -46,17 +46,25 @@ HEADERS += CORE/sa_log.h \
     IO/encodings/8bit.h \
     IO/encodings/iso1cvt.h \
     IO/encodings/iso2cvt.h \
+    IO/encodings/iso5cvt.h \
     IO/encodings/iso7cvt.h \
     IO/encodings/koi8rcvt.h \
+    IO/encodings/koi8ucvt.h \
     IO/encodings/cp1250cvt.h \
     IO/encodings/cp1251cvt.h \
+    IO/encodings/cp1252cvt.h \
+    IO/encodings/cp1253cvt.h \
     IO/encodings/utf8cvt.h \
     IO/encodings/iso1.h \
     IO/encodings/iso2.h \
+    IO/encodings/iso5.h \
     IO/encodings/iso7.h \
     IO/encodings/cp1250.h \
     IO/encodings/cp1251.h \
+    IO/encodings/cp1252.h \
+    IO/encodings/cp1253.h \
     IO/encodings/koi8r.h \
+    IO/encodings/koi8u.h \
     IO/encodings/utf8.h \
     IO/io.h \
     IO/modules.h \
@@ -70,11 +78,15 @@ SOURCES += CORE/edge.cpp \
     IO/encodings/8bit.cpp \
     IO/encodings/iso1cvt.cpp \
     IO/encodings/iso2cvt.cpp \
+    IO/encodings/iso5cvt.cpp \
     IO/encodings/iso7cvt.cpp \
     IO/encodings/cp1250cvt.cpp \
     IO/encodings/cp1251cvt.cpp \
-    IO/encodings/utf8cvt.cpp \
+    IO/encodings/cp1252cvt.cpp \
+    IO/encodings/cp1253cvt.cpp \
     IO/encodings/koi8rcvt.cpp \
+    IO/encodings/koi8ucvt.cpp \
+    IO/encodings/utf8cvt.cpp \
     IO/modules.cpp \
     IO/providers/xml/xml.cpp \
     IO/providers/gxl.cpp \

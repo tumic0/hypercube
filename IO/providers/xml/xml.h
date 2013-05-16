@@ -2,7 +2,6 @@
 #define XML_H_
 
 #include <string>
-#include <vector>
 #include "IO/io.h"
 
 
