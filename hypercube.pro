@@ -24,11 +24,9 @@ HEADERS += CORE/sa_log.h \
     IO/providers/ps.h \
     IO/providers/ps/encodings/iso2.ps.h \
     IO/providers/ps/encodings/iso7.ps.h \
-    IO/providers/ps/encodings/koi8r.ps.h \
     IO/providers/ps/encodings/iso1.h \
     IO/providers/ps/encodings/iso2.h \
     IO/providers/ps/encodings/iso7.h \
-    IO/providers/ps/encodings/koi8r.h \
     IO/providers/ps/western.h \
     IO/providers/ps/cyrillic.h \
     IO/providers/ps/greek.h \
@@ -77,7 +75,9 @@ HEADERS += CORE/sa_log.h \
     GUI/gui.h \
     GUI/graphtab.h \
     GUI/edgeitem.h \
-    GUI/settings.h
+    GUI/settings.h \
+    IO/providers/ps/encodings/iso5.h \
+    IO/providers/ps/encodings/iso5.ps.h
 SOURCES += \
     CORE/edge.cpp \
     CORE/graph.cpp \

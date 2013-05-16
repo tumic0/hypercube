@@ -2,7 +2,7 @@
 #define CYRILLIC_H_
 
 #include "snippet.h"
-#include "encodings/koi8r.h"
+#include "encodings/iso5.h"
 #include "fonts/nimbus.h"
 
 class Cyrillic : public PsSnippet
@@ -11,7 +11,7 @@ class Cyrillic : public PsSnippet
 	PsFont *_font;
 
 public:
-	Cyrillic() {_encoding = new PsKOI8R; _font = new Nimbus;}
+	Cyrillic() {_encoding = new PsISO5; _font = new Nimbus;}
 	virtual PsEncoding *encoding() const {return _encoding;}
 	virtual PsFont *font() const {return _font;}
 };
