@@ -39,11 +39,12 @@ void VertexItem::setSize(qreal size)
 		setVisible(false);
 	} else {
 		prepareGeometryChange();
-		if (!isVisible())
-			setVisible(true);
 		moveBy(diff, diff);
 		setRect(QRectF(0, 0, size, size));
 		_text.setPos(size, size / 2);
+
+		if (!isVisible())
+			setVisible(true);
 	}
 }
 
@@ -61,12 +62,13 @@ void VertexItem::setFontSize(int size)
 	if (size <= 0) {
 		_text.setVisible(false);
 	} else {
-		if (!_text.isVisible())
-			_text.setVisible(true);
 		QFont font = _text.font();
 		font.setPixelSize(size);
 		_text.setFont(font);
 		_text.setPos(_size, _size / 2);
+
+		if (!_text.isVisible())
+			_text.setVisible(true);
 	}
 
 	update();

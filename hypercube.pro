@@ -23,9 +23,11 @@ HEADERS += CORE/sa_log.h \
     IO/providers/xml/xml.h \
     IO/providers/ps.h \
     IO/providers/ps/encodings/iso2.ps.h \
+    IO/providers/ps/encodings/iso5.ps.h \
     IO/providers/ps/encodings/iso7.ps.h \
     IO/providers/ps/encodings/iso1.h \
     IO/providers/ps/encodings/iso2.h \
+    IO/providers/ps/encodings/iso5.h \
     IO/providers/ps/encodings/iso7.h \
     IO/providers/ps/western.h \
     IO/providers/ps/cyrillic.h \
@@ -67,17 +69,16 @@ HEADERS += CORE/sa_log.h \
     IO/encodings/koi8r.h \
     IO/encodings/koi8u.h \
     IO/encodings/utf8.h \
-    GUI/vertexitem.h \
     GUI/icons.h \
+    GUI/settings.h \
     GUI/graphview.h \
     GUI/numericedit.h \
     GUI/colorcombobox.h \
     GUI/gui.h \
     GUI/graphtab.h \
+    GUI/vertexitem.h \
     GUI/edgeitem.h \
-    GUI/settings.h \
-    IO/providers/ps/encodings/iso5.h \
-    IO/providers/ps/encodings/iso5.ps.h
+    GUI/legenditem.h
 SOURCES += \
     CORE/edge.cpp \
     CORE/graph.cpp \
@@ -112,6 +113,7 @@ SOURCES += \
     GUI/main.cpp \
     GUI/vertexitem.cpp \
     GUI/edgeitem.cpp \
+    GUI/legenditem.cpp \
     GUI/graphview.cpp \
     GUI/graphtab.cpp \
     GUI/colorcombobox.cpp \

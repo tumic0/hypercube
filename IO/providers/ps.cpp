@@ -68,7 +68,9 @@ void PsGraphOutput::prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
 	   << "/d {moveto show} def" << endl
 	   << "/f {font findfont exch scalefont setfont} def" << endl
 	   << "/lw {setlinewidth} def" << endl
-	   << "/c {setrgbcolor} def" << endl << endl;
+	   << "/c {setrgbcolor} def" << endl
+	   << "/rect {4 -2 roll moveto dup 0 exch rlineto exch 0 rlineto neg 0 "
+		  "exch rlineto closepath} def" << endl << endl;
 
 	fs << "%%EndProlog" << endl << endl;
 }
@@ -183,6 +185,42 @@ void PsGraphOutput::vertexes(Graph *graph, wofstream &fs)
 	fs << endl;
 }
 
+void PsGraphOutput::legend(Graph *graph, wofstream &fs)
+{
+	Color color;
+	Coordinates dim = graph->dimensions();
+	int height = graph->legend();
+	int width = height * LEGEND_RECT_RATIO;
+	int index = 0;
+
+	fs << height << " f" << endl;
+
+	for (ColorMap::iterator it = graph->colorMap()->begin();
+	  it != graph->colorMap()->end(); it++) {
+		int x = LEGEND_MARGIN;
+		int y = LEGEND_MARGIN + index * width;
+		int tx = LEGEND_MARGIN + width + (height / 3);
+		int ty = y + height;
+		wstring text((*it).first);
+		escape(text);
+		color = (*it).second;
+
+		fs << color.red() << " " << color.green() << " "
+		   << color.blue() << " c" << endl;
+		fs << x << " " << tr(y, dim) << " " << width << " " << -height
+		   << " rect fill" << endl;
+		fs << 0 << " " << 0 << " " << 0 << " c" << endl;
+		fs << "1 lw" << endl;
+		fs << x << " " << tr(y, dim) << " " << width << " " << -height
+		   << " rect stroke" << endl;
+		fs << "(" << text << ") " << tx << " " << tr(ty, dim) << " d" << endl;
+
+		index++;
+	}
+
+	fs << endl;
+}
+
 
 IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *fileName)
 {
@@ -211,6 +249,8 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *fileName)
 		prolog(graph, *sp, fs);
 		edges(graph, fs);
 		vertexes(graph, fs);
+			if (graph->legend())
+		legend(graph, fs);
 		fs << "%%EOF" << endl;
 
 		fail = fs.fail();

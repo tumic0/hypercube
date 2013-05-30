@@ -4,6 +4,7 @@
 #include "graphview.h"
 #include "vertexitem.h"
 #include "edgeitem.h"
+#include "legenditem.h"
 
 
 class BoundingRectItem : public QGraphicsRectItem
@@ -35,6 +36,9 @@ GraphView::GraphView(QWidget *parent)
 	_dimensions = QPoint(0, 0);
 	_boundingRect = 0;
 
+	_directed = false;
+	_legend = 0;
+
 	_scene = new QGraphicsScene(this);
 	setScene(_scene);
 }
@@ -51,6 +55,7 @@ void GraphView::clear()
 
 	_vertexes.clear();
 	_edges.clear();
+	_legendItems.clear();
 }
 
 VertexItem* GraphView::addVertex()
@@ -72,6 +77,15 @@ EdgeItem* GraphView::addEdge(VertexItem *src, VertexItem *dst)
 	return e;
 }
 
+LegendItem* GraphView::addLegend()
+{
+	LegendItem *l = new LegendItem(_legendItems.count());
+	_scene->addItem(l);
+	_legendItems.append(l);
+
+	return l;
+}
+
 void GraphView::setDimensions(const QPoint dimensions)
 {
 	QPoint offset = ((dimensions / 2) - (_dimensions / 2));
@@ -89,6 +103,14 @@ void GraphView::setDimensions(const QPoint dimensions)
 
 	_scene->setSceneRect(0, 0, dimensions.x(), dimensions.y());
 	_dimensions = dimensions;
+}
+
+void GraphView::setLegend(int size)
+{
+	_legend = size;
+
+	for (int i = 0; i < _legendItems.size(); i++)
+		_legendItems.at(i)->setSize(size);
 }
 
 void GraphView::setDirectedGraph(bool state)

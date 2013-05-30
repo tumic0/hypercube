@@ -21,6 +21,7 @@
 #define VERTEX_FONT_SIZE_SETTING "vertexFontSize"
 #define EDGE_COLOR_SETTING "edgeColor"
 #define VERTEX_COLOR_SETTING "vertexColor"
+#define LEGEND_SETTING "legend"
 
 #define ALGORITHM_GROUP "Algorithm"
 #define NODE_DISTRIBUTION_SETTING "nodeDistribution"

@@ -34,6 +34,11 @@ void SvgGraphOutput::header(Graph *graph, wofstream &fs)
 	      "font-weight=\"normal\">"<< endl;
 }
 
+void SvgGraphOutput::footer(wofstream &fs)
+{
+	fs << "</g>" << endl << endl << "</svg>" << endl;
+}
+
 void SvgGraphOutput::edges(Graph *graph, wofstream &fs)
 {
 	for (int zValue = -2; zValue < 0; zValue++) {
@@ -124,6 +129,37 @@ void SvgGraphOutput::vertexes(Graph *graph, wofstream &fs)
 	fs << endl;
 }
 
+void SvgGraphOutput::legend(Graph *graph, wofstream &fs)
+{
+	int height = graph->legend();
+	int width = height * LEGEND_RECT_RATIO;
+	int index = 0;
+
+	fs << "<g font-size=\"" << height << "\">" << endl;
+
+	for (ColorMap::iterator it = graph->colorMap()->begin();
+	  it != graph->colorMap()->end(); it++) {
+		int x = LEGEND_MARGIN;
+		int y = LEGEND_MARGIN + index * width;
+		int tx = LEGEND_MARGIN + width + (height / 3);
+		int ty = y + height;
+		wstring text((*it).first);
+		escape(text);
+
+		fs << "<g>" << endl;
+		fs << "\t<rect x=\"" << x << "\" y=\"" << y << "\" "
+		   << "width=\"" << width << "\" "
+		   << "height=\"" << height << "\" "
+		   << "stroke=\"#000000\" fill=\"" << (*it).second << "\"/>" << endl;
+		fs << "\t<text x=\"" << tx << "\" y=\"" << ty << "\">"
+		   << text << "</text>" << endl;
+		fs << "</g>" << endl;
+
+		index++;
+	}
+
+	fs << "</g>" << endl << endl;
+}
 
 IO::Error SvgGraphOutput::writeGraph(Graph *graph, const char *fileName)
 {
@@ -140,7 +176,9 @@ IO::Error SvgGraphOutput::writeGraph(Graph *graph, const char *fileName)
 	header(graph, fs);
 	edges(graph, fs);
 	vertexes(graph, fs);
-	fs << "</g>" << endl << endl << "</svg>" << endl;
+	if (graph->legend())
+		legend(graph, fs);
+	footer(fs);
 
 	fs.close();
 	if (fs.fail()) {

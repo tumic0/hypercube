@@ -55,12 +55,14 @@ public:
 	bool vertexIDs() const {return _showVertexIDs;}
 	bool edgeValues() const {return _showEdgeValues;}
 	bool coloredEdges() const {return _coloredEdges;}
+	int legend() const {return _legend;}
 	bool directedGraph() const;
 	void setDirectedGraph(bool state);
 	void showVertexIDs(bool show);
 	void showEdgeValues(bool show);
 	void colorizeEdges(bool colorize);
 	void setEdgeZValue(int value);
+	void setLegend(int size);
 
 
 	int size() const {return _size;}
@@ -117,6 +119,7 @@ private:
 	int _edgeSize;
 	int _vertexFontSize;
 	int _edgeFontSize;
+	int _legend;
 	bool _showVertexIDs;
 	bool _showEdgeValues;
 	bool _coloredEdges;

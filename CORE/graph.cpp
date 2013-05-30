@@ -25,7 +25,8 @@ static const Margin max(const Margin &a, const Margin &b)
 Graph::Graph()
 {
 	_dimensions = Coordinates(0, 0);
-	_directed = 0;
+	_directed = false;
+	_legend = 0;
 }
 
 void Graph::clear()

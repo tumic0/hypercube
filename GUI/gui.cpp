@@ -37,6 +37,9 @@
 	widget->action; \
 	widget->blockSignals(false)
 
+#define CHECKED(state) \
+	((state == Qt::Checked) ? true : false)
+
 #define ZOOM_STRING(zoom) \
 	QString("%1%").arg((int)((zoom) * 100))
 
@@ -427,6 +430,7 @@ void GUI::createGraphProperties()
 	_vertexIDs = new QCheckBox(tr("Show vertex IDs"), this);
 	_edgeValues = new QCheckBox(tr("Show edge values"), this);
 	_coloredEdges = new QCheckBox(tr("Colored edges"), this);
+	_legend = new QCheckBox(tr("Show legend"), this);
 
 	_edgeFontSize->setMinimum(MIN_FONT_SIZE);
 	_vertexFontSize->setMinimum(MIN_FONT_SIZE);
@@ -441,6 +445,8 @@ void GUI::createGraphProperties()
 	  this, SLOT(setVertexFontSize(int)));
 	connect(_coloredEdges, SIGNAL(stateChanged(int)),
 	  this, SLOT(colorizeEdges(int)));
+	connect(_legend, SIGNAL(stateChanged(int)),
+	  this, SLOT(showLegend(int)));
 
 	connect(_edgeColor, SIGNAL(activated(const QColor&)),
 	  this, SLOT(setEdgeColor(const QColor&)));
@@ -464,6 +470,7 @@ void GUI::createGraphProperties()
 	edgeLayout->addRow(tr("Color:"), _edgeColor);
 	edgeLayout->addRow(_edgeValues);
 	edgeLayout->addRow(_coloredEdges);
+	edgeLayout->addRow(_legend);
 	edgeBox->setLayout(edgeLayout);
 
 	vertexLayout->addRow(tr("Size:"), _vertexSize);
@@ -838,7 +845,7 @@ void GUI::setQuality(int value)
 void GUI::setSALogInfo(int state)
 {
 	if (TAB())
-		TAB()->setLogInfo((state == Qt::Checked) ? true : false);
+		TAB()->setLogInfo(CHECKED(state));
 }
 #endif
 
@@ -887,8 +894,11 @@ void GUI::setEdgeSize(int size)
 
 void GUI::setEdgeFontSize(int size)
 {
-	if (TAB())
+	if (TAB()) {
 		TAB()->setEdgeFontSize(size);
+		if (_legend->isChecked())
+			TAB()->setLegend(size);
+	}
 	getArguments();
 }
 
@@ -902,29 +912,48 @@ void GUI::setVertexFontSize(int size)
 void GUI::showEdgeValues(int state)
 {
 	if (TAB())
-		TAB()->showEdgeValues((state == Qt::Checked) ? true : false);
+		TAB()->showEdgeValues(CHECKED(state));
 	getArguments();
 }
 
 void GUI::showVertexIDs(int state)
 {
 	if (TAB())
-		TAB()->showVertexIDs((state == Qt::Checked) ? true : false);
+		TAB()->showVertexIDs(CHECKED(state));
 	getArguments();
 }
 
 void GUI::directGraph(int state)
 {
 	if (TAB())
-		TAB()->setDirectedGraph((state == Qt::Checked) ? true : false);
+		TAB()->setDirectedGraph(CHECKED(state));
 	getArguments();
 }
 
 void GUI::colorizeEdges(int state)
 {
+	if (CHECKED(state)) {
+		if (TAB())
+			TAB()->colorizeEdges(true);
+		_edgeColor->setEnabled(false);
+		_legend->setEnabled(true);
+	} else {
+		if (TAB()) {
+			TAB()->colorizeEdges(false);
+			TAB()->setLegend(0);
+		}
+		_legend->setChecked(false);
+		_legend->setEnabled(false);
+		_edgeColor->setEnabled(true);
+	}
+
+	getArguments();
+}
+
+void GUI::showLegend(int state)
+{
 	if (TAB())
-		TAB()->colorizeEdges((state == Qt::Checked) ? true : false);
-	_edgeColor->setEnabled((state == Qt::Checked) ? false : true);
+		TAB()->setLegend(CHECKED(state) ? _edgeFontSize->value() : 0);
 	getArguments();
 }
 
@@ -952,7 +981,7 @@ void GUI::setEdgeLabelAttr()
 void GUI::setAntialiasing(int state)
 {
 	if (TAB())
-		TAB()->setAntialiasing((state == Qt::Checked) ? true : false);
+		TAB()->setAntialiasing(CHECKED(state));
 }
 
 void GUI::setSpecialsEscaping()
@@ -966,8 +995,7 @@ void GUI::setMiscProperties(GraphTab *tab)
 	Encoding* encoding = *(encodings + _inputEncoding->currentIndex());
 
 	tab->setInputEncoding(encoding);
-	tab->setAntialiasing((_antialiasing->checkState() == Qt::Checked)
-	  ? true : false);
+	tab->setAntialiasing(_antialiasing->isChecked());
 	tab->setNodeLabelAttr(_nodeLabelAttr->text());
 	tab->setEdgeLabelAttr(_edgeLabelAttr->text());
 }
@@ -986,20 +1014,17 @@ void GUI::setAlgorithmProperties(GraphTab *tab)
 	tab->setCoolFactor(_coolFactor->value());
 	tab->setNumSteps(_numSteps->value());
 #ifdef SA_LOG_SUPPORT
-	tab->setLogInfo((_debug->checkState() == Qt::Checked) ? true : false);
+	tab->setLogInfo(_debug->isChecked());
 #endif
 }
 
 void GUI::setGraphProperties(GraphTab *tab)
 {
-	tab->showVertexIDs((_vertexIDs->checkState() == Qt::Checked)
-	  ? true : false);
-	tab->showEdgeValues((_edgeValues->checkState() == Qt::Checked)
-	  ? true : false);
-	tab->colorizeEdges((_coloredEdges->checkState() == Qt::Checked)
-	  ? true : false);
-	tab->setDirectedGraph((_directedGraph->checkState() == Qt::Checked)
-	  ? true : false);
+	tab->showVertexIDs(_vertexIDs->isChecked());
+	tab->showEdgeValues(_edgeValues->isChecked());
+	tab->colorizeEdges(_coloredEdges->isChecked());
+	tab->setDirectedGraph(_directedGraph->isChecked());
+	tab->setLegend(_legend->isChecked() ? _edgeFontSize->value() : 0);
 	tab->setDimensions(QPoint(_graphWidth->value(), _graphHeight->value()));
 	tab->setEdgeSize(_edgeSize->value());
 	tab->setVertexSize(_vertexSize->value());
@@ -1113,6 +1138,7 @@ void GUI::getGraphProperties(GraphTab *tab)
 	BLOCK(_edgeValues, setChecked(tab->edgeValues()));
 	BLOCK(_coloredEdges, setChecked(tab->coloredEdges()));
 	BLOCK(_directedGraph, setChecked(tab->directedGraph()));
+	BLOCK(_legend, setChecked(tab->legend()));
 
 	_edgeSize->setMaximum(tab->vertexSize());
 	_edgeColor->setEnabled(!tab->coloredEdges());
@@ -1145,6 +1171,7 @@ void GUI::writeSettings()
 	settings.setValue(VERTEX_FONT_SIZE_SETTING, _vertexFontSize->value());
 	settings.setValue(EDGE_COLOR_SETTING, _edgeColor->color());
 	settings.setValue(VERTEX_COLOR_SETTING, _vertexColor->color());
+	settings.setValue(LEGEND_SETTING, _legend->checkState());
 	settings.endGroup();
 
 	settings.beginGroup(ALGORITHM_GROUP);
@@ -1203,6 +1230,8 @@ void GUI::readSettings()
 	  QColor(EDGE_COLOR)).value<QColor>());
 	_vertexColor->setColor(settings.value(VERTEX_COLOR_SETTING,
 	  QColor(VERTEX_COLOR)).value<QColor>());
+	_legend->setCheckState((Qt::CheckState)settings.value(
+	  LEGEND_SETTING, Qt::Unchecked).toInt());
 	settings.endGroup();
 
 	settings.beginGroup(ALGORITHM_GROUP);

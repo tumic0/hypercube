@@ -32,7 +32,8 @@ public:
 	  {_dimensions = dimensions;}
 	bool directed() const {return _directed;}
 	void setDirected(bool state) {_directed = state;}
-
+	int legend() const {return _legend;}
+	void setLegend(int size) {_legend = size;}
 
 	void updateCoordinates(size_t vid);
 	void updateMargins(size_t vid);
@@ -57,6 +58,8 @@ public:
 	void setVertexFontSize(int size);
 	void setEdgeFontSize(int size);
 
+	ColorMap *colorMap() {return &_colormap;}
+
 private:
 	void checkTwin(Edge *e);
 	void updateDistance(size_t vid);
@@ -65,6 +68,7 @@ private:
 
 	Coordinates _dimensions;
 	bool _directed;
+	int _legend;
 
 	Vector<Vertex*> _vertexes;
 	Vector<Edge*> _edges;

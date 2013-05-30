@@ -18,8 +18,8 @@ public:
 	float green() const {return ((float)((_data & 0x0000FF00) >> 8) / 255);}
 	float blue() const {return ((float)(_data & 0x000000FF) / 255);}
 
-	bool operator==(const Color &color) {return (_data == color._data);}
-	bool operator!=(const Color &color) {return !(*this == color);}
+	bool operator==(const Color &color) const {return (_data == color._data);}
+	bool operator!=(const Color &color) const {return !(*this == color);}
 
 	template< typename charT, typename Traits > friend
 	  std::basic_ostream<charT, Traits>& operator<<(

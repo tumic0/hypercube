@@ -17,11 +17,11 @@ public:
 	Vertex *src() const {return _src;}
 	Vertex *dst() const {return _dst;}
 
-	Margin margin() const {return _margin;}
+	const Margin &margin() const {return _margin;}
 
-	std::wstring text() const {return _text;}
+	const std::wstring &text() const {return _text;}
 	void setText(const std::wstring &text);
-	Color color() const {return _color;}
+	const Color &color() const {return _color;}
 	void setColor(const Color &color) {_color = color;}
 	int size() const {return _size;}
 	void setSize(int size);

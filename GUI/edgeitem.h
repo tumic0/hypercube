@@ -1,7 +1,7 @@
 #ifndef EDGEITEM_H_
 #define EDGEITEM_H_
 
-#include <QGraphicsLineItem>
+#include <QGraphicsItem>
 
 class VertexItem;
 class GraphView;

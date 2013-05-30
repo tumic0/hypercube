@@ -38,6 +38,7 @@ CLI::CLI(int argc, char *argv[])
 	_edgeSize = EDGE_SIZE;
 	_vertexFontSize = VERTEX_FONT_SIZE;
 	_edgeFontSize = EDGE_FONT_SIZE;
+	_legend = 0;
 
 	_nodeDistribution = NODE_DISTRIBUTION;
 	_edgeLength = EDGE_LENGTH;
@@ -188,6 +189,8 @@ void CLI::usage()
 	cout << " -u               undirected graph" << endl;
 	cout << " -c               asign a unique color to every uniqe edge value"
 		 << endl;
+	cout << " -l <size>        show legend with font size <size>"
+		 << endl;
 	cout << endl;
 	cout << "option arguments:" << endl;
 	cout << " <dimesnsions>    width,height" << endl;
@@ -235,6 +238,7 @@ int CLI::argument(int i)
 	ARG("-es", _edgeSize);
 	ARG("-vf", _vertexFontSize);
 	ARG("-ef", _edgeFontSize);
+	ARG("-l", _legend);
 
 	ARG("-nd", _nodeDistribution);
 	ARG("-el", _edgeLength);
@@ -303,13 +307,17 @@ void CLI::setGraphProperties()
 
 	_graph->setVertexColor(_vertexColor);
 	_graph->setVertexSize(_vertexSize);
-	if (_coloredEdges)
-		_graph->colorize();
-	else
-		_graph->setEdgeColor(_edgeColor);
+
+	_graph->setEdgeColor(_edgeColor);
 	_graph->setEdgeSize(_edgeSize);
 	_graph->setVertexFontSize(_vertexFontSize);
 	_graph->setEdgeFontSize(_edgeFontSize);
+
+	if (_legend)
+		_coloredEdges = true;
+	_graph->setLegend(_legend);
+	if (_coloredEdges)
+		_graph->colorize();
 }
 
 void CLI::setSAProperties()

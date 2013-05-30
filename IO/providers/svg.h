@@ -15,8 +15,10 @@ public:
 private:
 	void escape(std::wstring &str);
 	void header(Graph *graph, std::wofstream &fs);
+	void footer(std::wofstream &fs);
 	void edges(Graph *graph, std::wofstream &fs);
 	void vertexes(Graph *graph, std::wofstream &fs);
+	void legend(Graph *graph, std::wofstream &fs);
 };
 
 #endif /* SVG_H_ */

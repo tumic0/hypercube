@@ -64,6 +64,7 @@ private slots:
 	void setEdgeFontSize(int size);
 	void setVertexFontSize(int size);
 	void colorizeEdges(int state);
+	void showLegend(int state);
 
 	void showEdgeValues(int state);
 	void showVertexIDs(int state);
@@ -155,6 +156,7 @@ private:
 	QCheckBox *_vertexIDs;
 	QCheckBox *_coloredEdges;
 	QCheckBox *_directedGraph;
+	QCheckBox *_legend;
 	ColorComboBox *_edgeColor;
 	ColorComboBox *_vertexColor;
 

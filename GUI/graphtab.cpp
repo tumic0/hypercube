@@ -4,6 +4,7 @@
 #include "IO/modules.h"
 #include "vertexitem.h"
 #include "edgeitem.h"
+#include "legenditem.h"
 #include "graphtab.h"
 
 
@@ -202,12 +203,19 @@ void GraphTab::showEdgeValues(bool show)
 void GraphTab::colorizeEdges(bool colorize)
 {
 	_coloredEdges = colorize;
+
 	if (colorize) {
 		storeGraph();
 		_graph->colorize();
 		loadGraph();
 	} else
 		_view->setEdgeColor(_edgeColor);
+}
+
+void GraphTab::setLegend(int size)
+{
+	_legend = size;
+	_view->setLegend(size);
 }
 
 bool GraphTab::directedGraph() const
@@ -244,6 +252,7 @@ void GraphTab::loadGraph()
 	Edge *edg;
 	VertexItem *v;
 	EdgeItem *e;
+	LegendItem *l;
 	Coordinates c;
 
 
@@ -252,6 +261,7 @@ void GraphTab::loadGraph()
 	_view->setDimensions(QPoint(_graph->dimensions().x(),
 	  _graph->dimensions().y()));
 	_view->setDirectedGraph(_graph->directed());
+	_view->setLegend(_graph->legend());
 
 	for (size_t i = 0; i < _graph->vertex_size(); i++) {
 		vtx = _graph->vertex(i);
@@ -278,6 +288,15 @@ void GraphTab::loadGraph()
 		e->setZValue(edg->zValue());
 		e->setTwin(edg->twin());
 	}
+
+	for (ColorMap::iterator it = _graph->colorMap()->begin();
+	  it != _graph->colorMap()->end(); it++) {
+		l = _view->addLegend();
+
+		l->setText(QString::fromStdWString((*it).first));
+		l->setColor(QColor((*it).second.rgb()));
+		l->setSize(_graph->legend());
+	}
 }
 
 void GraphTab::storeGraph()
@@ -294,6 +313,7 @@ void GraphTab::storeGraph()
 	_graph->setDimensions(Coordinates(_view->dimensions().x(),
 	  _view->dimensions().y()));
 	_graph->setDirected(_view->directedGraph());
+	_graph->setLegend(_view->legend());
 
 	for (int i = 0; i < _view->vertex_size(); i++) {
 		v = _view->vertex(i);
@@ -318,6 +338,8 @@ void GraphTab::storeGraph()
 		edg->setFontSize(e->fontSize());
 		edg->setZValue(e->zValue());
 		edg->setTwin(e->twin());
+
+		_graph->colorMap()->color(e->text().toStdWString());
 	}
 }
 
@@ -337,6 +359,7 @@ void GraphTab::setGraphProperties()
 	_graph->setEdgeSize(_edgeSize);
 	_graph->setVertexFontSize(_showVertexIDs ? _vertexFontSize : 0);
 	_graph->setEdgeFontSize(_showEdgeValues ? _edgeFontSize : 0);
+	_graph->setLegend(_legend);
 
 	_graph->setDimensions(Coordinates(_dimensions.x(), _dimensions.y()));
 	_graph->randomize();

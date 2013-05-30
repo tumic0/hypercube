@@ -48,9 +48,9 @@ void EdgeItem::setSize(qreal size)
 	if (!_size) {
 		setVisible(false);
 	} else {
+		_text.setPos(textPos());
 		if (!isVisible())
 			setVisible(true);
-		_text.setPos(textPos());
 	}
 
 	update();
@@ -71,12 +71,13 @@ void EdgeItem::setFontSize(int size)
 	if (size <= 0) {
 		_text.setVisible(false);
 	} else {
-		if (!_text.isVisible())
-			_text.setVisible(true);
 		QFont font = _text.font();
 		font.setPixelSize(size);
 		_text.setFont(font);
 		_text.setPos(textPos());
+
+		if (!_text.isVisible())
+			_text.setVisible(true);
 	}
 
 	update();

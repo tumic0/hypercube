@@ -6,6 +6,7 @@
 class QGraphicsScene;
 class EdgeItem;
 class VertexItem;
+class LegendItem;
 class BoundingRectItem;
 
 
@@ -21,9 +22,12 @@ public:
 	QPoint dimensions() const {return _dimensions;}
 	void setDirectedGraph(bool state);
 	bool directedGraph() const {return _directed;}
+	void setLegend(int size);
+	int legend() const {return _legend;}
 
 	VertexItem* addVertex();
 	EdgeItem* addEdge(VertexItem *src, VertexItem *dst);
+	LegendItem* addLegend();
 
 	int vertex_size() const {return _vertexes.size();}
 	int edge_size() const {return _edges.size();}
@@ -32,8 +36,6 @@ public:
 
 	void clear();
 
-	void showEdgeValues(bool visible);
-	void showVertexIDs(bool visible);
 	void setVertexColor(const QColor &color);
 	void setEdgeColor(const QColor &color);
 	void setVertexSize(int size);
@@ -41,6 +43,7 @@ public:
 	void setVertexFontSize(int size);
 	void setEdgeFontSize(int size);
 	void setEdgeZValue(int value);
+	void setLegendSize(int size);
 
 	void scale(qreal scaleFactor);
 	qreal zoom() {return transform().m11();}
@@ -56,9 +59,11 @@ private:
 	BoundingRectItem *_boundingRect;
 	QVector<VertexItem*> _vertexes;
 	QVector<EdgeItem*> _edges;
+	QVector<LegendItem*> _legendItems;
 
 	QPoint _dimensions;
 	bool _directed;
+	int _legend;
 };
 
 #endif /* GRAPHSCENE_H_ */

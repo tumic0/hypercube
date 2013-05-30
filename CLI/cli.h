@@ -46,6 +46,7 @@ private:
 	int _edgeSize;
 	int _vertexFontSize;
 	int _edgeFontSize;
+	int _legend;
 
 	float _nodeDistribution;
 	float _edgeLength;

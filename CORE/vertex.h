@@ -16,13 +16,13 @@ public:
 	size_t id() const {return _id;}
 	Graph *graph() const {return _graph;}
 
-	Coordinates coordinates() const {return _coordinates;}
+	const Coordinates &coordinates() const {return _coordinates;}
 	void setCoordinates(const Coordinates &c);
-	Margin margin() const {return _margin;}
+	const Margin &margin() const {return _margin;}
 
-	std::wstring text() const {return _text;}
+	const std::wstring &text() const {return _text;}
 	void setText(const std::wstring &text);
-	Color color() const {return _color;}
+	const Color &color() const {return _color;}
 	void setColor(const Color &color) {_color = color;}
 	int size() const {return _size;}
 	void setSize(int size);

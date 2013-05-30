@@ -7,6 +7,9 @@
 #define FONT_FAMILY        "Helvetica"
 #define AVG_CHAR_WIDTH     0.58f
 
+#define LEGEND_MARGIN      10
+#define LEGEND_RECT_RATIO  1.33
+
 #define NODE_DISTRIBUTION  8e6
 #define EDGE_LENGTH        1
 #define EDGE_CROSSINGS     1e4
