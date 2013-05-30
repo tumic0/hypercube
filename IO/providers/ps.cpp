@@ -194,6 +194,7 @@ void PsGraphOutput::legend(Graph *graph, wofstream &fs)
 	int index = 0;
 
 	fs << height << " f" << endl;
+	fs << "0 lw" << endl;
 
 	for (ColorMap::iterator it = graph->colorMap()->begin();
 	  it != graph->colorMap()->end(); it++) {
@@ -210,7 +211,6 @@ void PsGraphOutput::legend(Graph *graph, wofstream &fs)
 		fs << x << " " << tr(y, dim) << " " << width << " " << -height
 		   << " rect fill" << endl;
 		fs << 0 << " " << 0 << " " << 0 << " c" << endl;
-		fs << "1 lw" << endl;
 		fs << x << " " << tr(y, dim) << " " << width << " " << -height
 		   << " rect stroke" << endl;
 		fs << "(" << text << ") " << tx << " " << tr(ty, dim) << " d" << endl;
