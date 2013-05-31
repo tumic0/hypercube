@@ -46,6 +46,24 @@ CoordinatesF OutputProvider::vertexTextPosition(const CoordinatesF &point,
 	return point + CoordinatesF(size / 2, size);
 }
 
+CoordinatesF OutputProvider::legendRectSize(float size)
+{
+	return CoordinatesF(size * LEGEND_RECT_RATIO, size);
+}
+
+CoordinatesF OutputProvider::legendPosition(int index, float size)
+{
+	return CoordinatesF(LEGEND_MARGIN, LEGEND_MARGIN
+	  + (index * legendRectSize(size).x()));
+}
+
+CoordinatesF OutputProvider::legendTextPosition(const CoordinatesF &point,
+  float size)
+{
+	return point + CoordinatesF(legendRectSize(size).x() + (size / 3),
+	  (1 - DESCENT_RATIO) * size);
+}
+
 OutputProvider::Arrow OutputProvider::arrow(LineF &line, float size)
 {
 	Arrow arrow;
@@ -68,7 +86,7 @@ OutputProvider::Arrow OutputProvider::arrow(LineF &line, float size)
 }
 
 
-wstring trim(const std::wstring &str)
+wstring trim(const wstring &str)
 {
 	size_t s = str.find_first_not_of(L" \n\r\t");
 	size_t e = str.find_last_not_of (L" \n\r\t");

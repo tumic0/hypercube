@@ -13,7 +13,7 @@ using namespace std;
 
 #define tr(val,dim) ((dim).y()-(val))
 
-void PsGraphOutput::escape(wstring &str)
+static void escape(wstring &str)
 {
 	stringReplace(str, L"\\", L"\\\\");
 	stringReplace(str, L"(", L"\\(");
@@ -189,31 +189,30 @@ void PsGraphOutput::legend(Graph *graph, wofstream &fs)
 {
 	Color color;
 	Coordinates dim = graph->dimensions();
-	int height = graph->legend();
-	int width = height * LEGEND_RECT_RATIO;
+	CoordinatesF r = legendRectSize(graph->legend());
 	int index = 0;
 
-	fs << height << " f" << endl;
+	fs << graph->legend() << " f" << endl;
 	fs << "0 lw" << endl;
 
 	for (ColorMap::iterator it = graph->colorMap()->begin();
 	  it != graph->colorMap()->end(); it++) {
-		int x = LEGEND_MARGIN;
-		int y = LEGEND_MARGIN + index * width;
-		int tx = LEGEND_MARGIN + width + (height / 3);
-		int ty = y + height;
+		CoordinatesF c = legendPosition(index, graph->legend());
+		CoordinatesF t = legendTextPosition(c, graph->legend());
 		wstring text((*it).first);
+
 		escape(text);
 		color = (*it).second;
 
 		fs << color.red() << " " << color.green() << " "
 		   << color.blue() << " c" << endl;
-		fs << x << " " << tr(y, dim) << " " << width << " " << -height
+		fs << c.x() << " " << tr(c.y(), dim) << " " << r.x() << " " << -r.y()
 		   << " rect fill" << endl;
 		fs << 0 << " " << 0 << " " << 0 << " c" << endl;
-		fs << x << " " << tr(y, dim) << " " << width << " " << -height
+		fs << c.x() << " " << tr(c.y(), dim) << " " << r.x() << " " << -r.y()
 		   << " rect stroke" << endl;
-		fs << "(" << text << ") " << tx << " " << tr(ty, dim) << " d" << endl;
+		fs << "(" << text << ") " << t.x() << " " << tr(t.y(), dim) << " d"
+		   << endl;
 
 		index++;
 	}

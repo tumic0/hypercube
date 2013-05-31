@@ -6,6 +6,7 @@
 
 #define FONT_FAMILY        "Helvetica"
 #define AVG_CHAR_WIDTH     0.58f
+#define DESCENT_RATIO      0.1f
 
 #define LEGEND_MARGIN      10
 #define LEGEND_RECT_RATIO  1.33

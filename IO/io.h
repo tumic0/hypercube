@@ -50,6 +50,10 @@ protected:
 	static CoordinatesF vertexTextPosition(const CoordinatesF &point,
 	  float size);
 	static Arrow arrow(LineF &line, float size);
+	static CoordinatesF legendRectSize(float size);
+	static CoordinatesF legendPosition(int index, float size);
+	static CoordinatesF legendTextPosition(const CoordinatesF &point,
+	  float size);
 };
 
 

@@ -27,7 +27,7 @@ public:
 	Vertex *vertex(size_t id) const {return _vertexes[id];}
 	Edge *edge(size_t id) const {return _edges[id];}
 
-	Coordinates dimensions() const {return _dimensions;}
+	const Coordinates &dimensions() const {return _dimensions;}
 	void setDimensions(const Coordinates &dimensions)
 	  {_dimensions = dimensions;}
 	bool directed() const {return _directed;}
@@ -38,7 +38,7 @@ public:
 	void updateCoordinates(size_t vid);
 	void updateMargins(size_t vid);
 
-	Margin margin(size_t vid) const {return _margins[vid];}
+	const Margin &margin(size_t vid) const {return _margins[vid];}
 	unsigned crossings() const {return _crossings.sum();}
 	float distance() const {return _distances.sum();}
 	float length() const {return _lengths.sum();}

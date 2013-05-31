@@ -13,7 +13,6 @@ public:
 	virtual const char* description() {return "SVG";}
 
 private:
-	void escape(std::wstring &str);
 	void header(Graph *graph, std::wofstream &fs);
 	void footer(std::wofstream &fs);
 	void edges(Graph *graph, std::wofstream &fs);

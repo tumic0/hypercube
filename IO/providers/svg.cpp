@@ -11,7 +11,7 @@
 using namespace std;
 
 
-void SvgGraphOutput::escape(wstring &str)
+static void escape(wstring &str)
 {
 	stringReplace(str, L"&", L"&amp;");
 	stringReplace(str, L"<", L"&lt;");
@@ -131,27 +131,24 @@ void SvgGraphOutput::vertexes(Graph *graph, wofstream &fs)
 
 void SvgGraphOutput::legend(Graph *graph, wofstream &fs)
 {
-	int height = graph->legend();
-	int width = height * LEGEND_RECT_RATIO;
+	Coordinates r = legendRectSize(graph->legend()).toCoordinates();
 	int index = 0;
 
-	fs << "<g font-size=\"" << height << "\">" << endl;
+	fs << "<g font-size=\"" << graph->legend() << "\">" << endl;
 
 	for (ColorMap::iterator it = graph->colorMap()->begin();
 	  it != graph->colorMap()->end(); it++) {
-		int x = LEGEND_MARGIN;
-		int y = LEGEND_MARGIN + index * width;
-		int tx = LEGEND_MARGIN + width + (height / 3);
-		int ty = y + height;
+		Coordinates c = legendPosition(index, graph->legend()).toCoordinates();
+		Coordinates t = legendTextPosition(c, graph->legend()).toCoordinates();
 		wstring text((*it).first);
+
 		escape(text);
 
 		fs << "<g>" << endl;
-		fs << "\t<rect x=\"" << x << "\" y=\"" << y << "\" "
-		   << "width=\"" << width << "\" "
-		   << "height=\"" << height << "\" "
+		fs << "\t<rect x=\"" << c.x() << "\" y=\"" << c.y() << "\" "
+		   << "width=\"" << r.x() << "\" " << "height=\"" << r.y() << "\" "
 		   << "stroke=\"#000000\" fill=\"" << (*it).second << "\"/>" << endl;
-		fs << "\t<text x=\"" << tx << "\" y=\"" << ty << "\">"
+		fs << "\t<text x=\"" << t.x() << "\" y=\"" << t.y() << "\">"
 		   << text << "</text>" << endl;
 		fs << "</g>" << endl;
 
