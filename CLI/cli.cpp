@@ -189,7 +189,7 @@ void CLI::usage()
 	cout << " -u               undirected graph" << endl;
 	cout << " -c               asign a unique color to every uniqe edge value"
 		 << endl;
-	cout << " -l <size>        show legend with font size <size>"
+	cout << " -l <size>        show edge color legend with font size <size>"
 		 << endl;
 	cout << endl;
 	cout << "option arguments:" << endl;
