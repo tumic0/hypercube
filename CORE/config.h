@@ -2,14 +2,14 @@
 #define CONFIG_H_
 
 #define APP_HOMEPAGE       "http://tumic.wz.cz/hypercube"
-#define APP_VERSION        "1.4.2"
+#define APP_VERSION        "1.5.0"
 
 #define FONT_FAMILY        "Helvetica"
 #define AVG_CHAR_WIDTH     0.58f
 #define DESCENT_RATIO      0.1f
 
 #define LEGEND_MARGIN      10
-#define LEGEND_RECT_RATIO  1.33
+#define LEGEND_RECT_RATIO  1.33f
 
 #define NODE_DISTRIBUTION  8e6
 #define EDGE_LENGTH        1

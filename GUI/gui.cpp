@@ -1234,6 +1234,7 @@ void GUI::readSettings()
 	  QColor(VERTEX_COLOR)).value<QColor>());
 	_legend->setCheckState((Qt::CheckState)settings.value(
 	  LEGEND_SETTING, Qt::Unchecked).toInt());
+	_legend->setEnabled(_coloredEdges->isChecked());
 	settings.endGroup();
 
 	settings.beginGroup(ALGORITHM_GROUP);

@@ -188,25 +188,25 @@ void PsGraphOutput::vertexes(Graph *graph, wofstream &fs)
 
 void PsGraphOutput::legend(Graph *graph, wofstream &fs)
 {
-	Color color;
+	float size = (float)graph->legend();
 	Coordinates dim = graph->dimensions();
-	CoordinatesF r = legendRectSize(graph->legend());
+	CoordinatesF r = legendRectSize(size);
 	int index = 0;
+
 
 	fs << graph->legend() << " f" << endl;
 	fs << "0 lw" << endl;
 
 	for (ColorMap::iterator it = graph->colorMap()->begin();
 	  it != graph->colorMap()->end(); it++) {
-		CoordinatesF c = legendPosition(index, graph->legend());
-		CoordinatesF t = legendTextPosition(c, graph->legend());
+		CoordinatesF c = legendPosition(index, size);
+		CoordinatesF t = legendTextPosition(c, size);
 		wstring text((*it).first);
 
 		escape(text);
-		color = (*it).second;
 
-		fs << color.red() << " " << color.green() << " "
-		   << color.blue() << " c" << endl;
+		fs << (*it).second.red() << " " << (*it).second.green() << " "
+		   << (*it).second.blue() << " c" << endl;
 		fs << c.x() << " " << tr(c.y(), dim) << " " << r.x() << " " << -r.y()
 		   << " rect fill" << endl;
 		fs << 0 << " " << 0 << " " << 0 << " c" << endl;
