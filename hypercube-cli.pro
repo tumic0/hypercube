@@ -75,6 +75,7 @@ SOURCES += CORE/edge.cpp \
     CORE/sa.cpp \
     CORE/colormap.cpp \
     CORE/line.cpp \
+    CORE/misc.cpp \
     IO/encodings/8bit.cpp \
     IO/encodings/iso1cvt.cpp \
     IO/encodings/iso2cvt.cpp \

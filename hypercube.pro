@@ -86,6 +86,7 @@ SOURCES += \
     CORE/vertex.cpp \
     CORE/colormap.cpp \
     CORE/line.cpp \
+	CORE/misc.cpp \
     IO/modules.cpp \
     IO/encodings/8bit.cpp \
     IO/encodings/koi8rcvt.cpp \
@@ -118,7 +119,7 @@ SOURCES += \
     GUI/graphtab.cpp \
     GUI/colorcombobox.cpp \
     GUI/numericedit.cpp \
-    GUI/gui.cpp
+	GUI/gui.cpp
 DEFINES += SA_LOG_SUPPORT
 RESOURCES += hypercube.qrc
 TRANSLATIONS = lang/hypercube_cs.ts

@@ -1062,6 +1062,8 @@ void GUI::getArguments()
 		args.append(QString(" -c"));
 	if (_directedGraph->checkState())
 		args.append(QString(" -d"));
+	if (_legend->checkState())
+		args.append(QString(" -l %1").arg(_edgeFontSize->value()));
 
 	if (_nodeDistribution->value() != NODE_DISTRIBUTION)
 		args.append(QString(" -nd %1").arg(_nodeDistribution->value()));

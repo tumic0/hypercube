@@ -4,6 +4,7 @@
 #include "CORE/vertex.h"
 #include "CORE/edge.h"
 #include "CORE/config.h"
+#include "CORE/misc.h"
 #include "IO/modules.h"
 #include "IO/providers/ps/snippet.h"
 #include "ps.h"
