@@ -64,14 +64,17 @@ void PsGraphOutput::prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
 		fs << "/font /" << sn->font()->name() << " def" << endl << endl;
 
 	fs << "/e {newpath moveto lineto stroke} def" << endl
-	   << "/a {newpath moveto lineto lineto closepath fill} def" << endl
 	   << "/v {newpath 0 360 arc closepath fill} def" << endl
 	   << "/d {moveto show} def" << endl
 	   << "/f {font findfont exch scalefont setfont} def" << endl
 	   << "/lw {setlinewidth} def" << endl
-	   << "/c {setrgbcolor} def" << endl
-	   << "/rect {4 -2 roll moveto dup 0 exch rlineto exch 0 rlineto neg 0 "
-		  "exch rlineto closepath} def" << endl << endl;
+	   << "/c {setrgbcolor} def" << endl;
+	if (graph->directed())
+		fs << "/a {newpath moveto lineto lineto closepath fill} def" << endl;
+	if (graph->legend())
+		fs << "/rect {4 -2 roll moveto dup 0 exch rlineto exch 0 rlineto "
+		  "neg 0 exch rlineto closepath} def" << endl;
+	fs << endl;
 
 	fs << "%%EndProlog" << endl << endl;
 }
@@ -249,8 +252,8 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *fileName)
 		prolog(graph, *sp, fs);
 		edges(graph, fs);
 		vertexes(graph, fs);
-			if (graph->legend())
-		legend(graph, fs);
+		if (graph->legend())
+			legend(graph, fs);
 		fs << "%%EOF" << endl;
 
 		fail = fs.fail();

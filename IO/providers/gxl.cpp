@@ -159,6 +159,9 @@ Vertex* GxlHandler::addVertex(const wstring &id)
 	Vertex *v;
 	map<wstring, Vertex*>::const_iterator it;
 
+	if (id.empty())
+		return 0;
+
 	it = _vertexes.find(id);
 	if (it != _vertexes.end())
 		return it->second;
@@ -173,6 +176,9 @@ Vertex* GxlHandler::addVertex(const wstring &id)
 Edge* GxlHandler::addEdge(const wstring &source, const wstring &target)
 {
 	Vertex *src, *dst;
+
+	if (source.empty() || target.empty() || source == target)
+		return 0;
 
 	src = addVertex(source);
 	dst = addVertex(target);
@@ -242,9 +248,9 @@ bool GxlHandler::handleElement(const wstring &element)
 	Edge *edge;
 
 	if (element == NODE) {
-		if (_nodeAttributes.id.empty())
+		if (!(vertex = addVertex(_nodeAttributes.id)))
 			return false;
-		vertex = addVertex(_nodeAttributes.id);
+
 		if (_nodeLabel.empty())
 			vertex->setText(_nodeAttributes.id);
 		else
@@ -254,9 +260,9 @@ bool GxlHandler::handleElement(const wstring &element)
 		_nodeLabel.clear();
 
 	} else if (element == EDGE) {
-		if (_edgeAttributes.from.empty() || _edgeAttributes.to.empty())
+		if (!(edge = addEdge(_edgeAttributes.from, _edgeAttributes.to)))
 			return false;
-		edge = addEdge(_edgeAttributes.from, _edgeAttributes.to);
+
 		if (_edgeLabel.empty())
 			edge->setText(_edgeAttributes.id);
 		else

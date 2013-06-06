@@ -304,18 +304,16 @@ bool GmlGraphInput::handleKey(const wstring &key)
 	if (key == NODE) {
 		Vertex *v;
 
-		if (_nodeAttributes.id < 0)
+		if (!(v = addVertex(_nodeAttributes.id)))
 			return false;
-		v = addVertex(_nodeAttributes.id);
 		setVertexAttributes(v);
 
 		clearNodeAttributes();
 	} else if (key == EDGE) {
 		Edge *e;
 
-		if (_edgeAttributes.source < 0 || _edgeAttributes.target < 0)
+		if (!(e = addEdge(_edgeAttributes.source, _edgeAttributes.target)))
 			return false;
-		e = addEdge(_edgeAttributes.source, _edgeAttributes.target);
 		setEdgeAttributes(e);
 
 		clearEdgeAttributes();
@@ -328,6 +326,9 @@ Vertex* GmlGraphInput::addVertex(int id)
 {
 	Vertex *v;
 	map<int, Vertex*>::const_iterator it;
+
+	if (id < 0)
+		return 0;
 
 	it = _vertexes.find(id);
 	if (it != _vertexes.end())
@@ -343,6 +344,9 @@ Vertex* GmlGraphInput::addVertex(int id)
 Edge* GmlGraphInput::addEdge(int source, int target)
 {
 	Vertex *src, *dst;
+
+	if (source < 0 || target < 0 || source == target)
+		return 0;
 
 	src = addVertex(source);
 	dst = addVertex(target);

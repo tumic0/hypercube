@@ -347,10 +347,15 @@ void DotGraphInput::edge(idSet &src, edgeSet &edges)
 			break;
 		default:
 			error();
+			return;
 	}
 
 	for (idSet::iterator i = src.begin(); i != src.end(); i++) {
 		for (idSet::iterator j = dst.begin(); j != dst.end(); j++) {
+			if (*i == *j) {
+				error();
+				return;
+			}
 			e = addEdge(*i, *j);
 			setEdgeAttributes(e, _edgeAttributes);
 			edges.insert(e);

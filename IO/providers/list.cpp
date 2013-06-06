@@ -136,6 +136,10 @@ void ListGraphInput::entry()
 			src = addVertex(_id);
 			nextToken();
 			dst = addVertex(_id);
+			if (src == dst) {
+				error();
+				return;
+			}
 			compare(ID);
 			edge = _graph->addEdge(src, dst);
 			edgeValue(edge);

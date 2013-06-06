@@ -170,6 +170,9 @@ Vertex* GraphmlHandler::addVertex(const wstring &id)
 	Vertex *v;
 	map<wstring, Vertex*>::const_iterator it;
 
+	if (id.empty())
+		return 0;
+
 	it = _vertexes.find(id);
 	if (it != _vertexes.end())
 		return it->second;
@@ -184,6 +187,9 @@ Vertex* GraphmlHandler::addVertex(const wstring &id)
 Edge* GraphmlHandler::addEdge(const wstring &source, const wstring &target)
 {
 	Vertex *src, *dst;
+
+	if (source.empty() || target.empty() || source == target)
+		return false;
 
 	src = addVertex(source);
 	dst = addVertex(target);
@@ -267,9 +273,8 @@ bool GraphmlHandler::handleElement(const wstring &element)
 	Edge *edge;
 
 	if (element == NODE) {
-		if (_nodeAttributes.id.empty())
+		if (!(vertex = addVertex(_nodeAttributes.id)))
 			return false;
-		vertex = addVertex(_nodeAttributes.id);
 
 		if (_nodeLabel.id.empty())
 			vertex->setText(_nodeAttributes.id);
@@ -284,9 +289,8 @@ bool GraphmlHandler::handleElement(const wstring &element)
 		_nodeLabel.value.clear();
 
 	} else if (element == EDGE) {
-		if (_edgeAttributes.source.empty() || _edgeAttributes.target.empty())
+		if (!(edge = addEdge(_edgeAttributes.source, _edgeAttributes.target)))
 			return false;
-		edge = addEdge(_edgeAttributes.source, _edgeAttributes.target);
 
 		if (_edgeLabel.id.empty())
 			edge->setText(_edgeAttributes.id);

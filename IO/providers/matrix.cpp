@@ -103,6 +103,11 @@ void MatrixGraphInput::matrix(unsigned cnt)
 	for (unsigned i = 0; i < cnt; i++) {
 		for (unsigned j = 0; j < cnt; j++) {
 			if (_id > 0) {
+				if (i == j) {
+					error();
+					return;
+				}
+
 				wstringstream ss;
 				ss << _id;
 
