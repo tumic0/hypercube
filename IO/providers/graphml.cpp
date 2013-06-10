@@ -189,7 +189,7 @@ Edge* GraphmlHandler::addEdge(const wstring &source, const wstring &target)
 	Vertex *src, *dst;
 
 	if (source.empty() || target.empty() || source == target)
-		return false;
+		return 0;
 
 	src = addVertex(source);
 	dst = addVertex(target);
