@@ -86,6 +86,8 @@ unsigned MatrixGraphInput::count()
 
 	compare(ID);
 	compare(NL);
+	if (_token == ERROR)
+		return 0;
 
 	for (unsigned i = 0; i < cnt; i++) {
 		wstringstream ss;
