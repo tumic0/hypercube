@@ -17,6 +17,14 @@ using namespace std;
 
 const unsigned char BOM[] = {0xEF, 0xBB, 0xBF};
 
+static void escape(wstring &str)
+{
+	stringReplace(str, L"&amp;", L"&");
+	stringReplace(str, L"&lt;", L"<");
+	stringReplace(str, L"&gt;", L">");
+	stringReplace(str, L"&quot;", L"\"");
+	stringReplace(str, L"&apos;", L"\'");
+}
 
 void XmlParser::setEncoding(const wstring &encoding)
 {
@@ -79,10 +87,6 @@ void XmlParser::nextToken()
 				}
 				if (c == '=') {
 					_token = EQ;
-					return;
-				}
-				if (c == '&') {
-					_token = AMP;
 					return;
 				}
 				if (c == '/') {
@@ -181,6 +185,7 @@ void XmlParser::data()
 		c = _fs.get();
 
 		if (c == '<') {
+			escape(_string);
 			_handler->data(_string);
 			_token = LT;
 			return;
@@ -381,12 +386,13 @@ void XmlParser::attribute(bool xml)
 
 	if (_token == ERROR)
 		return;
-
 	if (xml) {
 		if (attr == L"encoding")
 			_encoding = value;
-	} else
+	} else {
+		escape(value);
 		_handler->attribute(attr, value);
+	}
 }
 
 void XmlParser::xmlAttributes()

@@ -18,6 +18,7 @@ static void escape(wstring &str)
 	stringReplace(str, L"<", L"&lt;");
 	stringReplace(str, L">", L"&gt;");
 	stringReplace(str, L"\"", L"&quot;");
+	stringReplace(str, L"\'", L"&apos;");
 }
 
 void SvgGraphOutput::header(Graph *graph, wofstream &fs)
