@@ -41,8 +41,8 @@ public:
 
 private:
 	struct Relation {
-		wstring node;
-		wstring parent;
+		const wstring node;
+		const wstring parent;
 	};
 
 	struct GraphAttributes {

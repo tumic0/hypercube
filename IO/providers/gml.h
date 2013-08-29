@@ -30,8 +30,8 @@ private:
 	};
 
 	struct Relation {
-		std::wstring node;
-		std::wstring parent;
+		const std::wstring node;
+		const std::wstring parent;
 	};
 
 	struct NodeAttributes {

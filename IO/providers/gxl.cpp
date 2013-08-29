@@ -31,6 +31,8 @@ using namespace std;
 #define EDGEMODE        L"edgemode"
 #define NAME            L"name"
 
+#define compositeDelimiter L", "
+
 #define isAtomicAttribute(element) \
 	(element == INT || element == FLOAT || element == STRING \
 	 || element == BOOL || element == ENUM)
@@ -55,7 +57,7 @@ public:
 private:
 	struct Relation {
 		const wstring node;
-		const wstring *parents;
+		const wstring * const parents;
 		size_t numParents;
 	};
 
@@ -318,13 +320,13 @@ bool GxlHandler::handleData(const wstring &data)
 				if (_nodeLabel.empty())
 					_nodeLabel = data;
 				else
-					_nodeLabel += L", " + data;
+					_nodeLabel += compositeDelimiter + data;
 			}
 			if (_attrAttributes.name == _edgeLabelAttr) {
 				if (_edgeLabel.empty())
 					_edgeLabel = data;
 				else
-					_edgeLabel += L", " + data;
+					_edgeLabel += compositeDelimiter + data;
 			}
 		} else {
 			if (_attrAttributes.name == _nodeLabelAttr)
