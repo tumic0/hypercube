@@ -269,7 +269,8 @@ and
 .B \-ea
 parameters. If there is no appropriate attribute, the vertex/edge id is used as
 the label. Composite attribute types (seq, set, bag and tup) are serialized by
-hypercube.
+hypercube into a single string (comma delimited), the locator attribute type is
+not supported.
 .PP
 The input encoding is always taken from the xml declaration (with UTF\-8 as the
 default), setting the encoding using the
