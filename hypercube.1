@@ -1,4 +1,4 @@
-.TH HYPERCUBE 1 "2013-06-1" "1.5.0"
+.TH HYPERCUBE 1 "2013-06-1" "1.5.2"
 .SH NAME
 Hypercube \- Graph visualization tool
 .SH SYNOPSIS
@@ -138,7 +138,7 @@ Set node distribution factor to
 Set edge length factor to
 .IR LENGTH .
 .TP
-.BI \-ec " CROSSINGS"
+.BI \-cr " CROSSINGS"
 Set edge crossings factor to
 .IR CROSSINGS .
 .SS "Algorithm Settings"
@@ -268,7 +268,8 @@ vertex/edge labels can be set using the
 and
 .B \-ea
 parameters. If there is no appropriate attribute, the vertex/edge id is used as
-the label.
+the label. Composite attribute types (seq, set, bag and tup) are serialized by
+hypercube.
 .PP
 The input encoding is always taken from the xml declaration (with UTF\-8 as the
 default), setting the encoding using the
