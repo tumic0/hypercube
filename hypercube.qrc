@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/" >
+    <qresource prefix="/">
         <file>icons/dialog-close.png</file>
         <file>icons/document-open.png</file>
         <file>icons/document-save-all.png</file>
@@ -10,5 +10,9 @@
         <file>icons/hypercube.png</file>
         <file>icons/transform-move.png</file>
         <file>icons/view-refresh.png</file>
+    </qresource>
+
+    <qresource prefix="/">
+        <file>lang/hypercube_cs.qm</file>
     </qresource>
 </RCC>

@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 
 	QString locale = QLocale::system().name();
 	QTranslator translator;
-	translator.load(QString("hypercube_") + locale);
+	translator.load(QString(":/lang/hypercube_") + locale);
 	app.installTranslator(&translator);
 
 	GUI gui;
