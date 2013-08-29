@@ -14,9 +14,15 @@ using namespace std;
 #define NODE            L"node"
 #define EDGE            L"edge"
 #define ATTR            L"attr"
+#define BOOL            L"bool"
 #define INT             L"int"
+#define ENUM            L"enum"
 #define FLOAT           L"float"
 #define STRING          L"string"
+#define SEQ             L"seq"
+#define SET             L"set"
+#define TUP             L"tup"
+#define BAG             L"bag"
 #define DIRECTED        L"directed"
 #define DEFAULTDIRECTED L"defaultdirected"
 #define ID              L"id"
@@ -24,6 +30,12 @@ using namespace std;
 #define TO              L"to"
 #define EDGEMODE        L"edgemode"
 #define NAME            L"name"
+
+#define isAtomicAttribute(element) \
+	(element == INT || element == FLOAT || element == STRING \
+	 || element == BOOL || element == ENUM)
+#define isCompositeAttribute(element) \
+	(element == SEQ || element == SET || element == TUP || element == BAG)
 
 
 class GxlHandler : public XmlHandler
@@ -42,8 +54,9 @@ public:
 
 private:
 	struct Relation {
-		wstring node;
-		wstring parent;
+		const wstring node;
+		const wstring *parents;
+		size_t numParents;
 	};
 
 	struct GraphAttributes {
@@ -89,14 +102,27 @@ private:
 };
 
 
+static const wstring gxlParents[] = {ROOT};
+static const wstring graphParents[] = {GXL};
+static const wstring nodeParents[] = {GRAPH};
+#define edgeParents nodeParents
+static const wstring atomicAttributesParents[] = {ATTR, SEQ, SET, TUP, BAG};
+static const wstring compositeAttributesParents[] = {ATTR};
+
 const GxlHandler::Relation GxlHandler::relations[] = {
-	{GXL, ROOT},
-	{GRAPH, GXL},
-	{NODE, GRAPH},
-	{EDGE, GRAPH},
-	{INT, ATTR},
-	{FLOAT, ATTR},
-	{STRING, ATTR}
+	{GXL, gxlParents, ARRAY_SIZE(gxlParents)},
+	{GRAPH, graphParents, ARRAY_SIZE(graphParents)},
+	{NODE, nodeParents, ARRAY_SIZE(nodeParents)},
+	{EDGE, edgeParents, ARRAY_SIZE(edgeParents)},
+	{INT, atomicAttributesParents, ARRAY_SIZE(atomicAttributesParents)},
+	{FLOAT, atomicAttributesParents, ARRAY_SIZE(atomicAttributesParents)},
+	{STRING, atomicAttributesParents, ARRAY_SIZE(atomicAttributesParents)},
+	{BOOL, atomicAttributesParents, ARRAY_SIZE(atomicAttributesParents)},
+	{ENUM, atomicAttributesParents, ARRAY_SIZE(atomicAttributesParents)},
+	{SEQ, compositeAttributesParents, ARRAY_SIZE(compositeAttributesParents)},
+	{SET, compositeAttributesParents, ARRAY_SIZE(compositeAttributesParents)},
+	{TUP, compositeAttributesParents, ARRAY_SIZE(compositeAttributesParents)},
+	{BAG, compositeAttributesParents, ARRAY_SIZE(compositeAttributesParents)}
 };
 
 
@@ -195,8 +221,11 @@ bool GxlHandler::checkRelation(const wstring &node, const wstring &parent)
 
 	for (size_t i = 0; i < ARRAY_SIZE(relations); i++) {
 		if (node == relations[i].node) {
-			if (parent != relations[i].parent)
-				return false;
+			for (size_t j = 0; j < relations[i].numParents; j++) {
+				if (parent == relations[i].parents[j])
+					return true;
+			}
+			return false;
 		}
 	}
 
@@ -277,13 +306,32 @@ bool GxlHandler::handleElement(const wstring &element)
 
 bool GxlHandler::handleData(const wstring &data)
 {
-	const wstring &element = _elements.back();
+	if (_elements.size() < 2)
+		return true;
 
-	if (element == INT || element == FLOAT || element == STRING) {
-		if (_attrAttributes.name == _nodeLabelAttr)
-			_nodeLabel = data;
-		if (_attrAttributes.name == _edgeLabelAttr)
-			_edgeLabel = data;
+	const wstring &element = _elements.back();
+	const wstring &parent = _elements.at(_elements.size() - 2);
+
+	if (isAtomicAttribute(element)) {
+		if (isCompositeAttribute(parent)) {
+			if (_attrAttributes.name == _nodeLabelAttr) {
+				if (_nodeLabel.empty())
+					_nodeLabel = data;
+				else
+					_nodeLabel += L", " + data;
+			}
+			if (_attrAttributes.name == _edgeLabelAttr) {
+				if (_edgeLabel.empty())
+					_edgeLabel = data;
+				else
+					_edgeLabel += L", " + data;
+			}
+		} else {
+			if (_attrAttributes.name == _nodeLabelAttr)
+				_nodeLabel = data;
+			if (_attrAttributes.name == _edgeLabelAttr)
+				_edgeLabel = data;
+		}
 	}
 
 	return true;
