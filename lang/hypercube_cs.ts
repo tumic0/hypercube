@@ -141,7 +141,7 @@
     <message>
         <location filename="../GUI/gui.cpp" line="257"/>
         <source>CLI arguments</source>
-        <translation>argumenty pro CLI</translation>
+        <translation>Argumenty pro CLI</translation>
     </message>
     <message>
         <location filename="../GUI/gui.cpp" line="264"/>

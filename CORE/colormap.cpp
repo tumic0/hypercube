@@ -45,7 +45,7 @@ Color ColorMap::nextColor()
 	return Color(hsv2rgb(_hueState, SATURATION, VALUE));
 }
 
-unsigned hsv2rgb(float h, float s, float v)
+static unsigned hsv2rgb(float h, float s, float v)
 {
 	unsigned hi;
 	float r = 0, g = 0, b = 0, p, q, t, f;
