@@ -150,7 +150,7 @@ bool GraphmlHandler::endElement(const wstring &)
 
 bool GraphmlHandler::attribute(const wstring &name, const wstring &value)
 {
-	setAttribute(_elements.back(), name, value);
+	setAttribute(_elements.back(), name, trim(value));
 
 	return true;
 }

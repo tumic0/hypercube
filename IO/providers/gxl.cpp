@@ -167,7 +167,7 @@ bool GxlHandler::endElement(const wstring &name)
 
 bool GxlHandler::attribute(const wstring &name, const wstring &value)
 {
-	setAttribute(_elements.back(), name, value);
+	setAttribute(_elements.back(), name, trim(value));
 
 	return true;
 }

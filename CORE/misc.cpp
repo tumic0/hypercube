@@ -38,8 +38,6 @@ bool stringCaseCmp(const wstring &s1, const wstring &s2)
 
 wstring s2w(const string &s)
 {
-	wstring w(s.length(), L' ');
-	copy(s.begin(), s.end(), w.begin());
-
+	wstring w(s.begin(), s.end());
 	return w;
 }
