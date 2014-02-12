@@ -26,6 +26,7 @@ static void unescape(wstring &str)
 	stringReplace(str, L"&apos;", L"\'");
 }
 
+
 void XmlParser::setEncoding(const wstring &encoding)
 {
 	codecvt<wchar_t,char,mbstate_t> *cvt = 0;

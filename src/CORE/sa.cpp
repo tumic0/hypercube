@@ -7,8 +7,24 @@
 #include "sa_log.h"
 
 
-static inline float rnd();
-static inline int crop(int x, int min, int max);
+static inline float rnd()
+{
+	return ((float) rand() / (float)RAND_MAX);
+}
+
+static inline int crop(int x, int min, int max)
+{
+	int retval;
+
+	if (x < min)
+		retval = min;
+	else if (x > max)
+		retval = max;
+	else
+		retval = x;
+
+	return retval;
+}
 
 
 SA::SA()
@@ -95,24 +111,4 @@ void SA::compute(Graph *g)
 	} while (temp > _finalTemp);
 
 	LOG_END();
-}
-
-
-static inline float rnd()
-{
-	return ((float) rand() / (float)RAND_MAX);
-}
-
-static inline int crop(int x, int min, int max)
-{
-	int retval;
-
-	if (x < min)
-		retval = min;
-	else if (x > max)
-		retval = max;
-	else
-		retval = x;
-
-	return retval;
 }

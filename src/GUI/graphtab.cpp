@@ -6,6 +6,7 @@
 #include "edgeitem.h"
 #include "legenditem.h"
 #include "graphtab.h"
+#include <QDebug>
 
 
 GraphTab::GraphTab()
@@ -39,17 +40,11 @@ IO::Error GraphTab::readGraph(const QString &fileName)
 {
 	IO::Error error;
 
-	QByteArray b1 = fileName.toLocal8Bit();
-	const char *cFileName = b1.data();
-	QByteArray b2 = _nodeLabelAttr.toLocal8Bit();
-	const char *cNodeLabelAttr = b2.data();
-	QByteArray b3 = _edgeLabelAttr.toLocal8Bit();
-	const char *cEdgeLabelAttr = b3.data();
+	QByteArray ba = fileName.toLocal8Bit();
+	const char *cFileName = ba.data();
 
 	for (InputProvider **p = inputProviders; *p; p++) {
 		(*p)->setInputEncoding(_inputEncoding);
-		(*p)->setNodeLabelAttribute(cNodeLabelAttr);
-		(*p)->setEdgeLabelAttribute(cEdgeLabelAttr);
 
 		error = (*p)->readGraph(_graph, cFileName);
 		if (error == IO::Ok) {
@@ -75,15 +70,9 @@ IO::Error GraphTab::readGraph()
 {
 	_graph->clear();
 
-	QByteArray b1 = _inputFileName.toLocal8Bit();
-	const char *cFileName = b1.data();
-	QByteArray b2 = _nodeLabelAttr.toLocal8Bit();
-	const char *cNodeLabelAttr = b2.data();
-	QByteArray b3 = _edgeLabelAttr.toLocal8Bit();
-	const char *cEdgeLabelAttr = b3.data();
+	QByteArray ba = _inputFileName.toLocal8Bit();
+	const char *cFileName = ba.data();
 
-	_inputProvider->setNodeLabelAttribute(cNodeLabelAttr);
-	_inputProvider->setEdgeLabelAttribute(cEdgeLabelAttr);
 	_inputProvider->setInputEncoding(_inputEncoding);
 
 	IO::Error error = _inputProvider->readGraph(_graph, cFileName);
@@ -129,21 +118,48 @@ void GraphTab::transformGraph(void)
 	_graph->randomize();
 	_sa->compute(_graph);
 	_graph->center();
-	loadGraph();
+	updateCoordinates();
 }
 
 void GraphTab::bindTo(Graph *graph)
 {
 	storeGraph();
 	_graph->bindTo(graph);
-	loadGraph();
+	updateCoordinates();
 }
 
 void GraphTab::project(Graph* graph)
 {
 	storeGraph();
 	_graph->project(graph);
-	loadGraph();
+	updateColors();
+}
+
+void GraphTab::colorizeEdges(void)
+{
+	_coloredEdges = true;
+
+	storeGraph();
+	_graph->colorize();
+
+	for (size_t i = 0; i < _graph->edge_size(); i++) {
+		Edge *edg = _graph->edge(i);
+		EdgeItem *e = _view->edge(i);
+		e->setColor(QColor(edg->color().rgb()));
+	}
+	updateLegend();
+}
+
+void GraphTab::setNodeLabelAttr(const QString &name)
+{
+	_view->setVertexLabelAttr(name);
+	_nodeLabelAttr = name;
+}
+
+void GraphTab::setEdgeLabelAttr(const QString &name)
+{
+	_view->setEdgeLabelAttr(name);
+	_edgeLabelAttr = name;
 }
 
 void GraphTab::setDimensions(const QPoint &dimensions)
@@ -162,6 +178,7 @@ void GraphTab::setEdgeColor(const QColor &color)
 {
 	_view->setEdgeColor(color);
 	_edgeColor = color;
+	_coloredEdges = false;
 }
 
 void GraphTab::setVertexSize(int size)
@@ -200,18 +217,6 @@ void GraphTab::showEdgeValues(bool show)
 	_view->setEdgeFontSize(show ? _edgeFontSize : 0);
 }
 
-void GraphTab::colorizeEdges(bool colorize)
-{
-	_coloredEdges = colorize;
-
-	if (colorize) {
-		storeGraph();
-		_graph->colorize();
-		loadGraph();
-	} else
-		_view->setEdgeColor(_edgeColor);
-}
-
 void GraphTab::setLegend(int size)
 {
 	_legend = size;
@@ -245,6 +250,48 @@ void GraphTab::setAntialiasing(bool value)
 	_view->update();
 }
 
+void GraphTab::updateCoordinates()
+{
+	for (size_t i = 0; i < _graph->vertex_size(); i++) {
+		Vertex *vtx = _graph->vertex(i);
+		VertexItem *v = _view->vertex(i);
+		v->setCoordinates(QPoint(vtx->coordinates().x(), vtx->coordinates().y()));
+	}
+}
+
+void GraphTab::updateColors()
+{
+	for (size_t i = 0; i < _graph->vertex_size(); i++) {
+		Vertex *vtx = _graph->vertex(i);
+		VertexItem *v = _view->vertex(i);
+		v->setColor(QColor(vtx->color().rgb()));
+		v->setSize(vtx->size());
+		v->setFontSize(vtx->fontSize());
+	}
+
+	for (size_t i = 0; i < _graph->edge_size(); i++) {
+		Edge *edg = _graph->edge(i);
+		EdgeItem *e = _view->edge(i);
+		e->setColor(QColor(edg->color().rgb()));
+		e->setSize(edg->size());
+		e->setFontSize(edg->fontSize());
+		e->setZValue(edg->zValue());
+	}
+}
+
+void GraphTab::updateLegend()
+{
+	_view->clearLegend();
+
+	for (ColorMap::iterator it = _graph->colorMap().begin();
+	  it != _graph->colorMap().end(); it++) {
+		LegendItem *l = _view->addLegend();
+
+		l->setText(QString::fromStdWString((*it).first));
+		l->setColor(QColor((*it).second.rgb()));
+		l->setSize(_graph->legend());
+	}
+}
 
 void GraphTab::loadGraph()
 {
@@ -252,8 +299,6 @@ void GraphTab::loadGraph()
 	Edge *edg;
 	VertexItem *v;
 	EdgeItem *e;
-	LegendItem *l;
-	Coordinates c;
 
 
 	_view->clear();
@@ -263,17 +308,23 @@ void GraphTab::loadGraph()
 	_view->setDirectedGraph(_graph->directed());
 	_view->setLegend(_graph->legend());
 
+
 	for (size_t i = 0; i < _graph->vertex_size(); i++) {
 		vtx = _graph->vertex(i);
 		v = _view->addVertex();
 
-		c = vtx->coordinates();
-		v->setCoordinates(QPointF(vtx->coordinates().x(), vtx->coordinates().y()));
+		for (std::map<std::wstring, std::wstring>::const_iterator it
+		  = vtx->attributes().begin(); it != vtx->attributes().end(); it++) {
+			QString key = QString::fromStdWString(it->first);
+			QString value = QString::fromStdWString(it->second);
+			v->addAttribute(key, value);
+		}
+		v->setAttribute(QString::fromStdWString(vtx->attribute()));
+
+		v->setCoordinates(QPoint(vtx->coordinates().x(), vtx->coordinates().y()));
 		v->setColor(QColor(vtx->color().rgb()));
 		v->setSize(vtx->size());
-		v->setText(QString::fromStdWString(vtx->text()));
 		v->setFontSize(vtx->fontSize());
-		v->setPos(c.x(), c.y());
 	}
 
 	for (size_t i = 0; i < _graph->edge_size(); i++) {
@@ -281,22 +332,23 @@ void GraphTab::loadGraph()
 		e = _view->addEdge(_view->vertex(edg->src()->id()),
 		  _view->vertex(edg->dst()->id()));
 
+		for (std::map<std::wstring, std::wstring>::const_iterator it
+		  = edg->attributes().begin(); it != edg->attributes().end(); it++) {
+			QString key = QString::fromStdWString(it->first);
+			QString value = QString::fromStdWString(it->second);
+
+			e->addAttribute(key, value);
+		}
+		e->setAttribute(QString::fromStdWString(edg->attribute()));
+
 		e->setColor(QColor(edg->color().rgb()));
 		e->setSize(edg->size());
-		e->setText(QString::fromStdWString(edg->text()));
 		e->setFontSize(edg->fontSize());
 		e->setZValue(edg->zValue());
 		e->setTwin(edg->twin());
 	}
 
-	for (ColorMap::iterator it = _graph->colorMap()->begin();
-	  it != _graph->colorMap()->end(); it++) {
-		l = _view->addLegend();
-
-		l->setText(QString::fromStdWString((*it).first));
-		l->setColor(QColor((*it).second.rgb()));
-		l->setSize(_graph->legend());
-	}
+	updateLegend();
 }
 
 void GraphTab::storeGraph()
@@ -305,10 +357,7 @@ void GraphTab::storeGraph()
 	Edge *edg;
 	VertexItem *v;
 	EdgeItem *e;
-	QPointF pos;
 
-
-	_graph->clear();
 
 	_graph->setDimensions(Coordinates(_view->dimensions().x(),
 	  _view->dimensions().y()));
@@ -317,45 +366,35 @@ void GraphTab::storeGraph()
 
 	for (int i = 0; i < _view->vertex_size(); i++) {
 		v = _view->vertex(i);
-		pos = v->scenePos();
-		vtx = _graph->addVertex();
+		vtx = _graph->vertex(i);
 
-		vtx->setCoordinates(Coordinates(pos.x(), pos.y()));
+		vtx->setAttribute(v->attribute().toStdWString());
+		vtx->setCoordinates(Coordinates(v->coordinates().x(), v->coordinates().y()));
 		vtx->setColor(v->color().rgb());
 		vtx->setSize(v->size());
-		vtx->setText(v->text().toStdWString());
 		vtx->setFontSize(v->fontSize());
 	}
 
 	for (int i = 0; i < _view->edge_size(); i++) {
 		e = _view->edge(i);
-		edg = _graph->addEdge(_graph->vertex(e->src()->id()),
-		  _graph->vertex(e->dst()->id()));
+		edg = _graph->edge(i);
 
+		edg->setAttribute(e->attribute().toStdWString());
 		edg->setColor(e->color().rgb());
 		edg->setSize(e->size());
-		edg->setText(e->text().toStdWString());
 		edg->setFontSize(e->fontSize());
 		edg->setZValue(e->zValue());
 		edg->setTwin(e->twin());
-
-		_graph->colorMap()->color(e->text().toStdWString());
 	}
-}
-
-void GraphTab::getGraphProperties()
-{
-	_view->setDirectedGraph(_graph->directed());
 }
 
 void GraphTab::setGraphProperties()
 {
+	_graph->setVertexAttribute(_nodeLabelAttr.toStdWString());
+	_graph->setEdgeAttribute(_edgeLabelAttr.toStdWString());
 	_graph->setVertexColor(_vertexColor.rgb());
 	_graph->setVertexSize(_vertexSize);
-	if (_coloredEdges)
-		_graph->colorize();
-	else
-		_graph->setEdgeColor(_edgeColor.rgb());
+	_coloredEdges ? _graph->colorize() : _graph->setEdgeColor(_edgeColor.rgb());
 	_graph->setEdgeSize(_edgeSize);
 	_graph->setVertexFontSize(_showVertexIDs ? _vertexFontSize : 0);
 	_graph->setEdgeFontSize(_showEdgeValues ? _edgeFontSize : 0);
@@ -363,4 +402,31 @@ void GraphTab::setGraphProperties()
 
 	_graph->setDimensions(Coordinates(_dimensions.x(), _dimensions.y()));
 	_graph->randomize();
+	_sa->compute(_graph);
+	_graph->center();
+}
+
+void GraphTab::getGraphProperties()
+{
+	for (size_t i = 0; i < _graph->vertex_size(); i++) {
+		Vertex *vtx = _graph->vertex(i);
+		for (std::map<std::wstring, std::wstring>::const_iterator it
+		  = vtx->attributes().begin(); it != vtx->attributes().end(); it++) {
+			QString key = QString::fromStdWString(it->first);
+			_nodeLabelAttributes.insert(key);
+		}
+	}
+	for (size_t i = 0; i < _graph->edge_size(); i++) {
+		Edge *edg = _graph->edge(i);
+		for (std::map<std::wstring, std::wstring>::const_iterator it
+		  = edg->attributes().begin(); it != edg->attributes().end(); it++) {
+			QString key = QString::fromStdWString(it->first);
+			_edgeLabelAttributes.insert(key);
+		}
+	}
+
+	if (!_nodeLabelAttributes.empty())
+		_nodeLabelAttr = *_nodeLabelAttributes.begin();
+	if (!_edgeLabelAttributes.empty())
+		_edgeLabelAttr = *_edgeLabelAttributes.begin();
 }

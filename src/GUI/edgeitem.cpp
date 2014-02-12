@@ -35,6 +35,22 @@ void EdgeItem::adjust()
 	_text.setPos(textPos());
 }
 
+void EdgeItem::setAttribute(const QString &attribute)
+{
+	if (_attributes.contains(attribute)) {
+		_text.setText(_attributes[attribute]);
+		_attribute = attribute;
+	} else {
+		_text.setText(QString());
+		_attribute.clear();
+	}
+}
+
+void EdgeItem::addAttribute(const QString &attribute, const QString &value)
+{
+	_attributes.insert(attribute, value);
+}
+
 void EdgeItem::setDirected(bool val)
 {
 	_directed = val;
@@ -86,8 +102,8 @@ void EdgeItem::setFontSize(int size)
 QLineF EdgeItem::edgeLine()
 {
 	QPointF src, dst;
-	src = _src->coordinates() + QPointF(_src->size() / 2, _src->size() / 2);
-	dst = _dst->coordinates() + QPointF(_dst->size() / 2, _dst->size() / 2);
+	src = _src->pos() + QPointF(_src->size() / 2, _src->size() / 2);
+	dst = _dst->pos() + QPointF(_dst->size() / 2, _dst->size() / 2);
 
 	return QLineF(src, dst);
 }
@@ -114,7 +130,7 @@ QPointF EdgeItem::textPos()
 QRectF EdgeItem::boundingRect() const
 {
 	qreal inc = qMax(_src->size(), _dst->size());
-	QRectF rect = QRectF(_src->coordinates(), _dst->coordinates());
+	QRectF rect = QRectF(_src->pos(), _dst->pos());
 
 	return rect.normalized().adjusted(-inc, -inc, inc, inc);
 }

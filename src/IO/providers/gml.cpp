@@ -356,13 +356,13 @@ Edge* GmlGraphInput::addEdge(int source, int target)
 
 void GmlGraphInput::clearNodeAttributes()
 {
-	_nodeAttributes.label.clear();
+	_nodeAttributes.attributes.clear();
 	_nodeAttributes.id = -1;
 }
 
 void GmlGraphInput::clearEdgeAttributes()
 {
-	_edgeAttributes.label.clear();
+	_edgeAttributes.attributes.clear();
 	_edgeAttributes.source = -1;
 	_edgeAttributes.target = -1;
 }
@@ -392,41 +392,32 @@ void GmlGraphInput::setIntAttribute(const wstring &parent, const wstring &key,
 void GmlGraphInput::setStringAttribute(const wstring &parent,
   const wstring &key, const wstring &value)
 {
-	if (parent == NODE && key == _nodeLabelAttr)
-		_nodeAttributes.label = value;
-	else if (parent == EDGE && key == _edgeLabelAttr)
-		_edgeAttributes.label = value;
+	if (parent == NODE)
+		_nodeAttributes.attributes.push_back(pair<wstring, wstring>(key, value));
+	else if (parent == EDGE)
+		_edgeAttributes.attributes.push_back(pair<wstring, wstring>(key, value));
 }
 
 void GmlGraphInput::setVertexAttributes(Vertex *vertex)
 {
-	if (_nodeAttributes.label.empty()) {
-		wostringstream ss;
-		ss << _nodeAttributes.id;
-		vertex->setText(ss.str());
-	} else
-		vertex->setText(_nodeAttributes.label);
+	for (std::list<pair<wstring, wstring> >::iterator it
+	  = _nodeAttributes.attributes.begin();
+	  it != _nodeAttributes.attributes.end(); it++)
+		vertex->addAttribute(*it);
 }
 
 void GmlGraphInput::setEdgeAttributes(Edge *edge)
 {
-	edge->setText(_edgeAttributes.label);
+	for (std::list<pair<wstring, wstring> >::iterator it
+	  = _edgeAttributes.attributes.begin();
+	  it != _edgeAttributes.attributes.end(); it++)
+		edge->addAttribute(*it);
 }
 
 
 void GmlGraphInput::setInputEncoding(Encoding *encoding)
 {
 	_encoding = encoding;
-}
-
-void GmlGraphInput::setNodeLabelAttribute(const char *name)
-{
-	_nodeLabelAttr = s2w(name);
-}
-
-void GmlGraphInput::setEdgeLabelAttribute(const char *name)
-{
-	_edgeLabelAttr = s2w(name);
 }
 
 IO::Error GmlGraphInput::readGraph(Graph *graph, const char *fileName)

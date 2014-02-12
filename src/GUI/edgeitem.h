@@ -2,6 +2,7 @@
 #define EDGEITEM_H_
 
 #include <QGraphicsItem>
+#include <QMap>
 
 class VertexItem;
 class GraphView;
@@ -17,14 +18,18 @@ public:
 
 	bool twin() const {return _twin;}
 	void setTwin(bool state) {_twin = state;}
+
+	const QString &attribute() const {return _attribute;}
+	void setAttribute(const QString &attribute);
+	void addAttribute(const QString &attribute, const QString &value);
+	const QMap<QString, QString> &attributes() const {return _attributes;}
+
 	bool directed() const {return _directed;}
 	void setDirected(bool val);
 	QColor color() const {return _color;}
 	void setColor(const QColor &color);
 	qreal size() const {return _size;}
 	void setSize(qreal size);
-	QString text() const {return _text.text();}
-	void setText(const QString &text) {_text.setText(text);}
 	int fontSize() const {return _fontSize;}
 	void setFontSize(int size);
 
@@ -39,6 +44,8 @@ private:
 	QLineF edgeLine();
 	QPointF textPos();
 
+	QString _attribute;
+	QMap<QString, QString> _attributes;
 	QGraphicsSimpleTextItem _text;
 
 	bool _directed;

@@ -2,6 +2,7 @@
 #define GRAPHTAB_H_
 
 #include <QWidget>
+#include <QSet>
 #include "graphview.h"
 #include "CORE/graph.h"
 #include "CORE/sa.h"
@@ -25,18 +26,24 @@ public:
 	void transformGraph();
 	void bindTo(Graph *graph);
 	void project(Graph *graph);
+	void colorizeEdges();
 
 	Graph *graph();
 	GraphView *view() const {return _view;}
 
 	Encoding *inputEncoding() const {return _inputEncoding;}
 	void setInputEncoding(Encoding *encoding) {_inputEncoding = encoding;}
-	const QString &nodeLabelAttr() const {return _nodeLabelAttr;}
-	void setNodeLabelAttr(const QString &name) {_nodeLabelAttr = name;}
-	const QString &edgeLabelAttr() const {return _edgeLabelAttr;}
-	void setEdgeLabelAttr(const QString &name) {_edgeLabelAttr = name;}
 	bool antialiasing() const;
 	void setAntialiasing(bool value);
+
+	const QString &nodeLabelAttr() const {return _nodeLabelAttr;}
+	void setNodeLabelAttr(const QString &name);
+	const QString &edgeLabelAttr() const {return _edgeLabelAttr;}
+	void setEdgeLabelAttr(const QString &name);
+	const QSet<QString> &nodeLabelAttributes() const
+	  {return _nodeLabelAttributes;}
+	const QSet<QString> &edgeLabelAttributes() const
+	  {return _edgeLabelAttributes;}
 
 	QPoint dimensions() const {return _dimensions;}
 	void setDimensions(const QPoint &dimensions);
@@ -55,12 +62,12 @@ public:
 	bool vertexIDs() const {return _showVertexIDs;}
 	bool edgeValues() const {return _showEdgeValues;}
 	bool coloredEdges() const {return _coloredEdges;}
+	void presetColoredEdges() {_coloredEdges = true;}
 	int legend() const {return _legend;}
 	bool directedGraph() const;
 	void setDirectedGraph(bool state);
 	void showVertexIDs(bool show);
 	void showEdgeValues(bool show);
-	void colorizeEdges(bool colorize);
 	void setEdgeZValue(int value);
 	void setLegend(int size);
 
@@ -98,6 +105,9 @@ private:
 	void storeGraph();
 	void getGraphProperties();
 	void setGraphProperties();
+	void updateLegend();
+	void updateCoordinates();
+	void updateColors();
 
 	Graph *_graph;
 	GraphView *_view;
@@ -109,8 +119,11 @@ private:
 	OutputProvider *_outputProvider;
 
 	Encoding *_inputEncoding;
+
 	QString _nodeLabelAttr;
 	QString _edgeLabelAttr;
+	QSet<QString> _nodeLabelAttributes;
+	QSet<QString> _edgeLabelAttributes;
 
 	QPoint _dimensions;
 	QColor _vertexColor;

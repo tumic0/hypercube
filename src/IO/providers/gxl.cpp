@@ -1,6 +1,7 @@
 #include <string>
 #include <map>
 #include <deque>
+#include <list>
 #include "CORE/misc.h"
 #include "IO/providers/xml/xml.h"
 #include "gxl.h"
@@ -44,8 +45,6 @@ class GxlHandler : public XmlHandler
 {
 public:
 	GxlHandler(Graph *graph) : _graph(graph) {}
-	void setNodeLabelAttribute(const wstring &name) {_nodeLabelAttr = name;}
-	void setEdgeLabelAttribute(const wstring &name) {_edgeLabelAttr = name;}
 
 	virtual bool startDocument();
 	virtual bool endDocument();
@@ -67,12 +66,14 @@ private:
 
 	struct NodeAttributes {
 		wstring id;
+		list<pair<wstring, wstring> > attributes;
 	};
 
 	struct EdgeAttributes {
 		wstring id;
 		wstring from;
 		wstring to;
+		list<pair<wstring, wstring> > attributes;
 	};
 
 	struct AttrAttributes {
@@ -97,8 +98,7 @@ private:
 	NodeAttributes _nodeAttributes;
 	EdgeAttributes _edgeAttributes;
 	AttrAttributes _attrAttributes;
-	wstring _nodeLabel, _edgeLabel;
-	wstring _nodeLabelAttr, _edgeLabelAttr;
+	wstring _data;
 
 	static const Relation relations[];
 };
@@ -264,6 +264,7 @@ void GxlHandler::initGraphAttributes()
 void GxlHandler::clearNodeAttributes()
 {
 	_nodeAttributes.id.clear();
+	_nodeAttributes.attributes.clear();
 }
 
 void GxlHandler::clearEdgeAttributes()
@@ -271,6 +272,7 @@ void GxlHandler::clearEdgeAttributes()
 	_edgeAttributes.id.clear();
 	_edgeAttributes.from.clear();
 	_edgeAttributes.to.clear();
+	_edgeAttributes.attributes.clear();
 }
 
 bool GxlHandler::handleElement(const wstring &element)
@@ -282,25 +284,31 @@ bool GxlHandler::handleElement(const wstring &element)
 		if (!(vertex = addVertex(_nodeAttributes.id)))
 			return false;
 
-		if (_nodeLabel.empty())
-			vertex->setText(_nodeAttributes.id);
-		else
-			vertex->setText(_nodeLabel);
+		for (std::list<pair<wstring, wstring> >::iterator it
+		  = _nodeAttributes.attributes.begin();
+		  it != _nodeAttributes.attributes.end(); it++)
+			vertex->addAttribute(*it);
 
 		clearNodeAttributes();
-		_nodeLabel.clear();
-
 	} else if (element == EDGE) {
 		if (!(edge = addEdge(_edgeAttributes.from, _edgeAttributes.to)))
 			return false;
 
-		if (_edgeLabel.empty())
-			edge->setText(_edgeAttributes.id);
-		else
-			edge->setText(_edgeLabel);
+		for (std::list<pair<wstring, wstring> >::iterator it
+		  = _edgeAttributes.attributes.begin();
+		  it != _edgeAttributes.attributes.end(); it++)
+			edge->addAttribute(*it);
 
 		clearEdgeAttributes();
-		_edgeLabel.clear();
+	} else if (element == ATTR) {
+		const wstring &parent = _elements.at(_elements.size() - 2);
+		if (parent == NODE)
+			_nodeAttributes.attributes.push_back(
+			  pair<wstring, wstring>(_attrAttributes.name, _data));
+		if (parent == EDGE)
+			_edgeAttributes.attributes.push_back(
+			  pair<wstring, wstring>(_attrAttributes.name, _data));
+		_data.clear();
 	}
 
 	return true;
@@ -315,39 +323,13 @@ bool GxlHandler::handleData(const wstring &data)
 	const wstring &parent = _elements.at(_elements.size() - 2);
 
 	if (isAtomicAttribute(element)) {
-		if (isCompositeAttribute(parent)) {
-			if (_attrAttributes.name == _nodeLabelAttr) {
-				if (_nodeLabel.empty())
-					_nodeLabel = data;
-				else
-					_nodeLabel += compositeDelimiter + data;
-			}
-			if (_attrAttributes.name == _edgeLabelAttr) {
-				if (_edgeLabel.empty())
-					_edgeLabel = data;
-				else
-					_edgeLabel += compositeDelimiter + data;
-			}
-		} else {
-			if (_attrAttributes.name == _nodeLabelAttr)
-				_nodeLabel = data;
-			if (_attrAttributes.name == _edgeLabelAttr)
-				_edgeLabel = data;
-		}
+		if (isCompositeAttribute(parent) && !_data.empty())
+			_data += compositeDelimiter + data;
+		else
+			_data = data;
 	}
 
 	return true;
-}
-
-
-void GxlGraphInput::setNodeLabelAttribute(const char *name)
-{
-	_nodeLabelAttr = s2w(name);
-}
-
-void GxlGraphInput::setEdgeLabelAttribute(const char *name)
-{
-	_edgeLabelAttr = s2w(name);
 }
 
 IO::Error GxlGraphInput::readGraph(Graph *graph, const char *fileName)
@@ -355,9 +337,6 @@ IO::Error GxlGraphInput::readGraph(Graph *graph, const char *fileName)
 	GxlHandler handler(graph);
 	XmlParser parser(&handler);
 
-	handler.setNodeLabelAttribute(_nodeLabelAttr);
-	handler.setEdgeLabelAttribute(_edgeLabelAttr);
 	parser.setErrorPrefix("Gxl");
-
 	return parser.parse(fileName);
 }

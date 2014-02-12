@@ -7,43 +7,6 @@
 
 using namespace std;
 
-static unsigned hsv2rgb(float h, float s, float v);
-
-
-ColorMap::ColorMap()
-{
-	_hueState = HUE_INIT;
-}
-
-Color ColorMap::color(const std::wstring &str)
-{
-	map<wstring, Color>::iterator it;
-	Color color;
-
-	it = _colors.find(str);
-
-	if (it == _colors.end()) {
-		color = Color(nextColor());
-		_colors.insert(pair<wstring, Color>(str, color));
-	} else {
-		color = (*it).second;
-	}
-
-	return color;
-}
-
-void ColorMap::clear()
-{
-	_hueState = HUE_INIT;
-	_colors.clear();
-}
-
-Color ColorMap::nextColor()
-{
-	_hueState += HUE_INCREMENT;
-	_hueState -= (int) _hueState;
-	return Color(hsv2rgb(_hueState, SATURATION, VALUE));
-}
 
 static unsigned hsv2rgb(float h, float s, float v)
 {
@@ -80,4 +43,40 @@ static unsigned hsv2rgb(float h, float s, float v)
 	return ((unsigned)(r * 256) << 16)
 	  + ((unsigned)(g * 256) << 8)
 	  + (unsigned)(b * 256);
+}
+
+
+ColorMap::ColorMap()
+{
+	_hueState = HUE_INIT;
+}
+
+Color ColorMap::color(const std::wstring &str)
+{
+	map<wstring, Color>::iterator it;
+	Color color;
+
+	it = _colors.find(str);
+
+	if (it == _colors.end()) {
+		color = Color(nextColor());
+		_colors.insert(pair<wstring, Color>(str, color));
+	} else {
+		color = (*it).second;
+	}
+
+	return color;
+}
+
+void ColorMap::clear()
+{
+	_hueState = HUE_INIT;
+	_colors.clear();
+}
+
+Color ColorMap::nextColor()
+{
+	_hueState += HUE_INCREMENT;
+	_hueState -= (int) _hueState;
+	return Color(hsv2rgb(_hueState, SATURATION, VALUE));
 }

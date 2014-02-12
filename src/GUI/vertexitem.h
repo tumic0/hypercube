@@ -17,14 +17,17 @@ public:
 	void addEdge(EdgeItem *edge);
 	QList<EdgeItem *> edges() const {return _edgeList;}
 
-	QPointF coordinates() const {return _coordinates;}
-	void setCoordinates(const QPointF &coordinates) {_coordinates = coordinates;}
+	const QString &attribute() const {return _attribute;}
+	void setAttribute(const QString &attribute);
+	void addAttribute(const QString &attribute, const QString &value);
+	const QMap<QString, QString> &attributes() const {return _attributes;}
+
+	QPoint coordinates() const {return _coordinates;}
+	void setCoordinates(const QPoint &coordinates);
 	QColor color() const {return _color;}
 	void setColor(const QColor &color);
 	qreal size() const {return _size;}
 	void setSize(qreal size);
-	QString text() const {return _text.text();}
-	void setText(const QString &text) {_text.setText(text);}
 	int fontSize() const {return _fontSize;}
 	void setFontSize(int size);
 
@@ -36,11 +39,13 @@ private:
 
 
 	int _id;
-	QPointF _coordinates;
+	QPoint _coordinates;
 	qreal _size;
 	QColor _color;
 	int _fontSize;
 
+	QString _attribute;
+	QMap<QString, QString> _attributes;
 	QGraphicsSimpleTextItem _text;
 
 	QList<EdgeItem *> _edgeList;

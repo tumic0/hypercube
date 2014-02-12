@@ -16,10 +16,25 @@ Vertex::Vertex(Graph *graph, size_t id)
 	_fontSize = 0;
 }
 
-void Vertex::setText(const std::wstring &text)
+void Vertex::setAttribute(const std::wstring &attribute)
 {
-	_text = text;
+	map<wstring, wstring>::const_iterator it;
+
+	it = _attributes.find(attribute);
+	if (it == _attributes.end()) {
+		_attribute.clear();
+		_text.clear();
+	} else {
+		_attribute = it->first;
+		_text = it->second;
+	}
+
 	computeMargin();
+}
+
+void Vertex::addAttribute(const pair<wstring, wstring> &attribute)
+{
+	_attributes.insert(attribute);
 }
 
 void Vertex::setSize(int size)
@@ -38,7 +53,7 @@ void Vertex::computeMargin()
 {
 	if (_fontSize)
 		_margin.setRb(Coordinates(
-			_size + (int)ceil(AVG_CHAR_WIDTH * _fontSize * _text.length()),
+			_size + (int)ceil(AVG_CHAR_WIDTH * _fontSize * text().length()),
 			MAX(_size, _size / 2 + _fontSize)
 		));
 	else

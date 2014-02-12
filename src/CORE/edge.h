@@ -20,7 +20,12 @@ public:
 	const Margin &margin() const {return _margin;}
 
 	const std::wstring &text() const {return _text;}
-	void setText(const std::wstring &text);
+	const std::wstring &attribute() const {return _attribute;}
+	void setAttribute(const std::wstring &attribute);
+	void addAttribute(const std::pair<std::wstring, std::wstring> &attribute);
+	const std::map<std::wstring, std::wstring> &attributes() const
+	  {return _attributes;}
+
 	const Color &color() const {return _color;}
 	void setColor(const Color &color) {_color = color;}
 	int size() const {return _size;}
@@ -39,8 +44,11 @@ private:
 	Vertex *_src;
 	Vertex *_dst;
 
-	Margin _margin;
 	std::wstring _text;
+	std::wstring _attribute;
+	std::map<std::wstring, std::wstring> _attributes;
+
+	Margin _margin;
 	Color _color;
 	int _size;
 	int _fontSize;

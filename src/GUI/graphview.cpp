@@ -6,6 +6,7 @@
 #include "edgeitem.h"
 #include "legenditem.h"
 
+#include <iostream>
 
 class BoundingRectItem : public QGraphicsRectItem
 {
@@ -51,10 +52,18 @@ GraphView::~GraphView()
 void GraphView::clear()
 {
 	_scene->clear();
-	_boundingRect = 0;
 
 	_vertexes.clear();
 	_edges.clear();
+	_legendItems.clear();
+
+	_boundingRect = 0;
+}
+
+void GraphView::clearLegend()
+{
+	for (int i = 0; i < _legendItems.size(); i++)
+		delete _legendItems.at(i);
 	_legendItems.clear();
 }
 
@@ -119,6 +128,18 @@ void GraphView::setDirectedGraph(bool state)
 
 	for (int i = 0; i < _edges.size(); i++)
 		_edges.at(i)->setDirected(state);
+}
+
+void GraphView::setVertexLabelAttr(const QString &name)
+{
+	for (int i = 0; i < _vertexes.size(); i++)
+		_vertexes.at(i)->setAttribute(name);
+}
+
+void GraphView::setEdgeLabelAttr(const QString &name)
+{
+	for (int i = 0; i < _edges.size(); i++)
+		_edges.at(i)->setAttribute(name);
 }
 
 void GraphView::setVertexColor(const QColor &color)

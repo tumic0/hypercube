@@ -200,8 +200,8 @@ void PsGraphOutput::legend(Graph *graph, wofstream &fs)
 	fs << graph->legend() << " f" << endl;
 	fs << "0.66 lw" << endl;
 
-	for (ColorMap::iterator it = graph->colorMap()->begin();
-	  it != graph->colorMap()->end(); it++) {
+	for (ColorMap::iterator it = graph->colorMap().begin();
+	  it != graph->colorMap().end(); it++) {
 		CoordinatesF c = legendPosition(index, size);
 		CoordinatesF t = legendTextPosition(c, size);
 		wstring text((*it).first);

@@ -51,8 +51,54 @@
 	(((max) - (min)) / 100.0f)
 
 
-static QString saveFilter(OutputProvider *provider);
-static QString errorDescription(IO::Error error);
+static void initComboBox(QComboBox *cb, const QSet<QString> &set)
+{
+	QList<QString> list;
+	QList<QString>::const_iterator it;
+
+	list = set.values();
+	qSort(list);
+
+	cb->blockSignals(true);
+	cb->clear();
+	for (it = list.begin(); it != list.end(); it++)
+		cb->addItem(*it);
+	cb->blockSignals(false);
+
+	cb->setDisabled(cb->count() > 1 ? false : true);
+}
+
+static void setComboBox(QComboBox *cb, const QString &value)
+{
+	for (int i = 0; i < cb->count(); i++) {
+		if (cb->itemText(i) == value) {
+			BLOCK(cb, setCurrentIndex(i));
+			break;
+		}
+	}
+}
+
+static QString saveFilter(OutputProvider *provider)
+{
+	return QString(provider->description()) + QString(" (*.")
+	  + QString(provider->type()) + QString(")");
+}
+
+static QString errorDescription(IO::Error error)
+{
+	switch(error) {
+		case IO::OpenError:
+			return  QObject::tr("Error opening file");
+		case IO::ReadError:
+			return QObject::tr("Error reading file");
+		case IO::WriteError:
+			return QObject::tr("Error writing file");
+		case IO::FormatError:
+			return QObject::tr("File format error");
+		default:
+			return QObject::tr("Unknown error");
+	}
+}
 
 
 GUI::GUI()
@@ -218,25 +264,17 @@ void GUI::createMiscProperties()
 	QGroupBox *inputBox = new QGroupBox(tr("Input"));
 
 	_inputEncoding = new QComboBox();
-	_nodeLabelAttr = new QLineEdit();
-	_edgeLabelAttr = new QLineEdit();
-
+	_inputEncoding->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
 
 	for (Encoding **ep = encodings; *ep; ep++)
 		_inputEncoding->addItem((*ep)->name());
 
 	connect(_inputEncoding, SIGNAL(currentIndexChanged(int)), this,
 	  SLOT(setInputEncoding(int)));
-	connect(_nodeLabelAttr, SIGNAL(editingFinished()), this,
-	  SLOT(setNodeLabelAttr()));
-	connect(_edgeLabelAttr, SIGNAL(editingFinished()), this,
-	  SLOT(setEdgeLabelAttr()));
 
 	QVBoxLayout *inputLayout = new QVBoxLayout;
 	QFormLayout *inputFormLayout = new QFormLayout;
 	inputFormLayout->addRow(tr("Encoding:"), _inputEncoding);
-	inputFormLayout->addRow(tr("Node attribute:"), _nodeLabelAttr);
-	inputFormLayout->addRow(tr("Edge attribute:"), _edgeLabelAttr);
 	inputLayout->addLayout(inputFormLayout);
 	inputLayout->addStretch();
 	inputBox->setLayout(inputLayout);
@@ -427,13 +465,21 @@ void GUI::createGraphProperties()
 	_vertexFontSize = new QSpinBox();
 	_edgeColor = new ColorComboBox();
 	_vertexColor = new ColorComboBox();
-	_vertexIDs = new QCheckBox(tr("Show vertex IDs"), this);
-	_edgeValues = new QCheckBox(tr("Show edge values"), this);
+	_vertexIDs = new QCheckBox(tr("Show vertex labels"), this);
+	_edgeValues = new QCheckBox(tr("Show edge labels"), this);
 	_coloredEdges = new QCheckBox(tr("Colored edges"), this);
 	_legend = new QCheckBox(tr("Show legend"), this);
+	_vertexLabelAttr = new QComboBox();
+	_edgeLabelAttr = new QComboBox();
 
 	_edgeFontSize->setMinimum(MIN_FONT_SIZE);
 	_vertexFontSize->setMinimum(MIN_FONT_SIZE);
+	_vertexLabelAttr->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+	_edgeLabelAttr->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+	_vertexLabelAttr->setDisabled(true);
+	_edgeLabelAttr->setDisabled(true);
+	_vertexLabelAttr->addItem(QString::fromStdWString(NODE_LABEL_ATTR));
+	_edgeLabelAttr->addItem(QString::fromStdWString(EDGE_LABEL_ATTR));
 
 	connect(_edgeSize, SIGNAL(valueChanged(int)),
 	  this, SLOT(setEdgeSize(int)));
@@ -458,6 +504,10 @@ void GUI::createGraphProperties()
 	connect(_vertexIDs, SIGNAL(stateChanged(int)),
 	  this, SLOT(showVertexIDs(int)));
 
+	connect(_vertexLabelAttr, SIGNAL(currentIndexChanged(int)), this,
+	  SLOT(setNodeLabelAttr(int)));
+	connect(_edgeLabelAttr, SIGNAL(currentIndexChanged(int)), this,
+	  SLOT(setEdgeLabelAttr(int)));
 
 	QGroupBox *vertexBox = new QGroupBox(tr("Vertexes"));
 	QGroupBox *edgeBox = new QGroupBox(tr("Edges"));
@@ -468,6 +518,7 @@ void GUI::createGraphProperties()
 	edgeLayout->addRow(tr("Size:"), _edgeSize);
 	edgeLayout->addRow(tr("Font size:"), _edgeFontSize);
 	edgeLayout->addRow(tr("Color:"), _edgeColor);
+	edgeLayout->addRow(tr("Label:"), _edgeLabelAttr);
 	edgeLayout->addRow(_edgeValues);
 	edgeLayout->addRow(_coloredEdges);
 	edgeLayout->addRow(_legend);
@@ -476,6 +527,7 @@ void GUI::createGraphProperties()
 	vertexLayout->addRow(tr("Size:"), _vertexSize);
 	vertexLayout->addRow(tr("Font size:"), _vertexFontSize);
 	vertexLayout->addRow(tr("Color:"), _vertexColor);
+	vertexLayout->addRow(tr("Label:"), _vertexLabelAttr);
 	vertexLayout->addRow(_vertexIDs);
 	vertexBox->setLayout(vertexLayout);
 
@@ -537,6 +589,12 @@ void GUI::checkActions()
 	if (cnt == 0) {
 		_fileActionGroup->setEnabled(false);
 		_graphActionGroup->setEnabled(false);
+		_vertexLabelAttr->clear();
+		_edgeLabelAttr->clear();
+		_vertexLabelAttr->setEnabled(false);
+		_edgeLabelAttr->setEnabled(false);
+		_vertexLabelAttr->addItem(QString::fromStdWString(NODE_LABEL_ATTR));
+		_edgeLabelAttr->addItem(QString::fromStdWString(EDGE_LABEL_ATTR));
 	} else if (cnt == 1)
 		_projectActionGroup->setEnabled(false);
 }
@@ -611,7 +669,6 @@ void GUI::openFile(const QString &fileName)
 		  + errorDescription(error));
 		delete tab;
 	} else {
-		tab->transformGraph();
 		getGraphProperties(tab);
 
 		QFileInfo fi(fileName);
@@ -703,9 +760,6 @@ void GUI::transformGraph()
 
 void GUI::reloadGraph()
 {
-	setNodeLabelAttr();
-	setEdgeLabelAttr();
-
 	IO::ioerr.str("");
 	IO::Error error = TAB()->readGraph();
 	if (error) {
@@ -934,12 +988,12 @@ void GUI::colorizeEdges(int state)
 {
 	if (CHECKED(state)) {
 		if (TAB())
-			TAB()->colorizeEdges(true);
+			TAB()->colorizeEdges();
 		_edgeColor->setEnabled(false);
 		_legend->setEnabled(true);
 	} else {
 		if (TAB()) {
-			TAB()->colorizeEdges(false);
+			TAB()->setEdgeColor(_edgeColor->color());
 			TAB()->setLegend(0);
 		}
 		_legend->setChecked(false);
@@ -959,22 +1013,27 @@ void GUI::showLegend(int state)
 
 void GUI::setInputEncoding(int index)
 {
-	if (TAB())
+	if (TAB()) {
 		TAB()->setInputEncoding(*(encodings + index));
+		reloadGraph();
+	}
 	getArguments();
 }
 
-void GUI::setNodeLabelAttr()
+void GUI::setNodeLabelAttr(int index)
 {
 	if (TAB())
-		TAB()->setNodeLabelAttr(_nodeLabelAttr->text());
+		TAB()->setNodeLabelAttr(_vertexLabelAttr->itemText(index));
 	getArguments();
 }
 
-void GUI::setEdgeLabelAttr()
+void GUI::setEdgeLabelAttr(int index)
 {
-	if (TAB())
-		TAB()->setEdgeLabelAttr(_edgeLabelAttr->text());
+	if (TAB()) {
+		TAB()->setEdgeLabelAttr(_edgeLabelAttr->itemText(index));
+		if (TAB()->coloredEdges())
+			TAB()->colorizeEdges();
+	}
 	getArguments();
 }
 
@@ -996,8 +1055,6 @@ void GUI::setMiscProperties(GraphTab *tab)
 
 	tab->setInputEncoding(encoding);
 	tab->setAntialiasing(_antialiasing->isChecked());
-	tab->setNodeLabelAttr(_nodeLabelAttr->text());
-	tab->setEdgeLabelAttr(_edgeLabelAttr->text());
 }
 
 void GUI::setAlgorithmProperties(GraphTab *tab)
@@ -1022,16 +1079,17 @@ void GUI::setGraphProperties(GraphTab *tab)
 {
 	tab->showVertexIDs(_vertexIDs->isChecked());
 	tab->showEdgeValues(_edgeValues->isChecked());
-	tab->colorizeEdges(_coloredEdges->isChecked());
 	tab->setDirectedGraph(_directedGraph->isChecked());
 	tab->setLegend(_legend->isChecked() ? _edgeFontSize->value() : 0);
 	tab->setDimensions(QPoint(_graphWidth->value(), _graphHeight->value()));
-	tab->setEdgeSize(_edgeSize->value());
 	tab->setVertexSize(_vertexSize->value());
-	tab->setEdgeColor(_edgeColor->color());
 	tab->setVertexColor(_vertexColor->color());
 	tab->setVertexFontSize(_vertexFontSize->value());
+	tab->setEdgeSize(_edgeSize->value());
 	tab->setEdgeFontSize(_edgeFontSize->value());
+	tab->setEdgeColor(_edgeColor->color());
+	if (_coloredEdges->isChecked())
+		tab->presetColoredEdges();
 }
 
 void GUI::getArguments()
@@ -1083,10 +1141,11 @@ void GUI::getArguments()
 	if (_inputEncoding->currentIndex() > 0)
 		args.append(QString(" -e %1").arg(_inputEncoding->itemText(
 		  _inputEncoding->currentIndex())));
-	if (_nodeLabelAttr->text() != NODE_LABEL_ATTR)
-		args.append(QString(" -va %1").arg(_nodeLabelAttr->text()));
-	if (_edgeLabelAttr->text() != EDGE_LABEL_ATTR)
-		args.append(QString(" -ea %1").arg(_edgeLabelAttr->text()));
+
+	if (_vertexLabelAttr->currentText() != QString::fromStdWString(NODE_LABEL_ATTR))
+		args.append(QString(" -va %1").arg(_vertexLabelAttr->currentText()));
+	if (_edgeLabelAttr->currentText() != QString::fromStdWString(EDGE_LABEL_ATTR))
+		args.append(QString(" -ea %1").arg(_edgeLabelAttr->currentText()));
 
 	if (_argumentsEscape->isChecked())
 		args = args.replace("#", "\\#");
@@ -1096,16 +1155,8 @@ void GUI::getArguments()
 
 void GUI::getMiscProperties(GraphTab *tab)
 {
-	int index = 0;
-
-	for (Encoding **e = encodings; *e; e++, index++)
-		if (!strcmp((*e)->name(), tab->inputEncoding()->name()))
-			break;
-
-	BLOCK(_inputEncoding, setCurrentIndex(index));
+	setComboBox(_inputEncoding, tab->inputEncoding()->name());
 	BLOCK(_antialiasing, setChecked(tab->antialiasing()));
-	BLOCK(_nodeLabelAttr, setText(tab->nodeLabelAttr()));
-	BLOCK(_edgeLabelAttr, setText(tab->edgeLabelAttr()));
 }
 
 void GUI::getAlgorithmProperties(GraphTab *tab)
@@ -1128,6 +1179,11 @@ void GUI::getAlgorithmProperties(GraphTab *tab)
 
 void GUI::getGraphProperties(GraphTab *tab)
 {
+	initComboBox(_vertexLabelAttr, tab->nodeLabelAttributes());
+	initComboBox(_edgeLabelAttr, tab->edgeLabelAttributes());
+	setComboBox(_vertexLabelAttr, tab->nodeLabelAttr());
+	setComboBox(_edgeLabelAttr, tab->edgeLabelAttr());
+
 	BLOCK(_graphWidth, setValue(tab->dimensions().x()));
 	BLOCK(_graphHeight, setValue(tab->dimensions().y()));
 	BLOCK(_edgeSize, setValue(tab->edgeSize()));
@@ -1193,8 +1249,6 @@ void GUI::writeSettings()
 	settings.setValue(INPUT_ENCODING_SETTING, _inputEncoding->currentText());
 	settings.setValue(ANTIALIASING_SETTING, _antialiasing->checkState());
 	settings.setValue(ESCAPE_SPECIALS_SETTING, _argumentsEscape->checkState());
-	settings.setValue(NODE_LABEL_ATTR_SETTING, _nodeLabelAttr->text());
-	settings.setValue(EDGE_LABEL_ATTR_SETTING, _edgeLabelAttr->text());
 	settings.endGroup();
 }
 
@@ -1267,10 +1321,6 @@ void GUI::readSettings()
 			break;
 		}
 	}
-	_nodeLabelAttr->setText(settings.value(
-	  NODE_LABEL_ATTR_SETTING, NODE_LABEL_ATTR).toString());
-	_edgeLabelAttr->setText(settings.value(
-	  EDGE_LABEL_ATTR_SETTING, EDGE_LABEL_ATTR).toString());
 	_antialiasing->setChecked((Qt::CheckState)settings.value(
 	  ANTIALIASING_SETTING, Qt::Checked).toBool());
 	_argumentsEscape->setChecked((Qt::CheckState)settings.value(
@@ -1284,27 +1334,4 @@ void GUI::closeEvent(QCloseEvent *event)
 {
 	writeSettings();
 	event->accept();
-}
-
-
-QString saveFilter(OutputProvider *provider)
-{
-	return QString(provider->description()) + QString(" (*.")
-	  + QString(provider->type()) + QString(")");
-}
-
-QString errorDescription(IO::Error error)
-{
-	switch(error) {
-		case IO::OpenError:
-			return  QObject::tr("Error opening file");
-		case IO::ReadError:
-			return QObject::tr("Error reading file");
-		case IO::WriteError:
-			return QObject::tr("Error writing file");
-		case IO::FormatError:
-			return QObject::tr("File format error");
-		default:
-			return QObject::tr("Unknown error");
-	}
 }

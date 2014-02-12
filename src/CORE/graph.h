@@ -57,8 +57,10 @@ public:
 	void setEdgeSize(int size);
 	void setVertexFontSize(int size);
 	void setEdgeFontSize(int size);
+	void setVertexAttribute(const std::wstring &attribute);
+	void setEdgeAttribute(const std::wstring &attribute);
 
-	ColorMap *colorMap() {return &_colormap;}
+	ColorMap &colorMap() {return _colormap;}
 
 private:
 	void checkTwin(Edge *e);

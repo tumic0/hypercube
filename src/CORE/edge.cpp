@@ -19,10 +19,25 @@ Edge::Edge(Vertex *src, Vertex *dst, size_t id)
 	_twin = false;
 }
 
-void Edge::setText(const std::wstring &text)
+void Edge::setAttribute(const wstring &attribute)
 {
-	_text = text;
+	map<wstring, wstring>::const_iterator it;
+
+	it = _attributes.find(attribute);
+	if (it == _attributes.end()) {
+		_text.clear();
+		_attribute.clear();
+	} else {
+		_text = it->second;
+		_attribute = it->first;
+	}
+
 	computeMargin();
+}
+
+void Edge::addAttribute(const pair<wstring, wstring> &attribute)
+{
+	_attributes.insert(attribute);
 }
 
 void Edge::setSize(int size)
@@ -41,7 +56,7 @@ void Edge::computeMargin()
 {
 	if (_fontSize) {
 		Coordinates tm(
-		  _size + (int)ceil(AVG_CHAR_WIDTH * _fontSize * _text.length()),
+		  _size + (int)ceil(AVG_CHAR_WIDTH * _fontSize * text().length()),
 		  _size / 2 + _fontSize
 		);
 		_margin.setRb(tm);

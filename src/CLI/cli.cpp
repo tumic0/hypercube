@@ -4,6 +4,7 @@
 #include <string>
 #include "CORE/graph.h"
 #include "CORE/sa.h"
+#include "CORE/misc.h"
 #include "CORE/config.h"
 #include "IO/io.h"
 #include "IO/modules.h"
@@ -70,6 +71,8 @@ int CLI::exec()
 	if (!readGraph())
 		return EXIT_FAILURE;
 
+	_graph->setVertexAttribute(s2w(_vertexAttribute));
+	_graph->setEdgeAttribute(s2w(_edgeAttribute));
 	setGraphProperties();
 	setSAProperties();
 	_graph->randomize();
@@ -103,9 +106,6 @@ bool CLI::readGraph()
 
 	for (InputProvider **p = inputProviders; *p; p++) {
 		(*p)->setInputEncoding(*e);
-		(*p)->setNodeLabelAttribute(_vertexAttribute.c_str());
-		(*p)->setEdgeLabelAttribute(_edgeAttribute.c_str());
-
 		error = (*p)->readGraph(_graph, _inputFileName.c_str());
 		if (error != IO::FormatError)
 			break;

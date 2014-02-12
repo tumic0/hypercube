@@ -32,7 +32,7 @@ Graph::Graph()
 void Graph::clear()
 {
 	_dimensions = Coordinates(0, 0);
-	_directed = 0;
+	_directed = false;
 
 	_vertexes.clear();
 	_edges.clear();
@@ -123,6 +123,7 @@ void Graph::randomize(void)
 
 void Graph::colorize(void)
 {
+	_colormap.clear();
 	for (size_t i = 0; i < edge_size(); i++)
 		edge(i)->setColor(_colormap.color(edge(i)->text()));
 }
@@ -269,4 +270,16 @@ void Graph::setEdgeFontSize(int size)
 {
 	for (size_t i = 0; i < _edges.size(); i++)
 		_edges[i]->setFontSize(size);
+}
+
+void Graph::setVertexAttribute(const std::wstring &attribute)
+{
+	for (size_t i = 0; i < _vertexes.size(); i++)
+		_vertexes[i]->setAttribute(attribute);
+}
+
+void Graph::setEdgeAttribute(const std::wstring &attribute)
+{
+	for (size_t i = 0; i < _edges.size(); i++)
+		_edges[i]->setAttribute(attribute);
 }

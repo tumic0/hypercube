@@ -3,6 +3,8 @@
 #include <cctype>
 #include <fstream>
 #include <sstream>
+#include "CORE/misc.h"
+#include "CORE/config.h"
 #include "CORE/vertex.h"
 #include "CORE/edge.h"
 #include "list.h"
@@ -113,7 +115,8 @@ void ListGraphInput::edgeValue(Edge *edge)
 {
 	switch (_token) {
 		case ID:
-			edge->setText(_id);
+			edge->addAttribute(pair<wstring, wstring>(s2w(EDGE_LABEL_ATTR),
+			  _id));
 			nextToken();
 			break;
 		case NL:
@@ -190,7 +193,7 @@ Vertex* ListGraphInput::addVertex(const wstring &vertex)
 		return it->second;
 
 	v = _graph->addVertex();
-	v->setText(vertex);
+	v->addAttribute(pair<wstring, wstring>(s2w(NODE_LABEL_ATTR), vertex));
 
 	_vertexes.insert(pair<wstring, Vertex*>(vertex, v));
 

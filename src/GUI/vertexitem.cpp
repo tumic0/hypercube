@@ -16,6 +16,8 @@ VertexItem::VertexItem(int id)
 	_text.setParentItem(this);
 	_text.setFont(QFont(FONT_FAMILY));
 
+	setZValue(0);
+
 	setPen(QPen(Qt::NoPen));
 
 	setFlag(ItemIsMovable);
@@ -28,6 +30,28 @@ void VertexItem::addEdge(EdgeItem *edge)
 {
 	_edgeList.append(edge);
 	edge->adjust();
+}
+
+void VertexItem::setCoordinates(const QPoint &coordinates)
+{
+	_coordinates = coordinates;
+	setPos(coordinates.x(), coordinates.y());
+}
+
+void VertexItem::setAttribute(const QString &attribute)
+{
+	if (_attributes.contains(attribute)) {
+		_text.setText(_attributes[attribute]);
+		_attribute = attribute;
+	} else {
+		_text.setText(QString());
+		_attribute.clear();
+	}
+}
+
+void VertexItem::addAttribute(const QString &attribute, const QString &value)
+{
+	_attributes.insert(attribute, value);
 }
 
 void VertexItem::setSize(qreal size)
@@ -77,7 +101,7 @@ void VertexItem::setFontSize(int size)
 QVariant VertexItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
 	if (change == ItemPositionHasChanged) {
-		_coordinates = value.toPointF();
+		_coordinates = value.toPoint();
 		foreach (EdgeItem *edge, _edgeList)
 			edge->adjust();
 	}

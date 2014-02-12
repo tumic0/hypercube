@@ -35,7 +35,10 @@ public:
 	EdgeItem* edge(int id) const {return _edges.at(id);}
 
 	void clear();
+	void clearLegend();
 
+	void setVertexLabelAttr(const QString &name);
+	void setEdgeLabelAttr(const QString &name);
 	void setVertexColor(const QColor &color);
 	void setEdgeColor(const QColor &color);
 	void setVertexSize(int size);

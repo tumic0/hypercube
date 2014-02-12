@@ -2,6 +2,7 @@
 #define GML_H_
 
 #include <string>
+#include <list>
 #include "IO/io.h"
 
 
@@ -11,8 +12,6 @@ public:
 	GmlGraphInput() : _encoding(0) {}
 	virtual Error readGraph(Graph *graph, const char *fileName);
 	virtual void setInputEncoding(Encoding *encoding);
-	virtual void setNodeLabelAttribute(const char *name);
-	virtual void setEdgeLabelAttribute(const char *name);
 
 private:
 	enum Token {
@@ -36,13 +35,13 @@ private:
 
 	struct NodeAttributes {
 		int id;
-		std::wstring label;
+		std::list<std::pair<std::wstring, std::wstring> > attributes;
 	};
 
 	struct EdgeAttributes {
 		int source;
 		int target;
-		std::wstring label;
+		std::list<std::pair<std::wstring, std::wstring> > attributes;
 	};
 
 	struct GraphAttributes {
@@ -82,7 +81,6 @@ private:
 	GraphAttributes _graphAttributes;
 	NodeAttributes _nodeAttributes;
 	EdgeAttributes _edgeAttributes;
-	std::wstring _nodeLabelAttr, _edgeLabelAttr;
 
 	std::map<int, Vertex*> _vertexes;
 

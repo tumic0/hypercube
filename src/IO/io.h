@@ -22,8 +22,6 @@ class InputProvider : public IO
 public:
 	virtual Error readGraph(Graph *graph, const char *fileName) = 0;
 	virtual void setInputEncoding(Encoding *) {}
-	virtual void setNodeLabelAttribute(const char *) {}
-	virtual void setEdgeLabelAttribute(const char *) {}
 };
 
 class OutputProvider : public IO

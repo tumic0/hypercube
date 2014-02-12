@@ -2,6 +2,12 @@
 
 using namespace std;
 
+wstring s2w(const string &s)
+{
+	wstring w(s.begin(), s.end());
+	return w;
+}
+
 wstring trim(const wstring &str)
 {
 	size_t s = str.find_first_not_of(L" \n\r\t");
@@ -34,10 +40,4 @@ bool stringCaseCmp(const wstring &s1, const wstring &s2)
 			return false;
 
 	return true;
-}
-
-wstring s2w(const string &s)
-{
-	wstring w(s.begin(), s.end());
-	return w;
 }

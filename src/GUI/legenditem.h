@@ -3,8 +3,6 @@
 
 #include <QGraphicsRectItem>
 
-class GraphView;
-
 class LegendItem : public QGraphicsRectItem
 {
 public:
@@ -19,8 +17,8 @@ public:
 
 private:
 	int _index;
-	QGraphicsSimpleTextItem _text;
 	int _size;
+	QGraphicsSimpleTextItem _text;
 };
 
 #endif /* LEGENDITEM_H_ */

@@ -65,14 +65,13 @@ private slots:
 	void setVertexFontSize(int size);
 	void colorizeEdges(int state);
 	void showLegend(int state);
-
 	void showEdgeValues(int state);
 	void showVertexIDs(int state);
 	void directGraph(int state);
+	void setNodeLabelAttr(int index);
+	void setEdgeLabelAttr(int index);
 
 	void setInputEncoding(int index);
-	void setNodeLabelAttr();
-	void setEdgeLabelAttr();
 	void setAntialiasing(int state);
 	void setSpecialsEscaping();
 
@@ -159,6 +158,8 @@ private:
 	QCheckBox *_legend;
 	ColorComboBox *_edgeColor;
 	ColorComboBox *_vertexColor;
+	QComboBox *_vertexLabelAttr;
+	QComboBox *_edgeLabelAttr;
 
 	QSlider *_sizeSlider;
 	QSlider *_planaritySlider;
@@ -174,8 +175,6 @@ private:
 	QCheckBox *_debug;
 
 	QComboBox *_inputEncoding;
-	QLineEdit *_nodeLabelAttr;
-	QLineEdit *_edgeLabelAttr;
 	QCheckBox *_antialiasing;
 	QLabel *_arguments;
 	QCheckBox *_argumentsEscape;

@@ -2,6 +2,8 @@
 #include <cerrno>
 #include <fstream>
 #include <sstream>
+#include "CORE/misc.h"
+#include "CORE/config.h"
 #include "CORE/vertex.h"
 #include "CORE/edge.h"
 #include "matrix.h"
@@ -94,7 +96,8 @@ unsigned MatrixGraphInput::count()
 		ss << i;
 
 		Vertex *v = _graph->addVertex();
-		v->setText(ss.str());
+		v->addAttribute(pair<wstring, wstring>(s2w(NODE_LABEL_ATTR),
+		  ss.str()));
 	}
 
 	return cnt;
@@ -114,7 +117,8 @@ void MatrixGraphInput::matrix(unsigned cnt)
 				ss << _id;
 
 				Edge *e = _graph->addEdge(_graph->vertex(i), _graph->vertex(j));
-				e->setText(ss.str());
+				e->addAttribute(pair<wstring, wstring>(s2w(EDGE_LABEL_ATTR),
+				  ss.str()));
 			}
 
 			compare(ID);
