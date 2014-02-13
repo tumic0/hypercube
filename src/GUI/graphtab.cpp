@@ -6,7 +6,6 @@
 #include "edgeitem.h"
 #include "legenditem.h"
 #include "graphtab.h"
-#include <QDebug>
 
 
 GraphTab::GraphTab()

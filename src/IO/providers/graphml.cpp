@@ -260,6 +260,7 @@ void GraphmlHandler::clearKeyAttributes()
 	_keyAttributes.id.clear();
 	_keyAttributes.xfor.clear();
 	_keyAttributes.name.clear();
+	_keyAttributes.defval.clear();
 }
 
 bool GraphmlHandler::handleElement(const wstring &element)
@@ -283,6 +284,13 @@ bool GraphmlHandler::handleElement(const wstring &element)
 			vertex->addAttribute(pair<wstring, wstring>
 			  ((*key).second.name, (*it).second));
 		}
+		for (map<wstring, struct KeyAttributes>::iterator it = _keys.begin();
+		  it != _keys.end(); it++) {
+			if ((*it).second.xfor == NODE && !(*it).second.defval.empty()) {
+				vertex->addAttribute(pair<wstring, wstring>
+				  ((*it).second.name, (*it).second.defval));
+			}
+		}
 
 		clearNodeAttributes();
 
@@ -300,6 +308,13 @@ bool GraphmlHandler::handleElement(const wstring &element)
 				return false;
 			edge->addAttribute(pair<wstring, wstring>
 			  ((*key).second.name, (*it).second));
+		}
+		for (map<wstring, struct KeyAttributes>::iterator it = _keys.begin();
+		  it != _keys.end(); it++) {
+			if ((*it).second.xfor == EDGE && !(*it).second.defval.empty()) {
+				edge->addAttribute(pair<wstring, wstring>
+				  ((*it).second.name, (*it).second.defval));
+			}
 		}
 
 		clearEdgeAttributes();
