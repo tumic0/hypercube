@@ -27,6 +27,14 @@ const GmlGraphInput::Relation GmlGraphInput::relations[] = {
 };
 
 
+template<typename T> wstring toWString(const T& t)
+{
+	std::wstringstream ss;
+	ss << t;
+	return ss.str();
+}
+
+
 void GmlGraphInput::error()
 {
 	if (_token == ERROR)
@@ -221,6 +229,7 @@ void GmlGraphInput::value(const wstring &parent, const wstring &key)
 			nextToken();
 			break;
 		case REAL:
+			setStringAttribute(parent, key, toWString(_float));
 			nextToken();
 			break;
 		case STRING:
@@ -378,11 +387,15 @@ void GmlGraphInput::setIntAttribute(const wstring &parent, const wstring &key,
 	if (parent == NODE) {
 		if (key == ID)
 			_nodeAttributes.id = value;
+		else
+			setStringAttribute(parent, key, toWString(value));
 	} else if (parent == EDGE) {
 		if (key == SOURCE)
 			_edgeAttributes.source = value;
-		if (key == TARGET)
+		else if (key == TARGET)
 			_edgeAttributes.target = value;
+		else
+			setStringAttribute(parent, key, toWString(value));
 	} else if (parent == GRAPH) {
 		if (key == DIRECTED)
 			_graphAttributes.directed = value ? true : false;
