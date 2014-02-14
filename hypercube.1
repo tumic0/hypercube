@@ -1,4 +1,4 @@
-.TH HYPERCUBE 1 "2013-06-1" "1.5.2"
+.TH HYPERCUBE 1 "2014-02-14" "1.6.0"
 .SH NAME
 Hypercube \- Graph visualization tool
 .SH SYNOPSIS
@@ -62,13 +62,13 @@ Default encoding is iso\-8859\-1.
 Use vertex
 .IR ATTRIBUTE
 for vertex labels. Usable only with file formats, that support vertex
-attributes. Default attribute is "label".
+attributes. If no attribute is set, the first available attribute is used.
 .TP
 .BI \-ea " ATTRIBUTE"
 Use edge
 .IR ATTRIBUTE
 for edge labels. Usable only with file formats, that support edge attributes.
-Default attribute is "label".
+If no attribute is set, the first available attribute is used.
 .SS "Graph Appearance"
 .TP
 .BI \-s " SIZE"

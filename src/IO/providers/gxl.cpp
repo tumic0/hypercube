@@ -40,6 +40,9 @@ using namespace std;
 #define isCompositeAttribute(element) \
 	(element == SEQ || element == SET || element == TUP || element == BAG)
 
+#define wstring_pair pair<wstring, wstring>
+#define list_iterator std::list<wstring_pair >::iterator
+
 
 class GxlHandler : public XmlHandler
 {
@@ -66,14 +69,14 @@ private:
 
 	struct NodeAttributes {
 		wstring id;
-		list<pair<wstring, wstring> > attributes;
+		list<wstring_pair > attributes;
 	};
 
 	struct EdgeAttributes {
 		wstring id;
 		wstring from;
 		wstring to;
-		list<pair<wstring, wstring> > attributes;
+		list<wstring_pair > attributes;
 	};
 
 	struct AttrAttributes {
@@ -284,30 +287,31 @@ bool GxlHandler::handleElement(const wstring &element)
 		if (!(vertex = addVertex(_nodeAttributes.id)))
 			return false;
 
-		for (std::list<pair<wstring, wstring> >::iterator it
-		  = _nodeAttributes.attributes.begin();
+		for (list_iterator it = _nodeAttributes.attributes.begin();
 		  it != _nodeAttributes.attributes.end(); it++)
 			vertex->addAttribute(*it);
+		vertex->addAttribute(wstring_pair(L"id", _nodeAttributes.id));
 
 		clearNodeAttributes();
 	} else if (element == EDGE) {
 		if (!(edge = addEdge(_edgeAttributes.from, _edgeAttributes.to)))
 			return false;
 
-		for (std::list<pair<wstring, wstring> >::iterator it
-		  = _edgeAttributes.attributes.begin();
+		for (list_iterator it = _edgeAttributes.attributes.begin();
 		  it != _edgeAttributes.attributes.end(); it++)
 			edge->addAttribute(*it);
+		if (!_edgeAttributes.id.empty())
+			edge->addAttribute(wstring_pair(L"id", _edgeAttributes.id));
 
 		clearEdgeAttributes();
 	} else if (element == ATTR) {
 		const wstring &parent = _elements.at(_elements.size() - 2);
 		if (parent == NODE)
 			_nodeAttributes.attributes.push_back(
-			  pair<wstring, wstring>(_attrAttributes.name, _data));
+			  wstring_pair(_attrAttributes.name, _data));
 		if (parent == EDGE)
 			_edgeAttributes.attributes.push_back(
-			  pair<wstring, wstring>(_attrAttributes.name, _data));
+			  wstring_pair(_attrAttributes.name, _data));
 		_data.clear();
 	}
 

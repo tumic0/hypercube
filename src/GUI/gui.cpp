@@ -478,8 +478,6 @@ void GUI::createGraphProperties()
 	_edgeLabelAttr->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
 	_vertexLabelAttr->setDisabled(true);
 	_edgeLabelAttr->setDisabled(true);
-	_vertexLabelAttr->addItem(QString::fromStdString(NODE_LABEL_ATTR));
-	_edgeLabelAttr->addItem(QString::fromStdString(EDGE_LABEL_ATTR));
 
 	connect(_edgeSize, SIGNAL(valueChanged(int)),
 	  this, SLOT(setEdgeSize(int)));
@@ -593,8 +591,6 @@ void GUI::checkActions()
 		_edgeLabelAttr->clear();
 		_vertexLabelAttr->setEnabled(false);
 		_edgeLabelAttr->setEnabled(false);
-		_vertexLabelAttr->addItem(QString::fromStdString(NODE_LABEL_ATTR));
-		_edgeLabelAttr->addItem(QString::fromStdString(EDGE_LABEL_ATTR));
 	} else if (cnt == 1)
 		_projectActionGroup->setEnabled(false);
 }
@@ -1142,9 +1138,9 @@ void GUI::getArguments()
 		args.append(QString(" -e %1").arg(_inputEncoding->itemText(
 		  _inputEncoding->currentIndex())));
 
-	if (_vertexLabelAttr->currentText() != QString::fromStdString(NODE_LABEL_ATTR))
+	if (!_vertexLabelAttr->currentText().isEmpty())
 		args.append(QString(" -va %1").arg(_vertexLabelAttr->currentText()));
-	if (_edgeLabelAttr->currentText() != QString::fromStdString(EDGE_LABEL_ATTR))
+	if (!_edgeLabelAttr->currentText().isEmpty())
 		args.append(QString(" -ea %1").arg(_edgeLabelAttr->currentText()));
 
 	if (_argumentsEscape->isChecked())

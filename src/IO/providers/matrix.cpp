@@ -96,7 +96,7 @@ unsigned MatrixGraphInput::count()
 		ss << i;
 
 		Vertex *v = _graph->addVertex();
-		v->addAttribute(pair<wstring, wstring>(s2w(NODE_LABEL_ATTR),
+		v->addAttribute(pair<wstring, wstring>(s2w(DEFAULT_LABEL_ATTR),
 		  ss.str()));
 	}
 
@@ -117,7 +117,7 @@ void MatrixGraphInput::matrix(unsigned cnt)
 				ss << _id;
 
 				Edge *e = _graph->addEdge(_graph->vertex(i), _graph->vertex(j));
-				e->addAttribute(pair<wstring, wstring>(s2w(EDGE_LABEL_ATTR),
+				e->addAttribute(pair<wstring, wstring>(s2w(DEFAULT_LABEL_ATTR),
 				  ss.str()));
 			}
 

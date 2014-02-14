@@ -115,7 +115,7 @@ void ListGraphInput::edgeValue(Edge *edge)
 {
 	switch (_token) {
 		case ID:
-			edge->addAttribute(pair<wstring, wstring>(s2w(EDGE_LABEL_ATTR),
+			edge->addAttribute(pair<wstring, wstring>(s2w(DEFAULT_LABEL_ATTR),
 			  _id));
 			nextToken();
 			break;
@@ -193,7 +193,7 @@ Vertex* ListGraphInput::addVertex(const wstring &vertex)
 		return it->second;
 
 	v = _graph->addVertex();
-	v->addAttribute(pair<wstring, wstring>(s2w(NODE_LABEL_ATTR), vertex));
+	v->addAttribute(pair<wstring, wstring>(s2w(DEFAULT_LABEL_ATTR), vertex));
 
 	_vertexes.insert(pair<wstring, Vertex*>(vertex, v));
 

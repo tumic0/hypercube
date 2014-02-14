@@ -17,6 +17,10 @@ using namespace std;
 #define ID       L"id"
 
 
+#define wstring_pair pair<wstring, wstring>
+#define list_iterator std::list<wstring_pair >::iterator
+
+
 const GmlGraphInput::Relation GmlGraphInput::relations[] = {
 	{NODE, GRAPH},
 	{EDGE, GRAPH},
@@ -29,7 +33,7 @@ const GmlGraphInput::Relation GmlGraphInput::relations[] = {
 
 template<typename T> wstring toWString(const T& t)
 {
-	std::wstringstream ss;
+	wstringstream ss;
 	ss << t;
 	return ss.str();
 }
@@ -387,8 +391,7 @@ void GmlGraphInput::setIntAttribute(const wstring &parent, const wstring &key,
 	if (parent == NODE) {
 		if (key == ID)
 			_nodeAttributes.id = value;
-		else
-			setStringAttribute(parent, key, toWString(value));
+		setStringAttribute(parent, key, toWString(value));
 	} else if (parent == EDGE) {
 		if (key == SOURCE)
 			_edgeAttributes.source = value;
@@ -406,23 +409,21 @@ void GmlGraphInput::setStringAttribute(const wstring &parent,
   const wstring &key, const wstring &value)
 {
 	if (parent == NODE)
-		_nodeAttributes.attributes.push_back(pair<wstring, wstring>(key, value));
+		_nodeAttributes.attributes.push_back(wstring_pair(key, value));
 	else if (parent == EDGE)
-		_edgeAttributes.attributes.push_back(pair<wstring, wstring>(key, value));
+		_edgeAttributes.attributes.push_back(wstring_pair(key, value));
 }
 
 void GmlGraphInput::setVertexAttributes(Vertex *vertex)
 {
-	for (std::list<pair<wstring, wstring> >::iterator it
-	  = _nodeAttributes.attributes.begin();
+	for (list_iterator it = _nodeAttributes.attributes.begin();
 	  it != _nodeAttributes.attributes.end(); it++)
 		vertex->addAttribute(*it);
 }
 
 void GmlGraphInput::setEdgeAttributes(Edge *edge)
 {
-	for (std::list<pair<wstring, wstring> >::iterator it
-	  = _edgeAttributes.attributes.begin();
+	for (list_iterator it = _edgeAttributes.attributes.begin();
 	  it != _edgeAttributes.attributes.end(); it++)
 		edge->addAttribute(*it);
 }

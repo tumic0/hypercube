@@ -26,6 +26,11 @@ using namespace std;
 #define FOR         L"for"
 
 
+#define wstring_pair pair<wstring, wstring>
+#define list_iterator std::list<wstring_pair >::iterator
+#define map_iterator map<wstring, struct KeyAttributes>::iterator
+
+
 class GraphmlHandler : public XmlHandler
 {
 public:
@@ -50,14 +55,14 @@ private:
 
 	struct NodeAttributes {
 		wstring id;
-		list<pair<wstring, wstring> > attributes;
+		list<wstring_pair > attributes;
 	};
 
 	struct EdgeAttributes {
 		wstring id;
 		wstring source;
 		wstring target;
-		list<pair<wstring, wstring> > attributes;
+		list<wstring_pair > attributes;
 	};
 
 	struct KeyAttributes {
@@ -267,30 +272,27 @@ bool GraphmlHandler::handleElement(const wstring &element)
 {
 	Vertex *vertex;
 	Edge *edge;
-	map<wstring, struct KeyAttributes>::iterator key;
+	map_iterator key;
 
 	if (element == NODE) {
 		if (!(vertex = addVertex(_nodeAttributes.id)))
 			return false;
 
-		for (list<pair<wstring, wstring> >::iterator it
-		  = _nodeAttributes.attributes.begin();
+		for (list_iterator it = _nodeAttributes.attributes.begin();
 		  it != _nodeAttributes.attributes.end(); it++) {
 			key = _keys.find((*it).first);
 			if (key == _keys.end())
 				return false;
 			if ((*key).second.xfor != NODE)
 				return false;
-			vertex->addAttribute(pair<wstring, wstring>
-			  ((*key).second.name, (*it).second));
+			vertex->addAttribute(wstring_pair((*key).second.name, (*it).second));
 		}
-		for (map<wstring, struct KeyAttributes>::iterator it = _keys.begin();
-		  it != _keys.end(); it++) {
-			if ((*it).second.xfor == NODE && !(*it).second.defval.empty()) {
-				vertex->addAttribute(pair<wstring, wstring>
-				  ((*it).second.name, (*it).second.defval));
-			}
+		for (map_iterator it = _keys.begin(); it != _keys.end(); it++) {
+			if ((*it).second.xfor == NODE && !(*it).second.defval.empty())
+				vertex->addAttribute(wstring_pair((*it).second.name,
+				  (*it).second.defval));
 		}
+		vertex->addAttribute(wstring_pair(L"id", _nodeAttributes.id));
 
 		clearNodeAttributes();
 
@@ -298,24 +300,22 @@ bool GraphmlHandler::handleElement(const wstring &element)
 		if (!(edge = addEdge(_edgeAttributes.source, _edgeAttributes.target)))
 			return false;
 
-		for (std::list<pair<wstring, wstring> >::iterator it
-		  = _edgeAttributes.attributes.begin();
+		for (list_iterator it = _edgeAttributes.attributes.begin();
 		  it != _edgeAttributes.attributes.end(); it++) {
 			key = _keys.find((*it).first);
 			if (key == _keys.end())
 				return false;
 			if ((*key).second.xfor != EDGE)
 				return false;
-			edge->addAttribute(pair<wstring, wstring>
-			  ((*key).second.name, (*it).second));
+			edge->addAttribute(wstring_pair((*key).second.name, (*it).second));
 		}
-		for (map<wstring, struct KeyAttributes>::iterator it = _keys.begin();
-		  it != _keys.end(); it++) {
-			if ((*it).second.xfor == EDGE && !(*it).second.defval.empty()) {
-				edge->addAttribute(pair<wstring, wstring>
-				  ((*it).second.name, (*it).second.defval));
-			}
+		for (map_iterator it = _keys.begin(); it != _keys.end(); it++) {
+			if ((*it).second.xfor == EDGE && !(*it).second.defval.empty())
+				edge->addAttribute(wstring_pair((*it).second.name,
+				  (*it).second.defval));
 		}
+		if (!_edgeAttributes.id.empty())
+			edge->addAttribute(wstring_pair(L"id", _edgeAttributes.id));
 
 		clearEdgeAttributes();
 
@@ -336,10 +336,10 @@ bool GraphmlHandler::handleData(const wstring &data)
 
 		if (parent == NODE)
 			_nodeAttributes.attributes.push_back(
-			  pair<wstring, wstring>(_dataAttributes.key, data));
+			  wstring_pair(_dataAttributes.key, data));
 		if (parent == EDGE)
 			_edgeAttributes.attributes.push_back(
-			  pair<wstring, wstring>(_dataAttributes.key, data));
+			  wstring_pair(_dataAttributes.key, data));
 	} else if (_elements.back() == DEFAULT) {
 		_keyAttributes.defval = data;
 	}

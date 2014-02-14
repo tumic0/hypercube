@@ -555,6 +555,10 @@ bool DotGraphInput::parse()
 	nextToken();
 	graph();
 
+	for (map<std::wstring, Vertex*>::iterator it = _vertexes.begin();
+	  it != _vertexes.end(); it++)
+		(*it).second->addAttribute(pair<wstring, wstring>(L"label", (*it).first));
+
 	_vertexes.clear();
 	attributesClear();
 
@@ -589,15 +593,13 @@ void DotGraphInput::mergeAttributes(Attributes &dst, const Attributes &src)
 void DotGraphInput::setVertexAttributes(Vertex *vertex, const Attributes &attr)
 {
 	if (!attr.label.empty())
-		vertex->addAttribute(pair<wstring, wstring>(s2w(NODE_LABEL_ATTR),
-		  attr.label));
+		vertex->addAttribute(pair<wstring, wstring>(L"label", attr.label));
 }
 
 void DotGraphInput::setEdgeAttributes(Edge *edge, const Attributes &attr)
 {
 	if (!attr.label.empty())
-		edge->addAttribute(pair<wstring, wstring>(s2w(EDGE_LABEL_ATTR),
-		  attr.label));
+		edge->addAttribute(pair<wstring, wstring>(L"label", attr.label));
 }
 
 Vertex* DotGraphInput::addVertex(const wstring &vertex)
@@ -610,8 +612,6 @@ Vertex* DotGraphInput::addVertex(const wstring &vertex)
 		return it->second;
 
 	v = _graph->addVertex();
-	v->addAttribute(pair<wstring, wstring>(s2w(NODE_LABEL_ATTR), vertex));
-
 	_vertexes.insert(pair<wstring, Vertex*>(vertex, v));
 
 	return v;

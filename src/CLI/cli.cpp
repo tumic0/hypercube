@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <set>
 #include "CORE/graph.h"
 #include "CORE/sa.h"
 #include "CORE/misc.h"
@@ -11,6 +12,10 @@
 #include "cli.h"
 
 using namespace std;
+
+
+#define map_iterator map<wstring, wstring>::const_iterator
+#define set_iterator set<wstring>::iterator
 
 
 static string replaceExtension(string const &fileName, string const &extension)
@@ -52,9 +57,6 @@ CLI::CLI(int argc, char *argv[])
 	_coloredEdges = false;
 	_forceDirected = false;
 	_forceUndirected = false;
-
-	_vertexAttribute = NODE_LABEL_ATTR;
-	_edgeAttribute = EDGE_LABEL_ATTR;
 }
 
 CLI::~CLI()
@@ -71,9 +73,8 @@ int CLI::exec()
 	if (!readGraph())
 		return EXIT_FAILURE;
 
-	_graph->setVertexAttribute(s2w(_vertexAttribute));
-	_graph->setEdgeAttribute(s2w(_edgeAttribute));
-	setGraphProperties();
+	if (!setGraphProperties())
+		return EXIT_FAILURE;
 	setSAProperties();
 	_graph->randomize();
 	_sa->compute(_graph);
@@ -297,8 +298,78 @@ bool CLI::parseArguments()
 	return true;
 }
 
-void CLI::setGraphProperties()
+bool CLI::setVertexAttribute()
 {
+	set<wstring> attributes;
+	set<wstring>::iterator it;
+	wstring attribute;
+	Vertex *vtx;
+
+
+	for (size_t i = 0; i < _graph->vertex_size(); i++) {
+		vtx = _graph->vertex(i);
+		for (map_iterator it = vtx->attributes().begin();
+		  it != vtx->attributes().end(); it++)
+			 attributes.insert(it->first);
+	}
+
+	if (_vertexAttribute.empty()) {
+		if (attributes.empty())
+			return true;
+		attribute = *attributes.begin();
+	} else {
+		attribute = s2w(_vertexAttribute);
+		if ((it = attributes.find(attribute)) == attributes.end()) {
+			cerr << _vertexAttribute << ": no such vertex attribute" << endl;
+			return false;
+		}
+	}
+
+	_graph->setVertexAttribute(attribute);
+
+	return true;
+}
+
+bool CLI::setEdgeAttribute()
+{
+	set<wstring> attributes;
+	set<wstring>::iterator it;
+	wstring attribute;
+	Edge *edg;
+
+
+	for (size_t i = 0; i < _graph->edge_size(); i++) {
+		edg = _graph->edge(i);
+		for (map_iterator it = edg->attributes().begin();
+		  it != edg->attributes().end(); it++) {
+			attributes.insert(it->first);
+		}
+	}
+
+	if (_edgeAttribute.empty()) {
+		if (attributes.empty())
+			return true;
+		attribute = *attributes.begin();
+	} else {
+		attribute = s2w(_edgeAttribute);
+		if ((it = attributes.find(attribute)) == attributes.end()) {
+			cerr << _edgeAttribute << ": no such edge attribute" << endl;
+			return false;
+		}
+	}
+
+	_graph->setEdgeAttribute(attribute);
+
+	return true;
+}
+
+bool CLI::setGraphProperties()
+{
+	if (!setVertexAttribute())
+		return false;
+	if (!setEdgeAttribute())
+		return false;
+
 	_graph->setDimensions(_dimensions);
 	if (_forceDirected)
 		_graph->setDirected(true);
@@ -318,6 +389,8 @@ void CLI::setGraphProperties()
 	_graph->setLegend(_legend);
 	if (_coloredEdges)
 		_graph->colorize();
+
+	return true;
 }
 
 void CLI::setSAProperties()

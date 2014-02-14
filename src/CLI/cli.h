@@ -21,7 +21,9 @@ private:
 	bool readGraph();
 	bool writeGraph();
 	bool parseArguments();
-	void setGraphProperties();
+	bool setVertexAttribute();
+	bool setEdgeAttribute();
+	bool setGraphProperties();
 	void setSAProperties();
 	int argument(int i);
 	void usage();
