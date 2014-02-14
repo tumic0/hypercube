@@ -264,7 +264,7 @@ void GUI::createMiscProperties()
 	QGroupBox *inputBox = new QGroupBox(tr("Input"));
 
 	_inputEncoding = new QComboBox();
-	_inputEncoding->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+	_inputEncoding->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 
 	for (Encoding **ep = encodings; *ep; ep++)
 		_inputEncoding->addItem((*ep)->name());
@@ -465,8 +465,8 @@ void GUI::createGraphProperties()
 	_vertexFontSize = new QSpinBox();
 	_edgeColor = new ColorComboBox();
 	_vertexColor = new ColorComboBox();
-	_vertexIDs = new QCheckBox(tr("Show vertex labels"), this);
-	_edgeValues = new QCheckBox(tr("Show edge labels"), this);
+	_vertexIDs = new QCheckBox(tr("Show labels"), this);
+	_edgeValues = new QCheckBox(tr("Show labels"), this);
 	_coloredEdges = new QCheckBox(tr("Colored edges"), this);
 	_legend = new QCheckBox(tr("Show legend"), this);
 	_vertexLabelAttr = new QComboBox();
@@ -474,8 +474,8 @@ void GUI::createGraphProperties()
 
 	_edgeFontSize->setMinimum(MIN_FONT_SIZE);
 	_vertexFontSize->setMinimum(MIN_FONT_SIZE);
-	_vertexLabelAttr->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-	_edgeLabelAttr->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+	_vertexLabelAttr->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+	_edgeLabelAttr->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 	_vertexLabelAttr->setDisabled(true);
 	_edgeLabelAttr->setDisabled(true);
 

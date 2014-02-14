@@ -38,7 +38,7 @@
     </message>
     <message>
         <location filename="../src/GUI/gui.cpp" line="146"/>
-        <location filename="../src/GUI/gui.cpp" line="632"/>
+        <location filename="../src/GUI/gui.cpp" line="628"/>
         <source>About Hypercube</source>
         <translation>O Hypercube</translation>
     </message>
@@ -49,13 +49,13 @@
     </message>
     <message>
         <location filename="../src/GUI/gui.cpp" line="153"/>
-        <location filename="../src/GUI/gui.cpp" line="643"/>
+        <location filename="../src/GUI/gui.cpp" line="639"/>
         <source>Open file</source>
         <translation>Otevřít soubor</translation>
     </message>
     <message>
         <location filename="../src/GUI/gui.cpp" line="156"/>
-        <location filename="../src/GUI/gui.cpp" line="709"/>
+        <location filename="../src/GUI/gui.cpp" line="705"/>
         <source>Save file</source>
         <translation>Uložit soubor</translation>
     </message>
@@ -215,16 +215,6 @@
         <translation>Orientovaný graf</translation>
     </message>
     <message>
-        <location filename="../src/GUI/gui.cpp" line="468"/>
-        <source>Show vertex labels</source>
-        <translation>Zobrazit popisky uzlů</translation>
-    </message>
-    <message>
-        <location filename="../src/GUI/gui.cpp" line="469"/>
-        <source>Show edge labels</source>
-        <translation>Zobrazit popisky hran</translation>
-    </message>
-    <message>
         <location filename="../src/GUI/gui.cpp" line="470"/>
         <source>Colored edges</source>
         <translation>Obarvené hrany</translation>
@@ -241,25 +231,25 @@
     </message>
     <message>
         <location filename="../src/GUI/gui.cpp" line="357"/>
-        <location filename="../src/GUI/gui.cpp" line="518"/>
-        <location filename="../src/GUI/gui.cpp" line="527"/>
+        <location filename="../src/GUI/gui.cpp" line="516"/>
+        <location filename="../src/GUI/gui.cpp" line="525"/>
         <source>Size:</source>
         <translation>Velikost:</translation>
     </message>
     <message>
-        <location filename="../src/GUI/gui.cpp" line="519"/>
-        <location filename="../src/GUI/gui.cpp" line="528"/>
+        <location filename="../src/GUI/gui.cpp" line="517"/>
+        <location filename="../src/GUI/gui.cpp" line="526"/>
         <source>Font size:</source>
         <translation>Velikost písma:</translation>
     </message>
     <message>
-        <location filename="../src/GUI/gui.cpp" line="520"/>
-        <location filename="../src/GUI/gui.cpp" line="529"/>
+        <location filename="../src/GUI/gui.cpp" line="518"/>
+        <location filename="../src/GUI/gui.cpp" line="527"/>
         <source>Color:</source>
         <translation>Barva:</translation>
     </message>
     <message>
-        <location filename="../src/GUI/gui.cpp" line="513"/>
+        <location filename="../src/GUI/gui.cpp" line="511"/>
         <source>Edges</source>
         <translation>Hrany</translation>
     </message>
@@ -295,46 +285,52 @@
         <translation>Výpočet</translation>
     </message>
     <message>
+        <location filename="../src/GUI/gui.cpp" line="468"/>
+        <location filename="../src/GUI/gui.cpp" line="469"/>
+        <source>Show labels</source>
+        <translation>Zobrazit popisky</translation>
+    </message>
+    <message>
         <location filename="../src/GUI/gui.cpp" line="471"/>
         <source>Show legend</source>
         <translation>Zobrazit legendu</translation>
     </message>
     <message>
-        <location filename="../src/GUI/gui.cpp" line="512"/>
+        <location filename="../src/GUI/gui.cpp" line="510"/>
         <source>Vertexes</source>
         <translation>Uzly</translation>
     </message>
     <message>
-        <location filename="../src/GUI/gui.cpp" line="521"/>
-        <location filename="../src/GUI/gui.cpp" line="530"/>
+        <location filename="../src/GUI/gui.cpp" line="519"/>
+        <location filename="../src/GUI/gui.cpp" line="528"/>
         <source>Label:</source>
         <translation>Popisek:</translation>
     </message>
     <message>
-        <location filename="../src/GUI/gui.cpp" line="634"/>
+        <location filename="../src/GUI/gui.cpp" line="630"/>
         <source>Graph visualizing tool</source>
         <translation>Nástroj na vizualizaci grafů</translation>
     </message>
     <message>
-        <location filename="../src/GUI/gui.cpp" line="635"/>
+        <location filename="../src/GUI/gui.cpp" line="631"/>
         <source>Hypercube is distributed under the terms of the GNU General Public License version 3. For more info about Hypercube visit the project homepage at</source>
         <translation>Program Hypercube je šířen za podmínek GNU General Public License verze 3. Více informací o Hypercube naleznete na domovské stránce projektu na adrese</translation>
     </message>
     <message>
-        <location filename="../src/GUI/gui.cpp" line="666"/>
-        <location filename="../src/GUI/gui.cpp" line="726"/>
-        <location filename="../src/GUI/gui.cpp" line="767"/>
+        <location filename="../src/GUI/gui.cpp" line="662"/>
+        <location filename="../src/GUI/gui.cpp" line="722"/>
+        <location filename="../src/GUI/gui.cpp" line="763"/>
         <source>Error</source>
         <translation>Chyba</translation>
     </message>
     <message>
-        <location filename="../src/GUI/gui.cpp" line="668"/>
-        <location filename="../src/GUI/gui.cpp" line="768"/>
+        <location filename="../src/GUI/gui.cpp" line="664"/>
+        <location filename="../src/GUI/gui.cpp" line="764"/>
         <source>Error loading graph</source>
         <translation>Chyba při nčítání grafu</translation>
     </message>
     <message>
-        <location filename="../src/GUI/gui.cpp" line="728"/>
+        <location filename="../src/GUI/gui.cpp" line="724"/>
         <source>Error saving graph</source>
         <translation>Chyba při ukládání grafu</translation>
     </message>
