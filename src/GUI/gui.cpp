@@ -232,7 +232,7 @@ void GUI::createToolBars()
 	_projectionsToolBar->addAction(_bindAction);
 	_projectionsToolBar->addAction(_projectAction);
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
 	_fileToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 	_graphToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 	_projectionsToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
@@ -264,7 +264,6 @@ void GUI::createMiscProperties()
 	QGroupBox *inputBox = new QGroupBox(tr("Input"));
 
 	_inputEncoding = new QComboBox();
-	_inputEncoding->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 
 	for (Encoding **ep = encodings; *ep; ep++)
 		_inputEncoding->addItem((*ep)->name());
@@ -474,7 +473,9 @@ void GUI::createGraphProperties()
 
 	_edgeFontSize->setMinimum(MIN_FONT_SIZE);
 	_vertexFontSize->setMinimum(MIN_FONT_SIZE);
+	_vertexLabelAttr->setMinimumSize(_vertexColor->sizeHint());
 	_vertexLabelAttr->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+	_edgeLabelAttr->setMinimumSize(_edgeColor->sizeHint());
 	_edgeLabelAttr->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 	_vertexLabelAttr->setDisabled(true);
 	_edgeLabelAttr->setDisabled(true);
@@ -621,6 +622,8 @@ void GUI::tabChanged(int current)
 
 	_zoom->setText(ZOOM_STRING(tab->view()->zoom()));
 	_fileName->setText(tab->fileName());
+
+	getArguments();
 }
 
 void GUI::about()
@@ -1138,9 +1141,9 @@ void GUI::getArguments()
 		args.append(QString(" -e %1").arg(_inputEncoding->itemText(
 		  _inputEncoding->currentIndex())));
 
-	if (!_vertexLabelAttr->currentText().isEmpty())
+	if (_vertexLabelAttr->count() > 1)
 		args.append(QString(" -va %1").arg(_vertexLabelAttr->currentText()));
-	if (!_edgeLabelAttr->currentText().isEmpty())
+	if (_edgeLabelAttr->count() > 1)
 		args.append(QString(" -ea %1").arg(_edgeLabelAttr->currentText()));
 
 	if (_argumentsEscape->isChecked())
