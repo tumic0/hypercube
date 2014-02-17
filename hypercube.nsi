@@ -91,8 +91,9 @@ SectionEnd
 
 Section "QT libs" SEC_QT
 
-  File "QtCore4.dll"
-  File "QtGui4.dll"
+  File "Qt5Core.dll"
+  File "Qt5Gui.dll"
+  File "Qt5Widgets.dll"
  
 SectionEnd
 
