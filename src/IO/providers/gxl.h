@@ -7,9 +7,6 @@ class GxlGraphInput : public InputProvider
 {
 public:
 	virtual Error readGraph(Graph *graph, const char *fileName);
-
-private:
-	std::wstring _nodeLabelAttr, _edgeLabelAttr;
 };
 
 #endif // GXL_H_
