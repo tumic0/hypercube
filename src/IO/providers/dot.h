@@ -5,6 +5,7 @@
 #include <map>
 #include <set>
 #include "IO/io.h"
+#include "IO/lexstream.h"
 
 
 class DotGraphInput: public InputProvider

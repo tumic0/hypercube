@@ -20,6 +20,7 @@ HEADERS += src/CORE/sa_log.h \
     src/IO/io.h \
     src/IO/modules.h \
     src/IO/encoding.h \
+    src/IO/lexstream.h \
     src/IO/providers/xml/xml.h \
     src/IO/providers/ps.h \
     src/IO/providers/ps/encodings/iso2.ps.h \

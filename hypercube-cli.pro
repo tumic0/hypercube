@@ -68,6 +68,7 @@ HEADERS += src/CORE/sa_log.h \
     src/IO/encodings/utf8.h \
     src/IO/io.h \
     src/IO/modules.h \
+	src/IO/lexstream.h \
     src/CLI/cli.h
 SOURCES += src/CORE/edge.cpp \
     src/CORE/vertex.cpp \

@@ -2,6 +2,7 @@
 #define MATRIX_H_
 
 #include "IO/io.h"
+#include "IO/lexstream.h"
 
 
 class MatrixGraphInput: public InputProvider

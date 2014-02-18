@@ -1,9 +1,7 @@
 #ifndef IO_H_
 #define IO_H_
 
-#include <string>
 #include <sstream>
-#include <fstream>
 #include "CORE/graph.h"
 #include "CORE/line.h"
 #include "encoding.h"
@@ -45,38 +43,6 @@ protected:
 	static CoordinatesF legendPosition(int index, float size);
 	static CoordinatesF legendTextPosition(const CoordinatesF &point,
 	  float size);
-};
-
-
-class lexstream : public std::wifstream
-{
-public:
-	lexstream() : _unget(false) {}
-	void open(const char *filename, std::ios_base::openmode mode =
-	  std::ios_base::in) {
-		_unget = false;
-		std::wifstream::open(filename, mode);
-	}
-	int get() {
-		if (_unget) {
-			if (is_open())
-				_unget = false;
-			else
-				setstate(std::ios_base::badbit);
-		} else
-			_last = std::wifstream::get();
-		return good() ? _last : -1;
-	}
-	void unget() {
-		if (good() && is_open())
-			_unget = true;
-		else
-			setstate(std::ios_base::badbit);
-	}
-
-private:
-	int _last;
-	bool _unget;
 };
 
 #endif /* IO_H_ */

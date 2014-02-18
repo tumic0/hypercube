@@ -3,6 +3,7 @@
 
 #include <string>
 #include "IO/io.h"
+#include "IO/lexstream.h"
 
 
 class XmlHandler

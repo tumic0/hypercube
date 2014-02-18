@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include "IO/io.h"
+#include "IO/lexstream.h"
 
 
 class GmlGraphInput : public InputProvider
