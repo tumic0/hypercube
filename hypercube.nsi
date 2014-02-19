@@ -94,6 +94,7 @@ Section "QT libs" SEC_QT
   File "Qt5Core.dll"
   File "Qt5Gui.dll"
   File "Qt5Widgets.dll"
+  File /r "platforms"
  
 SectionEnd
 
@@ -114,11 +115,8 @@ Section "Uninstall"
   DeleteRegKey HKCU "${REGENTRY}"
   DeleteRegKey HKCU SOFTWARE\Hypercube
 
-  ; Remove files and uninstaller
-  Delete "$INSTDIR\*.*"
-
   ; Remove directories used
-  RMDir "$INSTDIR"
+  RMDir /r "$INSTDIR"
 
   ; Remove Start menu entries
   !insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuFolder
