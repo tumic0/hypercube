@@ -130,7 +130,12 @@ void DotGraphInput::nextToken()
 				return;
 
 			case 1:
-				if (c == '-' || c == '>') {
+				if (c == '-' && !_directed) {
+					_token = EDGEOP;
+					return;
+				}
+				if (c == '>' && _directed) {
+					if (_directed)
 					_token = EDGEOP;
 					return;
 				}
