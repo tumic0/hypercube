@@ -282,7 +282,7 @@ void GraphTab::updateLegend()
 {
 	_view->clearLegend();
 
-	for (ColorMap::iterator it = _graph->colorMap().begin();
+	for (ColorMap::const_iterator it = _graph->colorMap().begin();
 	  it != _graph->colorMap().end(); it++) {
 		LegendItem *l = _view->addLegend();
 

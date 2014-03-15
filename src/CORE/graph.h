@@ -60,7 +60,7 @@ public:
 	void setVertexAttribute(const std::wstring &attribute);
 	void setEdgeAttribute(const std::wstring &attribute);
 
-	ColorMap &colorMap() {return _colormap;}
+	const ColorMap &colorMap() const {return _colormap;}
 
 private:
 	void checkTwin(Edge *e);

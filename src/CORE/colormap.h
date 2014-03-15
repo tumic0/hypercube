@@ -8,34 +8,34 @@
 class ColorMap
 {
 public:
-	class iterator {
+	class const_iterator {
 	public:
-		iterator() {}
-		iterator(std::map<std::wstring, Color>::iterator it)
+		const_iterator() {}
+		const_iterator(std::map<std::wstring, Color>::const_iterator it)
 		  : _it(it) {}
 
-		iterator& operator=(const iterator& other)
+		const_iterator& operator=(const const_iterator& other)
 			{_it = other._it; return(*this);}
-		bool operator==(const iterator& other)
+		bool operator==(const const_iterator& other)
 			{return(_it == other._it);}
-		bool operator!=(const iterator& other)
+		bool operator!=(const const_iterator& other)
 			{return(_it != other._it);}
 		std::pair<std::wstring, Color> operator*()
 			{return *_it;}
-		iterator operator++(int)
-			{iterator tmp(*this); _it++; return tmp;}
+		const_iterator operator++(int)
+			{const_iterator tmp(*this); _it++; return tmp;}
 	private:
-		std::map<std::wstring, Color>::iterator _it;
+		std::map<std::wstring, Color>::const_iterator _it;
 	};
 
 	ColorMap();
 	Color color(const std::wstring &str);
 	void clear();
 
-	iterator begin()
-		{return iterator(_colors.begin());}
-	iterator end()
-		{return iterator(_colors.end());}
+	const_iterator begin() const
+		{return const_iterator(_colors.begin());}
+	const_iterator end() const
+		{return const_iterator(_colors.end());}
 
 private:
 	Color nextColor();
