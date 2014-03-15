@@ -135,7 +135,6 @@ void DotGraphInput::nextToken()
 					return;
 				}
 				if (c == '>' && _directed) {
-					if (_directed)
 					_token = EDGEOP;
 					return;
 				}
