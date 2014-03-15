@@ -331,7 +331,7 @@ graph [
     source 15
     target 16
     LinkSpeed "0.5"
-    LinkLabel "0.5 M"
+    LinkLabel "0.5M"
     LinkSpeedUnits "M"
     LinkSpeedRaw 500000.0
   ]
@@ -339,7 +339,7 @@ graph [
     source 16
     target 19
     LinkSpeed "2.5"
-    LinkLabel "2.5 G"
+    LinkLabel "2.5G"
     LinkSpeedUnits "G"
     LinkSpeedRaw 2500000000.0
   ]

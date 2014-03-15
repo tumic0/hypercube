@@ -353,14 +353,14 @@
     </edge>
     <edge source="15" target="16">
       <data key="d34">0.5</data>
-      <data key="d35">0.5 M</data>
+      <data key="d35">0.5M</data>
       <data key="d36">M</data>
       <data key="d37">500000.0</data>
       <data key="d38">0</data>
     </edge>
     <edge source="16" target="19">
       <data key="d34">2.5</data>
-      <data key="d35">2.5 G</data>
+      <data key="d35">2.5G</data>
       <data key="d36">G</data>
       <data key="d37">2500000000.0</data>
       <data key="d38">0</data>
