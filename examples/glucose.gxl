@@ -133,6 +133,9 @@
 			</attr>
 		</node>
 		<node id="O">
+			<attr name="label">
+				<string>O</string>
+			</attr>
 		</node>
 	</graph>
 </gxl>

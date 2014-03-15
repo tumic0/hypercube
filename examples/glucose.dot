@@ -17,6 +17,7 @@ graph {
 	OH3 [label = "OH"];
 	OH4 [label = "OH"];
 	OH5 [label = "OH"];
+	O [label = "O"];
 
 	C1 -- C2;
 	C2 -- C3;
