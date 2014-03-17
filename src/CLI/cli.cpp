@@ -319,10 +319,6 @@ bool CLI::setVertexAttribute()
 		attribute = *attributes.begin();
 	} else {
 		attribute = s2w(_vertexAttribute);
-		if ((it = attributes.find(attribute)) == attributes.end()) {
-			cerr << _vertexAttribute << ": no such vertex attribute" << endl;
-			return false;
-		}
 	}
 
 	_graph->setVertexAttribute(attribute);
@@ -352,10 +348,6 @@ bool CLI::setEdgeAttribute()
 		attribute = *attributes.begin();
 	} else {
 		attribute = s2w(_edgeAttribute);
-		if ((it = attributes.find(attribute)) == attributes.end()) {
-			cerr << _edgeAttribute << ": no such edge attribute" << endl;
-			return false;
-		}
 	}
 
 	_graph->setEdgeAttribute(attribute);
@@ -386,7 +378,7 @@ bool CLI::setGraphProperties()
 
 	if (_legend)
 		_coloredEdges = true;
-	_graph->setLegend(_legend);
+	_graph->legend()->setSize(_legend);
 	if (_coloredEdges)
 		_graph->colorize();
 
