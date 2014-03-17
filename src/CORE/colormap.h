@@ -31,6 +31,7 @@ public:
 	ColorMap();
 	Color color(const std::wstring &str);
 	void clear();
+	bool empty() const {return _colors.empty();}
 
 	const_iterator begin() const
 		{return const_iterator(_colors.begin());}

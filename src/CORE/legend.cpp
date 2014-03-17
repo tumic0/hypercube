@@ -21,10 +21,10 @@ void Legend::updateMap()
 
 void Legend::computeDimensions()
 {
-	int height = LEGEND_MARGIN, tl = 0;
-	float width;
+	int tl = 0;
+	float width, height = LEGEND_MARGIN;
 
-	if (!_size) {
+	if (!_size || _map->empty()) {
 		_dimensions = Coordinates();
 		return;
 	}
@@ -37,5 +37,5 @@ void Legend::computeDimensions()
 	width = LEGEND_MARGIN + (_size * LEGEND_RECT_RATIO) + (_size / 3)
 	  + (_size * AVG_CHAR_WIDTH * tl);
 
-	_dimensions = Coordinates((int)width, height);
+	_dimensions = Coordinates((int)width, (int)height);
 }
