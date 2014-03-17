@@ -17,6 +17,7 @@ HEADERS += src/CORE/sa_log.h \
     src/CORE/adjlist.h \
     src/CORE/vector.h \
     src/CORE/line.h \
+    src/CORE/legend.h \
     src/IO/io.h \
     src/IO/modules.h \
     src/IO/encoding.h \
@@ -88,6 +89,7 @@ SOURCES += \
     src/CORE/colormap.cpp \
     src/CORE/line.cpp \
     src/CORE/misc.cpp \
+    src/CORE/legend.cpp \
     src/IO/modules.cpp \
     src/IO/encodings/8bit.cpp \
     src/IO/encodings/koi8rcvt.cpp \

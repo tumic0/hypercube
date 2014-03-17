@@ -191,7 +191,7 @@ void PsGraphOutput::vertexes(Graph *graph, wofstream &fs)
 
 void PsGraphOutput::legend(Graph *graph, wofstream &fs)
 {
-	float size = (float)graph->legend();
+	float size = (float)graph->legend()->size();
 	Coordinates dim = graph->dimensions();
 	CoordinatesF r = legendRectSize(size);
 	int index = 0;
@@ -200,8 +200,8 @@ void PsGraphOutput::legend(Graph *graph, wofstream &fs)
 	fs << graph->legend() << " f" << endl;
 	fs << "0.66 lw" << endl;
 
-	for (ColorMap::const_iterator it = graph->colorMap().begin();
-	  it != graph->colorMap().end(); it++) {
+	for (ColorMap::const_iterator it = graph->legend()->begin();
+	  it != graph->legend()->end(); it++) {
 		CoordinatesF c = legendPosition(index, size);
 		CoordinatesF t = legendTextPosition(c, size);
 		wstring text((*it).first);

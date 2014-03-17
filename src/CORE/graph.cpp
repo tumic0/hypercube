@@ -22,11 +22,10 @@ static const Margin max(const Margin &a, const Margin &b)
 }
 
 
-Graph::Graph()
+Graph::Graph() : _legend(&_colormap)
 {
 	_dimensions = Coordinates(0, 0);
 	_directed = false;
-	_legend = 0;
 }
 
 void Graph::clear()
@@ -44,6 +43,8 @@ void Graph::clear()
 
 	_margins.clear();
 	_colormap.clear();
+
+	_legend.updateMap();
 }
 
 Vertex* Graph::addVertex()
@@ -91,16 +92,23 @@ void Graph::checkTwin(Edge *e)
 
 void Graph::center(void)
 {
-	Coordinates mn, mx, offset;
+	Coordinates mn, mx, tmp, offset, legend;
 
 	if (!vertex_size())
 		return;
 
+	legend = _legend.dimensions();
+
 	mn = vertex(0)->coordinates() - margin(0).lt();
+	if (mn.y() <= legend.y())
+		mn.setX(mn.x() - legend.x());
 	mx = vertex(0)->coordinates() + margin(0).rb();
 
 	for (size_t i = 1; i < _vertexes.size(); i++) {
-		mn = min(mn, vertex(i)->coordinates() - margin(i).lt());
+		tmp = vertex(i)->coordinates() - margin(i).lt();
+		if (tmp.y() <= legend.y())
+			tmp.setX(tmp.x() - legend.x());
+		mn = min(mn, tmp);
 		mx = max(mx, vertex(i)->coordinates() + margin(i).rb());
 	}
 
@@ -126,6 +134,8 @@ void Graph::colorize(void)
 	_colormap.clear();
 	for (size_t i = 0; i < edge_size(); i++)
 		edge(i)->setColor(_colormap.color(edge(i)->text()));
+
+	_legend.updateMap();
 }
 
 void Graph::bindTo(Graph *source)

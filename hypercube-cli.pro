@@ -16,6 +16,7 @@ HEADERS += src/CORE/sa_log.h \
     src/CORE/adjlist.h \
     src/CORE/vector.h \
     src/CORE/line.h \
+    src/CORE/legend.h \
     src/IO/encoding.h \
     src/IO/providers/ps.h \
     src/IO/providers/ps/encodings/iso2.ps.h \
@@ -77,6 +78,7 @@ SOURCES += src/CORE/edge.cpp \
     src/CORE/colormap.cpp \
     src/CORE/line.cpp \
     src/CORE/misc.cpp \
+    src/CORE/legend.cpp \
     src/IO/encodings/8bit.cpp \
     src/IO/encodings/iso1cvt.cpp \
     src/IO/encodings/iso2cvt.cpp \

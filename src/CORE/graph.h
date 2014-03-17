@@ -9,6 +9,7 @@
 #include "coordinates.h"
 #include "color.h"
 #include "colormap.h"
+#include "legend.h"
 
 
 class Vertex;
@@ -27,13 +28,13 @@ public:
 	Vertex *vertex(size_t id) const {return _vertexes[id];}
 	Edge *edge(size_t id) const {return _edges[id];}
 
+	Legend *legend() {return &_legend;}
+
 	const Coordinates &dimensions() const {return _dimensions;}
 	void setDimensions(const Coordinates &dimensions)
 	  {_dimensions = dimensions;}
 	bool directed() const {return _directed;}
 	void setDirected(bool state) {_directed = state;}
-	int legend() const {return _legend;}
-	void setLegend(int size) {_legend = size;}
 
 	void updateCoordinates(size_t vid);
 	void updateMargins(size_t vid);
@@ -60,8 +61,6 @@ public:
 	void setVertexAttribute(const std::wstring &attribute);
 	void setEdgeAttribute(const std::wstring &attribute);
 
-	const ColorMap &colorMap() const {return _colormap;}
-
 private:
 	void checkTwin(Edge *e);
 	void updateDistance(size_t vid);
@@ -70,7 +69,7 @@ private:
 
 	Coordinates _dimensions;
 	bool _directed;
-	int _legend;
+	Legend _legend;
 
 	Vector<Vertex*> _vertexes;
 	Vector<Edge*> _edges;

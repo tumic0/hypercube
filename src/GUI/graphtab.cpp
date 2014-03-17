@@ -282,13 +282,13 @@ void GraphTab::updateLegend()
 {
 	_view->clearLegend();
 
-	for (ColorMap::const_iterator it = _graph->colorMap().begin();
-	  it != _graph->colorMap().end(); it++) {
+	for (ColorMap::const_iterator it = _graph->legend()->begin();
+	  it != _graph->legend()->end(); it++) {
 		LegendItem *l = _view->addLegend();
 
 		l->setText(QString::fromStdWString((*it).first));
 		l->setColor(QColor((*it).second.rgb()));
-		l->setSize(_graph->legend());
+		l->setSize(_graph->legend()->size());
 	}
 }
 
@@ -305,7 +305,7 @@ void GraphTab::loadGraph()
 	_view->setDimensions(QPoint(_graph->dimensions().x(),
 	  _graph->dimensions().y()));
 	_view->setDirectedGraph(_graph->directed());
-	_view->setLegend(_graph->legend());
+	_view->setLegend(_graph->legend()->size());
 
 
 	for (size_t i = 0; i < _graph->vertex_size(); i++) {
@@ -361,7 +361,7 @@ void GraphTab::storeGraph()
 	_graph->setDimensions(Coordinates(_view->dimensions().x(),
 	  _view->dimensions().y()));
 	_graph->setDirected(_view->directedGraph());
-	_graph->setLegend(_view->legend());
+	_graph->legend()->setSize(_view->legend());
 
 	for (int i = 0; i < _view->vertex_size(); i++) {
 		v = _view->vertex(i);
@@ -397,7 +397,7 @@ void GraphTab::setGraphProperties()
 	_graph->setEdgeSize(_edgeSize);
 	_graph->setVertexFontSize(_showVertexIDs ? _vertexFontSize : 0);
 	_graph->setEdgeFontSize(_showEdgeValues ? _edgeFontSize : 0);
-	_graph->setLegend(_legend);
+	_graph->legend()->setSize(_legend);
 
 	_graph->setDimensions(Coordinates(_dimensions.x(), _dimensions.y()));
 	_graph->randomize();

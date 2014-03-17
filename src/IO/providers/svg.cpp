@@ -133,14 +133,14 @@ void SvgGraphOutput::vertexes(Graph *graph, wofstream &fs)
 
 void SvgGraphOutput::legend(Graph *graph, wofstream &fs)
 {
-	float size = (float)graph->legend();
+	float size = (float)graph->legend()->size();
 	Coordinates r = legendRectSize(size).toCoordinates();
 	int index = 0;
 
 	fs << "<g font-size=\"" << graph->legend() << "\">" << endl;
 
-	for (ColorMap::const_iterator it = graph->colorMap().begin();
-	  it != graph->colorMap().end(); it++) {
+	for (ColorMap::const_iterator it = graph->legend()->begin();
+	  it != graph->legend()->end(); it++) {
 		Coordinates c = legendPosition(index, size).toCoordinates();
 		Coordinates t = legendTextPosition(c, size).toCoordinates();
 		wstring text((*it).first);
