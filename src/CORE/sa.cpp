@@ -45,7 +45,6 @@ inline Coordinates SA::newVertexLocation(Graph *g, size_t v, float temp)
 {
 	Coordinates offset, location;
 	Coordinates bounds = g->dimensions();
-	Coordinates legend = g->legend()->dimensions();
 	Coordinates loc = g->vertex(v)->coordinates();
 	Margin margin = g->margin(v);
 
@@ -55,9 +54,6 @@ inline Coordinates SA::newVertexLocation(Graph *g, size_t v, float temp)
 	  bounds.x() - 1 - margin.rb().x()));
 	location.setY(crop(loc.y() + offset.y(), margin.lt().y(),
 	  bounds.y() - 1 - margin.rb().y()));
-
-	if (location.y() < legend.y() && location.x() < legend.x())
-		location.setX(legend.x());
 
 	LOG_OFFSET(offset);
 

@@ -137,7 +137,7 @@ void SvgGraphOutput::legend(Graph *graph, wofstream &fs)
 	Coordinates r = legendRectSize(size).toCoordinates();
 	int index = 0;
 
-	fs << "<g font-size=\"" << graph->legend() << "\">" << endl;
+	fs << "<g font-size=\"" << graph->legend()->size() << "\">" << endl;
 
 	for (ColorMap::const_iterator it = graph->legend()->begin();
 	  it != graph->legend()->end(); it++) {

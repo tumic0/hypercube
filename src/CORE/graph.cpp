@@ -92,7 +92,7 @@ void Graph::checkTwin(Edge *e)
 
 void Graph::center(void)
 {
-	Coordinates mn, mx, tmp, offset, legend;
+	Coordinates mn, mx, offset, legend;
 
 	if (!vertex_size())
 		return;
@@ -100,19 +100,17 @@ void Graph::center(void)
 	legend = _legend.dimensions();
 
 	mn = vertex(0)->coordinates() - margin(0).lt();
-	if (mn.y() <= legend.y())
-		mn.setX(mn.x() - legend.x());
 	mx = vertex(0)->coordinates() + margin(0).rb();
 
 	for (size_t i = 1; i < _vertexes.size(); i++) {
-		tmp = vertex(i)->coordinates() - margin(i).lt();
-		if (tmp.y() <= legend.y())
-			tmp.setX(tmp.x() - legend.x());
-		mn = min(mn, tmp);
+		mn = min(mn, vertex(i)->coordinates() - margin(i).lt()
+		  - Coordinates(legend.x(), 0));
 		mx = max(mx, vertex(i)->coordinates() + margin(i).rb());
 	}
 
 	offset = (dimensions() - mx - mn) / 2;
+	if (offset.x() + mx.x() > _dimensions.x())
+		offset.setX(_dimensions.x() - mx.x());
 
 	for (size_t i = 0; i < _vertexes.size(); i++)
 		vertex(i)->setCoordinates(vertex(i)->coordinates() + offset);

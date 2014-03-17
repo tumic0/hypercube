@@ -9,8 +9,8 @@ class Legend
 public:
 	Legend(const ColorMap *map);
 	const Coordinates &dimensions() const {return _dimensions;}
-	size_t size() const {return _size;}
-	void setSize(size_t size);
+	int size() const {return _size;}
+	void setSize(int size);
 	void updateMap();
 
 	ColorMap::const_iterator begin() const
@@ -22,7 +22,7 @@ private:
 	void computeDimensions();
 
 	const ColorMap *_map;
-	size_t _size;
+	int _size;
 	Coordinates _dimensions;
 };
 

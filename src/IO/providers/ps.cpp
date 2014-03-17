@@ -197,7 +197,7 @@ void PsGraphOutput::legend(Graph *graph, wofstream &fs)
 	int index = 0;
 
 
-	fs << graph->legend() << " f" << endl;
+	fs << graph->legend()->size() << " f" << endl;
 	fs << "0.66 lw" << endl;
 
 	for (ColorMap::const_iterator it = graph->legend()->begin();
