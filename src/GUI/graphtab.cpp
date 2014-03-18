@@ -320,9 +320,9 @@ void GraphTab::loadGraph()
 		}
 		v->setAttribute(QString::fromStdWString(vtx->attribute()));
 
+		v->setSize(vtx->size());
 		v->setCoordinates(QPoint(vtx->coordinates().x(), vtx->coordinates().y()));
 		v->setColor(QColor(vtx->color().rgb()));
-		v->setSize(vtx->size());
 		v->setFontSize(vtx->fontSize());
 	}
 

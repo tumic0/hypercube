@@ -768,7 +768,6 @@ void GUI::reloadGraph()
 		  + errorDescription(error));
 		closeFile();
 	} else {
-		TAB()->transformGraph();
 		getGraphProperties(TAB());
 	}
 }
