@@ -89,6 +89,7 @@ void GmlGraphInput::nextToken()
 					_int = 0;
 					flstr += c;
 					state = 4;
+					break;
 				}
 				if (c == '+') {
 					_int = 0;
