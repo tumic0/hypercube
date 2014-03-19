@@ -83,9 +83,7 @@ inline void SA::newState(Graph *g, float temp)
 	delta = (new_cost - cost);
 	ex = rnd();
 	acc = exp(-delta / temp);
-	if ((delta < 0) || (ex < acc))
-		cost = new_cost;
-	else
+	if (!((delta < 0) || (ex < acc)))
 		g->vertex(id)->setCoordinates(location);
 
 	LOG_ACCEPTANCE(delta, ex, acc);
