@@ -176,7 +176,7 @@ IO::Error SvgGraphOutput::writeGraph(Graph *graph, const char *fileName)
 	header(graph, fs);
 	edges(graph, fs);
 	vertexes(graph, fs);
-	if (graph->legend())
+	if (graph->legend()->size())
 		legend(graph, fs);
 	footer(fs);
 

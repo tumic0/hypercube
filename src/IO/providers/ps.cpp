@@ -252,7 +252,7 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *fileName)
 		prolog(graph, *sp, fs);
 		edges(graph, fs);
 		vertexes(graph, fs);
-		if (graph->legend())
+		if (graph->legend()->size())
 			legend(graph, fs);
 		fs << "%%EOF" << endl;
 
