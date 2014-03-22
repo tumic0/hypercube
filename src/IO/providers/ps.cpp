@@ -71,7 +71,7 @@ void PsGraphOutput::prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
 	   << "/c {setrgbcolor} def" << endl;
 	if (graph->directed())
 		fs << "/a {newpath moveto lineto lineto closepath fill} def" << endl;
-	if (graph->legend())
+	if (graph->legend()->size())
 		fs << "/rect {4 -2 roll moveto dup 0 exch rlineto exch 0 rlineto "
 		  "neg 0 exch rlineto closepath} def" << endl;
 	fs << endl;
