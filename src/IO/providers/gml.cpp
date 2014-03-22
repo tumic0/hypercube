@@ -86,7 +86,6 @@ void GmlGraphInput::nextToken()
 					break;
 				}
 				if (c == '.') {
-					_int = 0;
 					flstr += c;
 					state = 4;
 					break;
@@ -160,7 +159,6 @@ void GmlGraphInput::nextToken()
 
 			case 4:
 				if (isdigit(c)) {
-					_int = _int * 10 + c - '0';
 					flstr += c;
 					break;
 				}
