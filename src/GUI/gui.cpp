@@ -714,6 +714,12 @@ void GUI::saveAs()
 			provider++;
 		}
 
+		if (!*provider) {
+			QMessageBox::critical(this, tr("Error"),
+			  tr("Invalid output format"));
+			return;
+		}
+
 		QString suffix = QString('.') + QString((*provider)->type());
 		if (!fileName.endsWith(suffix))
 			fileName.append(suffix);
