@@ -12,6 +12,7 @@ class Western : public PsSnippet
 
 public:
 	Western() {_encoding = new PsISO1; _font = new Helvetica;}
+	virtual ~Western() {delete _encoding; delete _font;}
 	virtual PsEncoding *encoding() const {return _encoding;}
 	virtual PsFont *font() const {return _font;}
 };

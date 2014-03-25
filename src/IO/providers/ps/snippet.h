@@ -4,6 +4,7 @@
 class PsFont
 {
 public:
+	virtual ~PsFont() {}
 	virtual const char *name() const = 0;
 	virtual const char *font() const = 0;
 };
@@ -11,6 +12,7 @@ public:
 class PsEncoding
 {
 public:
+	virtual ~PsEncoding() {}
 	virtual const char *name() const = 0;
 	virtual const char *encoding() const = 0;
 };
@@ -18,6 +20,7 @@ public:
 class PsSnippet
 {
 public:
+	virtual ~PsSnippet() {}
 	virtual PsFont *font() const = 0;
 	virtual PsEncoding *encoding() const = 0;
 };

@@ -12,6 +12,7 @@ class CE : public PsSnippet
 
 public:
 	CE() {_encoding = new PsISO2; _font = new Nimbus;}
+	virtual ~CE() {delete _encoding; delete _font;}
 	virtual PsEncoding *encoding() const {return _encoding;}
 	virtual PsFont *font() const {return _font;}
 };

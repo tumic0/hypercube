@@ -12,6 +12,7 @@ class Greek : public PsSnippet
 
 public:
 	Greek() {_encoding = new PsISO7; _font = new Moderna;}
+	virtual ~Greek() {delete _encoding; delete _font;}
 	virtual PsEncoding *encoding() const {return _encoding;}
 	virtual PsFont *font() const {return _font;}
 };
