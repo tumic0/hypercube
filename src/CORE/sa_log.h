@@ -1,14 +1,10 @@
 #ifndef SA_LOG_H_
 #define SA_LOG_H_
 
-#include "config.h"
-
 #ifdef SA_LOG_SUPPORT
 
-#include <stdexcept>
 #include <iostream>
 #include <fstream>
-
 
 #define LOG_INIT() \
 	_logInfo = false;
@@ -18,8 +14,11 @@
 		_logFsProgress.open(SA_PROGRESS_LOG); \
 		_logFsOffset.open(SA_OFFSET_LOG); \
 		_logFsAcceptance.open(SA_ACCEPTANCE_LOG); \
-		if (!_logFsProgress || !_logFsOffset || !_logFsAcceptance) \
-			throw std::logic_error("Error opening log file!"); \
+		if (!_logFsProgress || !_logFsOffset || !_logFsAcceptance) { \
+			_logInfo = false; \
+			std::cerr << "Error opening log file(s). Logging disabled." \
+			  << std::endl; \
+		} \
 	}
 
 #define LOG_END() \

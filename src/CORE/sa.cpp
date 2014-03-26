@@ -3,6 +3,7 @@
 #include <ctime>
 #include "vertex.h"
 #include "graph.h"
+#include "config.h"
 #include "sa.h"
 #include "sa_log.h"
 
