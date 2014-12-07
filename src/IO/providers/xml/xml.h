@@ -18,7 +18,7 @@ public:
 	virtual bool data(const std::wstring &data) = 0;
 };
 
-class XmlParser : public IO
+class XmlParser
 {
 public:
 	XmlParser(XmlHandler *handler) : _handler(handler) {}

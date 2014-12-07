@@ -673,7 +673,7 @@ bool XmlParser::start()
 
 IO::Error XmlParser::parse(const char *fileName)
 {
-	IO::Error err = Ok;
+	IO::Error err = IO::Ok;
 
 	locale lc(std::locale(), new iso1cvt);
 	_fs.imbue(lc);
@@ -681,10 +681,10 @@ IO::Error XmlParser::parse(const char *fileName)
 	_fs.open(fileName);
 	if (!_fs) {
 		_error << fileName << ": " << strerror(errno) << endl;
-		err = OpenError;
+		err = IO::OpenError;
 	} else {
 		if (!start())
-			err = (_fs.fail()) ? ReadError : FormatError;
+			err = (_fs.fail()) ? IO::ReadError : IO::FormatError;
 	}
 
 	_fs.close();
