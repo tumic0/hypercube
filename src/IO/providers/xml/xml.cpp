@@ -675,6 +675,9 @@ IO::Error XmlParser::parse(const char *fileName)
 {
 	IO::Error err = IO::Ok;
 
+	_error.str(std::string());
+	_error.clear();
+
 	locale lc(std::locale(), new iso1cvt);
 	_fs.imbue(lc);
 
