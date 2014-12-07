@@ -350,9 +350,12 @@ bool GraphmlHandler::handleData(const wstring &data)
 
 IO::Error GraphmlGraphInput::readGraph(Graph *graph, const char *fileName)
 {
+	IO::Error ret;
 	GraphmlHandler handler(graph);
 	XmlParser parser(&handler);
 
-	parser.setErrorPrefix("GraphML");
-	return parser.parse(fileName);
+	if ((ret = parser.parse(fileName)))
+		ioerr << "GraphML: " << parser.errorString();
+
+	return ret;
 }

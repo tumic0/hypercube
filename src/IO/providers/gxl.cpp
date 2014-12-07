@@ -338,9 +338,12 @@ bool GxlHandler::handleData(const wstring &data)
 
 IO::Error GxlGraphInput::readGraph(Graph *graph, const char *fileName)
 {
+	IO::Error err;
 	GxlHandler handler(graph);
 	XmlParser parser(&handler);
 
-	parser.setErrorPrefix("Gxl");
-	return parser.parse(fileName);
+	if ((err = parser.parse(fileName)))
+		ioerr << "GXL: " << parser.errorString();
+
+	return err;
 }

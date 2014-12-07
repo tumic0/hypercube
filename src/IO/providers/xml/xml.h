@@ -22,7 +22,7 @@ class XmlParser : public IO
 {
 public:
 	XmlParser(XmlHandler *handler) : _handler(handler) {}
-	void setErrorPrefix(const std::string &prefix);
+	std::string errorString() {return _error.str();}
 	IO::Error parse(const char *fileName);
 
 private:
@@ -81,7 +81,7 @@ private:
 	lexstream _fs;
 	Token _token;
 	unsigned _line;
-	std::string _errorPrefix;
+	std::stringstream _error;
 
 	std::wstring _encoding;
 	XmlHandler *_handler;

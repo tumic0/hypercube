@@ -51,7 +51,7 @@ void XmlParser::error()
 	if (_token == ERROR)
 		return;
 
-	ioerr << _errorPrefix << ": parse error on line: " << _line << endl;
+	_error << "Parse error on line: " << _line << endl;
 	_token = ERROR;
 }
 
@@ -671,11 +671,6 @@ bool XmlParser::start()
 }
 
 
-void XmlParser::setErrorPrefix(const std::string &prefix)
-{
-	_errorPrefix = prefix;
-}
-
 IO::Error XmlParser::parse(const char *fileName)
 {
 	IO::Error err = Ok;
@@ -685,7 +680,7 @@ IO::Error XmlParser::parse(const char *fileName)
 
 	_fs.open(fileName);
 	if (!_fs) {
-		ioerr << fileName << ": " << strerror(errno) << endl;
+		_error << fileName << ": " << strerror(errno) << endl;
 		err = OpenError;
 	} else {
 		if (!start())
