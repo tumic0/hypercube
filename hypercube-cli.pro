@@ -1,6 +1,7 @@
 CONFIG -= qt
 CONFIG += console
 TARGET = hypercube-cli
+VERSION = 1.7.0
 HEADERS += src/CORE/sa_log.h \
     src/CORE/graph.h \
     src/CORE/misc.h \
@@ -107,6 +108,7 @@ SOURCES += src/CORE/edge.cpp \
     src/CLI/main.cpp
 INCLUDEPATH += ./src
 win32 {
-    RC_FILE = hypercube-cli.rc
+    RC_ICONS = icons/hypercube-cli.ico
     DEFINES += _CRT_SECURE_NO_WARNINGS
 }
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"

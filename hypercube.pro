@@ -1,4 +1,5 @@
 TARGET = hypercube
+VERSION = 1.7.0
 QT += core \
     gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -80,7 +81,8 @@ HEADERS += src/CORE/sa_log.h \
     src/GUI/graphtab.h \
     src/GUI/vertexitem.h \
     src/GUI/edgeitem.h \
-    src/GUI/legenditem.h
+    src/GUI/legenditem.h \
+    src/GUI/app.h
 SOURCES += \
     src/CORE/edge.cpp \
     src/CORE/graph.cpp \
@@ -122,13 +124,17 @@ SOURCES += \
     src/GUI/graphtab.cpp \
     src/GUI/colorcombobox.cpp \
     src/GUI/numericedit.cpp \
-    src/GUI/gui.cpp
+    src/GUI/gui.cpp \
+    src/GUI/app.cpp
 DEFINES += SA_LOG_SUPPORT
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 RESOURCES += hypercube.qrc
 TRANSLATIONS = lang/hypercube_cs.ts
 INCLUDEPATH += ./src
 win32 {
-    RC_FILE = hypercube.rc
+    RC_ICONS = icons/hypercube.ico
     DEFINES += _CRT_SECURE_NO_WARNINGS
 }
-macx:ICON = icons/hypercube.icns
+macx {
+    ICON = icons/hypercube.icns
+}

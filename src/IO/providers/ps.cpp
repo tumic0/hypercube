@@ -27,7 +27,7 @@ void PsGraphOutput::prolog(Graph *graph, PsSnippet *sn, wofstream &fs)
 
 	fs << "%!PS-Adobe-3.0 EPSF-3.0" << endl
 	   << "%%BoundingBox: 0 0 " << dim.x() << " " << dim.y() << endl
-	   << "%%Creator: Hypercube ("APP_HOMEPAGE")" << endl;
+	   << "%%Creator: Hypercube (" APP_HOMEPAGE ")" << endl;
 
 	if (sn->font()->font())
 		fs << "%%DocumentSuppliedResources: font ";

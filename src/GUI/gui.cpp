@@ -118,6 +118,7 @@ GUI::GUI()
 	widget->setLayout(layout);
 	setCentralWidget(widget);
 
+	setWindowIcon(QIcon(QPixmap(APP_ICON)));
 	setWindowTitle("Hypercube");
 	setUnifiedTitleAndToolBarOnMac(true);
 
@@ -634,7 +635,7 @@ void GUI::about()
 	  + QString("<p>") + tr("Hypercube is distributed under the terms of the "
 		"GNU General Public License version 3. For more info about Hypercube "
 		"visit the project homepage at")
-	  + QString(" <a href=\""APP_HOMEPAGE"\">"APP_HOMEPAGE"</a>.</p>"));
+	  + QString(" <a href=\"" APP_HOMEPAGE "\">" APP_HOMEPAGE "</a>.</p>"));
 }
 
 void GUI::openFile()
@@ -649,7 +650,7 @@ void GUI::openFile()
 	}
 }
 
-void GUI::openFile(const QString &fileName)
+bool GUI::openFile(const QString &fileName)
 {
 	GraphTab *tab = new GraphTab();
 
@@ -667,6 +668,8 @@ void GUI::openFile(const QString &fileName)
 		  + tr("Error loading graph") + QString(":\n")
 		  + errorDescription(error));
 		delete tab;
+
+		return false;
 	} else {
 		getGraphProperties(tab);
 
@@ -683,6 +686,8 @@ void GUI::openFile(const QString &fileName)
 			_graphActionGroup->setEnabled(true);
 		} else if (cnt == 2)
 			_projectActionGroup->setEnabled(true);
+
+		return true;
 	}
 }
 

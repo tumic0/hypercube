@@ -24,7 +24,7 @@ class GUI : public QMainWindow
 
 public:
 	GUI();
-	void openFile(const QString &fileName);
+	bool openFile(const QString &fileName);
 
 private slots:
 	void about();
