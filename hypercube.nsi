@@ -1,26 +1,28 @@
-;Include Modern UI
 !include "MUI2.nsh"
+!include "x64.nsh"
 
 ; The name of the installer
 Name "Hypercube"
+; Program version
+!define VERSION "1.7.0"
 
 ; The file to write
-OutFile "install.exe"
+OutFile "Hypercube-${VERSION}.exe"
 
-RequestExecutionLevel user
+RequestExecutionLevel admin
 
 ; The default installation directory
-InstallDir "$LOCALAPPDATA\Hypercube"
+InstallDir "$PROGRAMFILES\Hypercube"
 
 ; Registry key to check for directory (so if you install again, it will 
 ; overwrite the old one automatically)
-InstallDirRegKey HKCU "Software\Hypercube" "Install_Dir"
+InstallDirRegKey HKLM "Software\Hypercube" "Install_Dir"
 
 ; Registry key for uninstaller
 !define REGENTRY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Hypercube" 
 
 ; Start menu page configuration
-!define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKCU" 
+!define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKLM" 
 !define MUI_STARTMENUPAGE_REGISTRY_KEY "Software\Hypercube" 
 !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Hypercube" 
 
@@ -58,18 +60,19 @@ Section "Hypercube (required)" SEC_GUI_APP
   File "hypercube.exe"
   
   ; Write the installation path into the registry
-  WriteRegStr HKCU SOFTWARE\Hypercube "Install_Dir" "$INSTDIR"
+  WriteRegStr HKLM SOFTWARE\Hypercube "Install_Dir" "$INSTDIR"
   
   ; Write the uninstall keys for Windows
-  WriteRegStr HKCU "${REGENTRY}" "DisplayName" "Hypercube"
-  WriteRegStr HKCU "${REGENTRY}" "Publisher" "Martin Tuma"
-  WriteRegStr HKCU "${REGENTRY}" "DisplayVersion" "1.6.3"
-  WriteRegStr HKCU "${REGENTRY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegDWORD HKCU "${REGENTRY}" "NoModify" 1
-  WriteRegDWORD HKCU "${REGENTRY}" "NoRepair" 1
+  WriteRegStr HKLM "${REGENTRY}" "DisplayName" "Hypercube"
+  WriteRegStr HKLM "${REGENTRY}" "Publisher" "Martin Tuma"
+  WriteRegStr HKLM "${REGENTRY}" "DisplayVersion" "${VERSION}"
+  WriteRegStr HKLM "${REGENTRY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegDWORD HKLM "${REGENTRY}" "NoModify" 1
+  WriteRegDWORD HKLM "${REGENTRY}" "NoRepair" 1
   WriteUninstaller "$INSTDIR\uninstall.exe"
 
   ; Create start menu entry and add links
+  SetShellVarContext all
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application  
     CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
     CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
@@ -94,15 +97,30 @@ Section "QT libs" SEC_QT
   File "Qt5Core.dll"
   File "Qt5Gui.dll"
   File "Qt5Widgets.dll"
+  File "libGLESv2.dll" 
   File /r "platforms"
  
 SectionEnd
 
 Section "MSVC runtime" SEC_MSVC
 
-  File "msvcp100.dll"
-  File "msvcr100.dll"
+  DetailPrint "Checking whether Visual C++ 2015 Redistributable is already installed..."
+  ${If} ${RunningX64}
+    ReadRegDword $R0 HKLM "SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x86" "Installed"
+  ${Else}
+    ReadRegDword $R0 HKLM "SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86" "Installed"
+  ${EndIf}
 
+  StrCmp $R0 "1" 0 +3
+  DetailPrint "Visual C++ 2015 Redistributable is already installed, skipping install."
+  Goto done
+
+  DetailPrint "Installing Visual C++ 2015 Redistributable..."
+  SetOutPath $TEMP
+  File "VC_redist.x86.exe"
+  ExecWait '"$TEMP/VC_redist.x86.exe" /install /quiet /norestart'
+
+  done:
 SectionEnd
 
 ;--------------------------------
@@ -112,13 +130,14 @@ SectionEnd
 Section "Uninstall"
   
   ; Remove registry keys
-  DeleteRegKey HKCU "${REGENTRY}"
-  DeleteRegKey HKCU SOFTWARE\Hypercube
+  DeleteRegKey HKLM "${REGENTRY}"
+  DeleteRegKey HKLM SOFTWARE\Hypercube
 
   ; Remove directories used
   RMDir /r "$INSTDIR"
 
   ; Remove Start menu entries
+  SetShellVarContext all
   !insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuFolder
   Delete "$SMPROGRAMS\$StartMenuFolder\*.*"
   RMDir "$SMPROGRAMS\$StartMenuFolder"  
@@ -133,7 +152,7 @@ SectionEnd
 LangString DESC_QT ${LANG_ENGLISH} \
   "QT Library. Unselct only if you have QT already installed!"
 LangString DESC_MSVC ${LANG_ENGLISH} \
-  "Visual C++ 2010 runtime components. Unselct only if you have the runtime already installed!"
+  "Visual C++ 2015 runtime components. Unselct only if you have the runtime already installed!" 
 LangString DESC_GUI_APP ${LANG_ENGLISH} \
   "Hypercube application"
 LangString DESC_CLI_APP ${LANG_ENGLISH} \
