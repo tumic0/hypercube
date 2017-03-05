@@ -10,7 +10,7 @@ Main goals in development are portability and easy usage rather than high
 performance and complexity. The command line tool does not use any other
 libraries than the standard C++ library and the GUI tool uses "pure" Qt.
 
-![Hypercube] (http://tumic.wz.cz/hypercube/images/screenshot.png)
+![Hypercube] (https://a.fsdn.com/con/app/proj/hypercubegraphv/screenshots/screenshot1.png/1)
 
 ## Build
 ### Linux/OS X
