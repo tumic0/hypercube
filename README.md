@@ -10,7 +10,7 @@ Main goals in development are portability and easy usage rather than high
 performance and complexity. The command line tool does not use any other
 libraries than the standard C++ library and the GUI tool uses "pure" Qt.
 
-![Hypercube] (https://a.fsdn.com/con/app/proj/hypercubegraphv/screenshots/screenshot1.png/1)
+![Hypercube](https://a.fsdn.com/con/app/proj/hypercubegraphv/screenshots/screenshot1.png/1)
 
 ## Build
 ### Linux/OS X
@@ -39,8 +39,8 @@ nmake
 ```
 
 ## Binaries
-* [Windows & OS X builds] (https://sourceforge.net/projects/hypercubegraphv)
-* [Linux packages] (https://build.opensuse.org/project/repositories/home:tumic:Hypercube)
+* [Windows & OS X builds](https://sourceforge.net/projects/hypercubegraphv)
+* [Linux packages](https://build.opensuse.org/project/repositories/home:tumic:Hypercube)
 
 ## Homepage
 Hypercube homepage: http://tumic.wz.cz/hypercube
