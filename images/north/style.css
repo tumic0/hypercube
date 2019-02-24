@@ -1,0 +1,27 @@
+body {
+	font-family: sans-serif;
+}
+
+td {
+	text-align: center;
+	font-size: 8pt;
+}
+
+img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+a:link {
+	color: #0000FF;
+	text-decoration: none
+}
+a:visited {
+	color: #008000;
+	text-decoration: none
+}
+a:hover {
+	color: #ff0000;
+	text-decoration: none
+}

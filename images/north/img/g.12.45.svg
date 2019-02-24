@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Hypercube (http://tumic.wz.cz/hypercube) -->
+
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" baseProfile="tiny">
+
+<g font-family="Helvetica" font-weight="normal">
+
+<g>
+	<polygon points="171,136 169,128 178,129" fill="#aaff00"/>
+	<line x1="185" y1="77" x2="173" y2="129" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="166,140 158,144 159,135" fill="#aaff00"/>
+	<line x1="106" y1="134" x2="159" y2="139" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="48,217 44,209 53,210" fill="#aaff00"/>
+	<line x1="53" y1="164" x2="49" y2="210" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="102,136 97,143 93,136" fill="#aaff00"/>
+	<line x1="53" y1="164" x2="95" y2="139" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="97,238 88,240 91,231" fill="#aaff00"/>
+	<line x1="48" y1="222" x2="90" y2="236" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="144,207 140,216 135,208" fill="#aaff00"/>
+	<line x1="102" y1="240" x2="138" y2="212" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="169,145 171,154 162,151" fill="#aaff00"/>
+	<line x1="148" y1="205" x2="167" y2="152" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="175,142 184,142 180,150" fill="#aaff00"/>
+	<line x1="230" y1="169" x2="181" y2="146" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="331,224 322,224 326,217" fill="#aaff00"/>
+	<line x1="283" y1="198" x2="324" y2="221" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="233,171 242,170 238,178" fill="#aaff00"/>
+	<line x1="283" y1="198" x2="240" y2="174" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="351,274 344,268 353,265" fill="#aaff00"/>
+	<line x1="335" y1="227" x2="349" y2="267" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="186,72 184,63 192,66" fill="#aaff00"/>
+	<line x1="201" y1="22" x2="188" y2="65" stroke="#aaff00" stroke-width="2"/>
+</g>
+
+<g fill="#000000">
+	<circle cx="184" cy="76" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="170" cy="140" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="47" cy="221" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="101" cy="239" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="105" cy="133" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="147" cy="204" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="334" cy="226" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="352" cy="278" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="229" cy="168" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="200" cy="21" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="52" cy="163" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="282" cy="197" r="4"/>
+</g>
+
+</g>
+
+</svg>

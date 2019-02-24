@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="320" height="240" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" baseProfile="tiny">
+
+<g>
+	<line x1="305" y1="140" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="251" y1="227" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="251" y1="227" x2="305" y2="140" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="63" y1="4" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="63" y1="4" x2="46" y2="181" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="211" y1="155" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="211" y1="155" x2="305" y2="140" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="211" y1="155" x2="251" y2="227" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="241" y1="60" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="241" y1="60" x2="305" y2="140" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="241" y1="60" x2="46" y2="181" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="241" y1="60" x2="251" y2="227" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="241" y1="60" x2="211" y2="155" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="173" y1="92" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="173" y1="92" x2="305" y2="140" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="173" y1="92" x2="46" y2="181" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="173" y1="92" x2="63" y2="4" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="173" y1="92" x2="211" y2="155" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="278" y1="115" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="278" y1="115" x2="63" y2="4" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="278" y1="115" x2="211" y2="155" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="278" y1="115" x2="241" y2="60" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="278" y1="115" x2="173" y2="92" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="208" y1="225" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="208" y1="225" x2="305" y2="140" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="208" y1="225" x2="63" y2="4" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="208" y1="225" x2="211" y2="155" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="208" y1="225" x2="241" y2="60" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="208" y1="225" x2="173" y2="92" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="231" y1="103" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="231" y1="103" x2="305" y2="140" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="231" y1="103" x2="46" y2="181" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="231" y1="103" x2="63" y2="4" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="231" y1="103" x2="211" y2="155" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="45" y1="41" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="45" y1="41" x2="305" y2="140" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="45" y1="41" x2="251" y2="227" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="45" y1="41" x2="211" y2="155" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="45" y1="41" x2="241" y2="60" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="45" y1="41" x2="173" y2="92" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="45" y1="41" x2="208" y2="225" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="175" y1="191" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="175" y1="191" x2="305" y2="140" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="175" y1="191" x2="46" y2="181" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="175" y1="191" x2="251" y2="227" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="175" y1="191" x2="63" y2="4" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="175" y1="191" x2="211" y2="155" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="175" y1="191" x2="241" y2="60" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="175" y1="191" x2="173" y2="92" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="175" y1="191" x2="278" y2="115" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="175" y1="191" x2="231" y2="103" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="175" y1="191" x2="45" y2="41" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="146" y1="222" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="146" y1="222" x2="305" y2="140" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="146" y1="222" x2="46" y2="181" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="146" y1="222" x2="251" y2="227" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="146" y1="222" x2="63" y2="4" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="146" y1="222" x2="241" y2="60" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="146" y1="222" x2="173" y2="92" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="146" y1="222" x2="278" y2="115" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="146" y1="222" x2="208" y2="225" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="146" y1="222" x2="231" y2="103" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="146" y1="222" x2="45" y2="41" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="81" y1="154" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="81" y1="154" x2="305" y2="140" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="81" y1="154" x2="251" y2="227" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="81" y1="154" x2="211" y2="155" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="81" y1="154" x2="278" y2="115" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="81" y1="154" x2="45" y2="41" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="81" y1="154" x2="175" y2="191" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="110" y1="117" x2="305" y2="140" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="110" y1="117" x2="46" y2="181" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="110" y1="117" x2="251" y2="227" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="110" y1="117" x2="211" y2="155" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="110" y1="117" x2="173" y2="92" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="110" y1="117" x2="278" y2="115" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="110" y1="117" x2="208" y2="225" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="110" y1="117" x2="231" y2="103" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="110" y1="117" x2="45" y2="41" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="110" y1="117" x2="175" y2="191" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="110" y1="117" x2="146" y2="222" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="18" y1="101" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="18" y1="101" x2="305" y2="140" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="18" y1="101" x2="46" y2="181" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="18" y1="101" x2="63" y2="4" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="18" y1="101" x2="241" y2="60" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="18" y1="101" x2="173" y2="92" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="18" y1="101" x2="278" y2="115" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="18" y1="101" x2="208" y2="225" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="18" y1="101" x2="45" y2="41" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="18" y1="101" x2="175" y2="191" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="18" y1="101" x2="146" y2="222" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="18" y1="101" x2="81" y2="154" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="305" y2="140" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="251" y2="227" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="63" y2="4" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="241" y2="60" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="278" y2="115" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="208" y2="225" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="45" y2="41" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="146" y2="222" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="81" y2="154" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="305" y2="140" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="46" y2="181" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="251" y2="227" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="63" y2="4" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="211" y2="155" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="173" y2="92" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="278" y2="115" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="208" y2="225" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="231" y2="103" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="175" y2="191" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="146" y2="222" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="81" y2="154" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="18" y2="101" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="176" y2="132" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="58" y1="88" x2="115" y2="79" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="58" y1="88" x2="173" y2="92" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="58" y1="88" x2="278" y2="115" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<line x1="58" y1="88" x2="175" y2="191" stroke="#00ff00" stroke-width="1"/>
+</g>
+
+<g>
+	<line x1="278" y1="115" x2="305" y2="140" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="208" y1="225" x2="251" y2="227" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="231" y1="103" x2="241" y2="60" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="231" y1="103" x2="278" y2="115" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="45" y1="41" x2="63" y2="4" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="175" y1="191" x2="208" y2="225" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="146" y1="222" x2="175" y2="191" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="81" y1="154" x2="46" y2="181" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="110" y1="117" x2="115" y2="79" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="110" y1="117" x2="81" y2="154" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="211" y2="155" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="173" y2="92" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="231" y2="103" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="175" y2="191" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="176" y1="132" x2="110" y2="117" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="9" y1="12" x2="45" y2="41" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="58" y1="88" x2="45" y2="41" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="58" y1="88" x2="110" y2="117" stroke="#ff0000" stroke-width="3"/>
+</g>
+<g>
+	<line x1="58" y1="88" x2="18" y2="101" stroke="#ff0000" stroke-width="3"/>
+</g>
+
+<g fill="#000000">
+	<circle cx="115" cy="79" r="4"/>
+	<text x="119" y="87" font-size="12">0</text>
+</g>
+<g fill="#000000">
+	<circle cx="305" cy="140" r="4"/>
+	<text x="309" y="148" font-size="12">1</text>
+</g>
+<g fill="#000000">
+	<circle cx="46" cy="181" r="4"/>
+	<text x="50" y="189" font-size="12">2</text>
+</g>
+<g fill="#000000">
+	<circle cx="251" cy="227" r="4"/>
+	<text x="255" y="235" font-size="12">3</text>
+</g>
+<g fill="#000000">
+	<circle cx="63" cy="4" r="4"/>
+	<text x="67" y="12" font-size="12">4</text>
+</g>
+<g fill="#000000">
+	<circle cx="211" cy="155" r="4"/>
+	<text x="215" y="163" font-size="12">5</text>
+</g>
+<g fill="#000000">
+	<circle cx="241" cy="60" r="4"/>
+	<text x="245" y="68" font-size="12">6</text>
+</g>
+<g fill="#000000">
+	<circle cx="173" cy="92" r="4"/>
+	<text x="177" y="100" font-size="12">7</text>
+</g>
+<g fill="#000000">
+	<circle cx="278" cy="115" r="4"/>
+	<text x="282" y="123" font-size="12">8</text>
+</g>
+<g fill="#000000">
+	<circle cx="208" cy="225" r="4"/>
+	<text x="212" y="233" font-size="12">9</text>
+</g>
+<g fill="#000000">
+	<circle cx="231" cy="103" r="4"/>
+	<text x="235" y="111" font-size="12">10</text>
+</g>
+<g fill="#000000">
+	<circle cx="45" cy="41" r="4"/>
+	<text x="49" y="49" font-size="12">11</text>
+</g>
+<g fill="#000000">
+	<circle cx="175" cy="191" r="4"/>
+	<text x="179" y="199" font-size="12">12</text>
+</g>
+<g fill="#000000">
+	<circle cx="146" cy="222" r="4"/>
+	<text x="150" y="230" font-size="12">13</text>
+</g>
+<g fill="#000000">
+	<circle cx="81" cy="154" r="4"/>
+	<text x="85" y="162" font-size="12">14</text>
+</g>
+<g fill="#000000">
+	<circle cx="110" cy="117" r="4"/>
+	<text x="114" y="125" font-size="12">15</text>
+</g>
+<g fill="#000000">
+	<circle cx="18" cy="101" r="4"/>
+	<text x="22" y="109" font-size="12">16</text>
+</g>
+<g fill="#000000">
+	<circle cx="176" cy="132" r="4"/>
+	<text x="180" y="140" font-size="12">17</text>
+</g>
+<g fill="#000000">
+	<circle cx="9" cy="12" r="4"/>
+	<text x="13" y="20" font-size="12">18</text>
+</g>
+<g fill="#000000">
+	<circle cx="58" cy="88" r="4"/>
+	<text x="62" y="96" font-size="12">19</text>
+</g>
+
+</svg>

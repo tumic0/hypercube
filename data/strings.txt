@@ -1,0 +1,7 @@
+Alfa Bravo 1
+Bravo Charlie 3
+Delta Alfa 2
+Alfa Charlie 4
+Echo Foxtrot 1
+Foxtrot Bravo 5
+Echo Delta 2

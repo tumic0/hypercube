@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="iso-8859-2"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2"/>
+    <meta http-equiv="Content-Language" content="en"/>
+
+<title>Hypercube input formats</title>
+
+<link rel="stylesheet" type="text/css" href="style.css"/>
+<link rel="icon" type="image/png" href="favicon.png"/>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-21900345-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</head>
+<body>
+
+<div class="case">
+
+<div class="header">
+<img src="images/hypercube.png" width="64" height="64" alt="Hypercube logo"/>
+<h1>Hypercube</h1>
+</div>
+
+<h2>Input formats</h2>
+<p>Graphs can be represented as DOT files, GML files, GraphML files, GXL files,
+edge lists or adjancency matrixes. All examples in the format descriptions below
+represent the following graph:</p>
+
+<object data="images/g8.svg" width="240" height="180"
+type="image/svg+xml">Example graph</object>
+
+<h3>DOT (Graphviz)</h3>
+<p>DOT file format as described in the official
+<a href="http://www.graphviz.org/doc/info/lang.html">Graphviz documentation</a>.
+Hypercube parses the complete language, but the only used attribute is the
+<i>label</i> attribute (for both edges and nodes).</p>
+
+<pre>Digraph {
+    0 -> 1 [label = 1];
+    0 -> 3 [label = 2];
+    0 -> 5 [label = 3];
+    1 -> 2 [label = 4];
+    1 -> 6 [label = 5];
+    2 -> 3 [label = 6];
+    2 -> 7 [label = 7];
+    3 -> 4 [label = 8];
+    4 -> 5 [label = 9];
+    4 -> 7 [label = 10];
+    5 -> 6 [label = 11];
+    6 -> 7 [label = 12];
+}</pre>
+
+<h3>GML</h3>
+<p>GML file format as described in the official
+<a href="http://www.fim.uni-passau.de/en/fim/faculty/chairs/theoretische-informatik/projects.html">
+documentation</a>.</p>
+
+<pre>graph [
+  directed 1
+
+  node [id 0]
+  node [id 1]
+  node [id 2]
+  node [id 3]
+  node [id 4]
+  node [id 5]
+  node [id 6]
+  node [id 7]
+
+  edge [label "1" source 0 target 1]
+  edge [label "2" source 0 target 3]
+  edge [label "3" source 0 target 5]
+  edge [label "4" source 1 target 2]
+  edge [label "5" source 1 target 6]
+  edge [label "6" source 2 target 3]
+  edge [label "7" source 2 target 7]
+  edge [label "8" source 3 target 4]
+  edge [label "9" source 4 target 5]
+  edge [label "10" source 4 target 7]
+  edge [label "11" source 5 target 6]
+  edge [label "12" source 6 target 7]
+]</pre>
+
+<h3>GraphML</h3>
+<p>GraphML file format as given by the
+<a href="http://graphml.graphdrawing.org/specification.html">specification</a>.
+Hypercube does not support nested graphs, hyperedges or ports.</p>
+
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;graphml xmlns=&quot;http://graphml.graphdrawing.org/xmlns&quot;  
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://graphml.graphdrawing.org/xmlns
+     http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd&quot;&gt;
+  &lt;graph id=&quot;G&quot; edgedefault=&quot;directed&quot;&gt;
+    &lt;node id=&quot;0&quot;/&gt;
+    &lt;node id=&quot;1&quot;/&gt;
+    &lt;node id=&quot;2&quot;/&gt;
+    &lt;node id=&quot;3&quot;/&gt;
+    &lt;node id=&quot;4&quot;/&gt;
+    &lt;node id=&quot;5&quot;/&gt;
+    &lt;node id=&quot;6&quot;/&gt;
+    &lt;node id=&quot;7&quot;/&gt;
+    &lt;edge source=&quot;0&quot; target=&quot;1&quot; id=&quot;1&quot;/&gt;
+    &lt;edge source=&quot;0&quot; target=&quot;3&quot; id=&quot;2&quot;/&gt;
+    &lt;edge source=&quot;0&quot; target=&quot;5&quot; id=&quot;3&quot;/&gt;
+    &lt;edge source=&quot;1&quot; target=&quot;2&quot; id=&quot;4&quot;/&gt;
+    &lt;edge source=&quot;1&quot; target=&quot;6&quot; id=&quot;5&quot;/&gt;
+    &lt;edge source=&quot;2&quot; target=&quot;3&quot; id=&quot;6&quot;/&gt;
+    &lt;edge source=&quot;2&quot; target=&quot;7&quot; id=&quot;7&quot;/&gt;
+    &lt;edge source=&quot;3&quot; target=&quot;4&quot; id=&quot;8&quot;/&gt;
+    &lt;edge source=&quot;4&quot; target=&quot;5&quot; id=&quot;9&quot;/&gt;
+    &lt;edge source=&quot;4&quot; target=&quot;7&quot; id=&quot;10&quot;/&gt;
+    &lt;edge source=&quot;5&quot; target=&quot;6&quot; id=&quot;11&quot;/&gt;
+    &lt;edge source=&quot;6&quot; target=&quot;7&quot; id=&quot;12&quot;/&gt;
+  &lt;/graph&gt;
+&lt;/graphml&gt;
+</pre>
+
+
+<h3>GXL</h3>
+<p>GXL file format as given by the
+<a href="http://www.gupro.de/GXL/xmlschema/xmlschema.html">specification</a>.
+Hypercube does not support hypergraphs, hyperedges and mixed graphs.</p>
+
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE gxl SYSTEM &quot;http://www.gupro.de/GXL/gxl-1.0.dtd&quot;&gt;
+&lt;gxl&gt;
+  &lt;graph&gt;
+    &lt;node id=&quot;0&quot;/&gt;
+    &lt;node id=&quot;1&quot;/&gt;
+    &lt;node id=&quot;2&quot;/&gt;
+    &lt;node id=&quot;3&quot;/&gt;
+    &lt;node id=&quot;4&quot;/&gt;
+    &lt;node id=&quot;5&quot;/&gt;
+    &lt;node id=&quot;6&quot;/&gt;
+    &lt;node id=&quot;7&quot;/&gt;
+    &lt;edge from=&quot;0&quot; to=&quot;1&quot; id=&quot;1&quot;/&gt;
+    &lt;edge from=&quot;0&quot; to=&quot;3&quot; id=&quot;2&quot;/&gt;
+    &lt;edge from=&quot;0&quot; to=&quot;5&quot; id=&quot;3&quot;/&gt;
+    &lt;edge from=&quot;1&quot; to=&quot;2&quot; id=&quot;4&quot;/&gt;
+    &lt;edge from=&quot;1&quot; to=&quot;6&quot; id=&quot;5&quot;/&gt;
+    &lt;edge from=&quot;2&quot; to=&quot;3&quot; id=&quot;6&quot;/&gt;
+    &lt;edge from=&quot;2&quot; to=&quot;7&quot; id=&quot;7&quot;/&gt;
+    &lt;edge from=&quot;3&quot; to=&quot;4&quot; id=&quot;8&quot;/&gt;
+    &lt;edge from=&quot;4&quot; to=&quot;5&quot; id=&quot;9&quot;/&gt;
+    &lt;edge from=&quot;4&quot; to=&quot;7&quot; id=&quot;10&quot;/&gt;
+    &lt;edge from=&quot;5&quot; to=&quot;6&quot; id=&quot;11&quot;/&gt;
+    &lt;edge from=&quot;6&quot; to=&quot;7&quot; id=&quot;12&quot;/&gt;
+  &lt;/graph&gt;
+&lt;/gxl&gt;
+</pre>
+
+
+<h3>Edge list</h3>
+<p>Each line of the input file represents an edge entry. The first value is
+the edge's start vertex ID, the second value the end vertex ID and the optional
+third value is the edge label (value). The values are strings separated by an
+arbitrary amount of whitespace. Quoted strings can be used, if whitespace occurs
+in the value.</p>
+
+<pre>0 1 1
+0 3 2
+0 5 3
+1 2 4
+1 6 5
+2 3 6
+2 7 7
+3 4 8
+4 5 9
+4 7 10
+5 6 11
+6 7 12</pre>
+
+<h3>Adjacency matrix</h3>
+<p>The adjacency matrix representation starts with a single number on
+a separate line representing the number of vertexes of the graph. Starting with
+the next line, the adjacency matrix itself follows. Numbers > 0 are taken as
+edges with the given edge value.</p>
+
+<pre>8
+0 1 0 2 0 3 0 0
+0 0 4 0 0 0 5 0
+0 0 0 6 0 0 0 7
+0 0 0 0 8 0 0 0
+0 0 0 0 0 9 0 10
+0 0 0 0 0 0 11 0
+0 0 0 0 0 0 0 12
+0 0 0 0 0 0 0 0</pre>
+
+
+<h3>Extensions</h3>
+<p>The input (as well as output) providers of Hypercube can be easily extended.
+See the <a href="extensions.html">extensions section</a> for more info.</p>
+
+</div>
+
+</body>
+</html>

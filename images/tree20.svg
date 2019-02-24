@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Hypercube (http://tumic.wz.cz/hypercube) -->
+
+<svg width="320" height="240" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" baseProfile="tiny">
+
+<g font-family="Helvetica" font-weight="normal">
+
+<g>
+	<text x="72" y="158" fill="#00ff00" font-size="16">4</text>
+	<line x1="52" y1="162" x2="104" y2="155" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="275" y="241" fill="#00ff00" font-size="16">4</text>
+	<line x1="305" y1="225" x2="254" y2="224" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="43" y="223" fill="#00ff00" font-size="16">7</text>
+	<line x1="18" y1="225" x2="77" y2="223" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="273" y="39" fill="#00ff00" font-size="16">7</text>
+	<line x1="305" y1="21" x2="249" y2="23" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="92" y="47" fill="#00ff00" font-size="16">4</text>
+	<line x1="119" y1="21" x2="68" y2="38" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="164" y="178" fill="#00ff00" font-size="16">7</text>
+	<line x1="167" y1="201" x2="184" y2="143" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="270" y="181" fill="#00ff00" font-size="16">7</text>
+	<line x1="301" y1="158" x2="245" y2="170" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="178" y="124" fill="#00ff00" font-size="16">7</text>
+	<line x1="167" y1="93" x2="184" y2="143" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="239" y="206" fill="#00ff00" font-size="16">4</text>
+	<line x1="254" y1="224" x2="245" y2="170" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="246" y="64" fill="#00ff00" font-size="16">7</text>
+	<line x1="249" y1="23" x2="239" y2="87" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="206" y="173" fill="#00ff00" font-size="16">7</text>
+	<line x1="245" y1="170" x2="184" y2="143" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="34" y="47" fill="#00ff00" font-size="16">7</text>
+	<line x1="68" y1="38" x2="16" y2="21" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="70" y="76" fill="#00ff00" font-size="16">7</text>
+	<line x1="68" y1="38" x2="70" y2="98" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="263" y="87" fill="#00ff00" font-size="16">4</text>
+	<line x1="239" y1="87" x2="296" y2="87" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="214" y="130" fill="#00ff00" font-size="16">4</text>
+	<line x1="239" y1="87" x2="184" y2="143" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="79" y="194" fill="#00ff00" font-size="16">4</text>
+	<line x1="77" y1="223" x2="104" y2="155" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="138" y="148" fill="#00ff00" font-size="16">4</text>
+	<line x1="104" y1="155" x2="184" y2="143" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="75" y="139" fill="#00ff00" font-size="16">4</text>
+	<line x1="104" y1="155" x2="70" y2="98" stroke="#00ff00" stroke-width="1"/>
+</g>
+<g>
+	<text x="38" y="99" fill="#00ff00" font-size="16">7</text>
+	<line x1="16" y1="102" x2="70" y2="98" stroke="#00ff00" stroke-width="1"/>
+</g>
+
+<g fill="#000000">
+	<circle cx="52" cy="162" r="5"/>
+	<text x="57" y="172" font-size="14">0</text>
+</g>
+<g fill="#000000">
+	<circle cx="305" cy="225" r="5"/>
+	<text x="310" y="235" font-size="14">1</text>
+</g>
+<g fill="#000000">
+	<circle cx="18" cy="225" r="5"/>
+	<text x="23" y="235" font-size="14">2</text>
+</g>
+<g fill="#000000">
+	<circle cx="305" cy="21" r="5"/>
+	<text x="310" y="31" font-size="14">3</text>
+</g>
+<g fill="#000000">
+	<circle cx="119" cy="21" r="5"/>
+	<text x="124" y="31" font-size="14">4</text>
+</g>
+<g fill="#000000">
+	<circle cx="167" cy="201" r="5"/>
+	<text x="172" y="211" font-size="14">5</text>
+</g>
+<g fill="#000000">
+	<circle cx="301" cy="158" r="5"/>
+	<text x="306" y="168" font-size="14">6</text>
+</g>
+<g fill="#000000">
+	<circle cx="167" cy="93" r="5"/>
+	<text x="172" y="103" font-size="14">7</text>
+</g>
+<g fill="#000000">
+	<circle cx="254" cy="224" r="5"/>
+	<text x="259" y="234" font-size="14">8</text>
+</g>
+<g fill="#000000">
+	<circle cx="249" cy="23" r="5"/>
+	<text x="254" y="33" font-size="14">9</text>
+</g>
+<g fill="#000000">
+	<circle cx="245" cy="170" r="5"/>
+	<text x="250" y="180" font-size="14">10</text>
+</g>
+<g fill="#000000">
+	<circle cx="68" cy="38" r="5"/>
+	<text x="73" y="48" font-size="14">11</text>
+</g>
+<g fill="#000000">
+	<circle cx="239" cy="87" r="5"/>
+	<text x="244" y="97" font-size="14">12</text>
+</g>
+<g fill="#000000">
+	<circle cx="296" cy="87" r="5"/>
+	<text x="301" y="97" font-size="14">13</text>
+</g>
+<g fill="#000000">
+	<circle cx="77" cy="223" r="5"/>
+	<text x="82" y="233" font-size="14">14</text>
+</g>
+<g fill="#000000">
+	<circle cx="104" cy="155" r="5"/>
+	<text x="109" y="165" font-size="14">15</text>
+</g>
+<g fill="#000000">
+	<circle cx="16" cy="102" r="5"/>
+	<text x="21" y="112" font-size="14">16</text>
+</g>
+<g fill="#000000">
+	<circle cx="184" cy="143" r="5"/>
+	<text x="189" y="153" font-size="14">17</text>
+</g>
+<g fill="#000000">
+	<circle cx="16" cy="21" r="5"/>
+	<text x="21" y="31" font-size="14">18</text>
+</g>
+<g fill="#000000">
+	<circle cx="70" cy="98" r="5"/>
+	<text x="75" y="108" font-size="14">19</text>
+</g>
+
+</g>
+
+</svg>

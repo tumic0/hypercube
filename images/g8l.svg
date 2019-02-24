@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Hypercube (http://tumic.wz.cz/hypercube) -->
+
+<svg width="240" height="180" viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg" baseProfile="tiny">
+
+<g font-family="Helvetica" font-weight="normal">
+
+<g>
+	<line x1="89" y1="108" x2="79" y2="17" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<line x1="89" y1="108" x2="179" y2="101" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<line x1="89" y1="108" x2="49" y2="154" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<line x1="79" y1="17" x2="162" y2="20" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<line x1="79" y1="17" x2="37" y2="70" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<line x1="162" y1="20" x2="179" y2="101" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<line x1="162" y1="20" x2="123" y2="67" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<line x1="179" y1="101" x2="138" y2="156" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<line x1="138" y1="156" x2="49" y2="154" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<line x1="138" y1="156" x2="123" y2="67" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<line x1="49" y1="154" x2="37" y2="70" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<line x1="37" y1="70" x2="123" y2="67" stroke="#aaff00" stroke-width="2"/>
+</g>
+
+<g fill="#000000">
+	<circle cx="88" cy="107" r="5"/>
+	<text x="93.5" y="118" font-size="14">nula</text>
+</g>
+<g fill="#000000">
+	<circle cx="78" cy="16" r="5"/>
+	<text x="83.5" y="27" font-size="14">jedna</text>
+</g>
+<g fill="#000000">
+	<circle cx="178" cy="100" r="5"/>
+	<text x="183.5" y="111" font-size="14">tři</text>
+</g>
+<g fill="#000000">
+	<circle cx="48" cy="153" r="5"/>
+	<text x="53.5" y="164" font-size="14">pět</text>
+</g>
+<g fill="#000000">
+	<circle cx="161" cy="19" r="5"/>
+	<text x="166.5" y="30" font-size="14">dvě</text>
+</g>
+<g fill="#000000">
+	<circle cx="36" cy="69" r="5"/>
+	<text x="41.5" y="80" font-size="14">šest</text>
+</g>
+<g fill="#000000">
+	<circle cx="122" cy="66" r="5"/>
+	<text x="127.5" y="77" font-size="14">sedm</text>
+</g>
+<g fill="#000000">
+	<circle cx="137" cy="155" r="5"/>
+	<text x="142.5" y="166" font-size="14">čtyři</text>
+</g>
+
+</g>
+
+</svg>

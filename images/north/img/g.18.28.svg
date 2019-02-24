@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Hypercube (http://tumic.wz.cz/hypercube) -->
+
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" baseProfile="tiny">
+
+<g font-family="Helvetica" font-weight="normal">
+
+<g>
+	<polygon points="232,170 234,162 240,168" fill="#aaff00"/>
+	<line x1="272" y1="131" x2="237" y2="165" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="184,110 192,114 185,119" fill="#aaff00"/>
+	<line x1="229" y1="174" x2="188" y2="116" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="299,217 290,217 294,209" fill="#aaff00"/>
+	<line x1="229" y1="174" x2="293" y2="213" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="170,211 174,203 179,211" fill="#aaff00"/>
+	<line x1="229" y1="174" x2="176" y2="207" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="123,79 132,79 128,87" fill="#aaff00"/>
+	<line x1="182" y1="107" x2="129" y2="82" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="154,153 154,144 162,148" fill="#aaff00"/>
+	<line x1="182" y1="107" x2="158" y2="146" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="210,50 211,58 203,54" fill="#aaff00"/>
+	<line x1="182" y1="107" x2="207" y2="56" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="61,60 70,58 67,66" fill="#aaff00"/>
+	<line x1="119" y1="78" x2="68" y2="62" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="13,89 17,81 22,88" fill="#aaff00"/>
+	<line x1="57" y1="59" x2="19" y2="85" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="34,9 42,14 33,18" fill="#aaff00"/>
+	<line x1="57" y1="59" x2="37" y2="15" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="153,161 159,167 150,170" fill="#aaff00"/>
+	<line x1="167" y1="214" x2="154" y2="168" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="165,271 160,263 169,263" fill="#aaff00"/>
+	<line x1="167" y1="214" x2="165" y2="264" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="111,232 117,225 120,234" fill="#aaff00"/>
+	<line x1="167" y1="214" x2="118" y2="230" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="249,9 247,17 241,11" fill="#aaff00"/>
+	<line x1="213" y1="46" x2="244" y2="14" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="348,257 339,255 345,248" fill="#aaff00"/>
+	<line x1="303" y1="220" x2="342" y2="252" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="278,268 278,259 286,263" fill="#aaff00"/>
+	<line x1="303" y1="220" x2="282" y2="262" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="351,188 347,196 342,188" fill="#aaff00"/>
+	<line x1="303" y1="220" x2="345" y2="192" stroke="#aaff00" stroke-width="2"/>
+</g>
+<g>
+	<polygon points="387,291 378,290 384,283" fill="#aaff00"/>
+	<line x1="352" y1="260" x2="382" y2="287" stroke="#aaff00" stroke-width="2"/>
+</g>
+
+<g fill="#000000">
+	<circle cx="271" cy="130" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="228" cy="173" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="181" cy="106" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="302" cy="219" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="166" cy="213" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="118" cy="77" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="151" cy="156" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="212" cy="45" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="351" cy="259" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="276" cy="272" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="354" cy="185" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="164" cy="275" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="106" cy="233" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="56" cy="58" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="9" cy="91" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="32" cy="4" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="252" cy="5" r="4"/>
+</g>
+<g fill="#000000">
+	<circle cx="390" cy="294" r="4"/>
+</g>
+
+</g>
+
+</svg>

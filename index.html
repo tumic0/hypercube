@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="iso-8859-2"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2"/>
+    <meta http-equiv="Content-Language" content="en"/>
+    <meta name="description" content="graph drawing tool (graph theory)"/>
+
+<title>Hypercube</title>
+
+<link rel="stylesheet" type="text/css" href="style.css"/>
+<link rel="icon" type="image/png" href="favicon.png"/>
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-21900345-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+<body>
+
+<div class="case">
+
+<div class="header">
+<img src="images/hypercube.png" width="64" height="64" alt="Hypercube logo"/>
+<h1>Hypercube</h1>
+</div>
+
+<h2>Description</h2>
+
+<p>Hypercube features a <a href="http://qt.nokia.com/">Qt</a> based GUI tool
+for visualizing simple text based graph (graph theory) representations as SVG
+and EPS images as well as a Qt independent command line tool. Hypercube uses
+a simulated annealing algorithm to lay out the graph that can be easy
+parametrized to achieve the desired look.</p>
+
+<p>Main goals in development are portability and easy usage rather than high
+performance and complexity. The command line tool does not require any other
+libraries than the standard C++ library and the GUI tool uses "pure" Qt.</p>
+
+<h2>Key features</h2>
+<ul>
+    <li>Native GUI for <b>Windows</b>, <b>Mac OS X</b> and <b>Linux</b>.</li>
+    <li>Industry standard input formats (DOT, GML, GraphML, GXL) as well as
+        simple line based text files.</li>
+    <li>High quality vector output to SVG and Postscript.</li>
+    <li>Unicode (UCS2) capable core. Support for UTF-8 encoded input files as
+        well as various Latin, Cyrilic and Greek 8-bit encodings.</li>
+    <li>Easy graph look setting in
+        <acronym title="What you see is what you get">WYSIWYG</acronym> mode.
+        Manual layout fine-tuning possible.</li>
+    <li>Natural lookink <a href="images/north/page.0.html">graph layouts.</a></li>
+    <li>Extensible with <a href="extensions.html">modules</a> providing support
+        for additional input/output formats.</li>
+</ul>
+
+
+<h2>GUI tool</h2>
+
+<a href="images/screenshot.png">
+<img src="images/screenshot-prev.png" width="550" height="466" alt="Hypercube"/>
+</a>
+
+
+<h2>CLI tool</h2>
+
+<pre>
+Usage:    hypercube-cli [OPTIONS] FILE
+
+OPTIONS:
+ -v               print the program version
+
+ -s &lt;dimensions&gt;  set image size to &lt;dimensions&gt;
+ -f &lt;format&gt;      set output format to &lt;format&gt;
+ -e &lt;encoding&gt;    set input file encoding to &lt;encoding&gt;
+ -o &lt;file&gt;        set the output file to &lt;file&gt;
+
+ -vc &lt;color&gt;      set vertex color to &lt;color&gt;
+ -ec &lt;color&gt;      set edge color to &lt;color&gt;
+ -vs &lt;size&gt;       set vertex size to &lt;size&gt;
+ -es &lt;size&gt;       set edge size to &lt;size&gt;
+ -vf &lt;size&gt;       set vertex font size to &lt;size&gt;
+ -ef &lt;size&gt;       set edge font size to &lt;size&gt;
+ -d               directed graph
+ -u               undirected graph
+ -c               asign a unique color to every uniqe edge value
+ -l &lt;size&gt;        show edge color legend with font size &lt;size&gt;
+
+option arguments:
+ &lt;dimesnsions&gt;    width,height
+ &lt;color&gt;          #RRGGBB
+ &lt;format&gt;         svg eps
+ &lt;encoding&gt;       iso-8859-1 iso-8859-2 iso-8859-5 iso-8859-7
+                  windows-1250 windows-1251 windows-1252 windows-1253
+                  koi8-r koi8-u utf-8
+</pre>
+
+<p>See the exported <a href="data/hypercube.pdf">manual page</a> for
+details.</p>
+
+
+<h2>Screenshots</h2>
+<p><a href="screenshots.html">Hypercube screenshots</a></p>
+
+<h2>Input formats</h2>
+<p><a href="input_formats.html">Input formats description</a>.</p>
+
+<h2>Examples</h2>
+<p><a href="examples.html">Examples page</a>.</p>
+
+<a name="download"></a>
+<h2>Download</h2>
+
+<p>Current version: <b>1.7.0</b></p>
+
+<ul>
+    <li><a href="https://sourceforge.net/projects/hypercubegraphv/files/Source/">
+        Sources</a></li>
+    <li><a href="https://sourceforge.net/projects/hypercubegraphv/files/Windows/">
+        Windows installer</a></li>
+    <li><a href="https://sourceforge.net/projects/hypercubegraphv/files/Mac%20OS%20X/">
+        Mac OS X bundle</a></li>
+    <li><a href="https://build.opensuse.org/project/repositories/home:tumic:Hypercube">
+        Linux repos/packages</a></li>
+</ul>
+
+<h2>Developement</h2>
+
+<p>Hypercube has a <a href="https://github.com/tumic0/hypercube">project page</a>
+at Github. For feature requests/bug reports please use the
+<a href="https://github.com/tumic0/hypercube/issues">issue tracker</a>.</p>
+
+</div>
+
+</body>
+</html>

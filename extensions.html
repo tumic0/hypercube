@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="iso-8859-2"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2"/>
+    <meta http-equiv="Content-Language" content="en"/>
+
+<title>Hypercube extensions</title>
+
+<link rel="stylesheet" type="text/css" href="style.css"/>
+<link rel="icon" type="image/png" href="favicon.png"/>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-21900345-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</head>
+<body>
+
+<div class="case">
+
+<div class="header">
+<img src="images/hypercube.png" width="64" height="64" alt="Hypercube logo"/>
+<h1>Hypercube</h1>
+</div>
+
+<h2>Extensions</h2>
+<p>Hypercube is designed to be easily extensible to handle additional
+input/output file formats. To add an extension (provider), the following steps
+must be done:</p>
+
+<ol>
+    <li>Implement the provider and add the source/header files to the Hypercube
+      project files <code>hypercube.pro</code> and
+      <code>hypercube-cli.pro</code>.</li>
+    <li>Append the provider to the <code>inputProviders</code> or
+      <code>outputProviders</code> array in <code>IO/modules.cpp</code></li>
+    <li>Recompile Hypercube</li>
+</ol>
+
+
+<h3>Input providers</h3>
+
+<pre>
+#include "IO/io.h"
+
+class MyInputProvider: public InputProvider
+{
+public:
+    virtual Error readGraph(Graph *graph, const char *fileName) = 0;
+    virtual void setInputEncoding(Encoding *encoding);
+};</pre>
+
+<p>The input provider interface consists of a single required method -
+<code>readGraph()</code> and a optional method,
+<code>setInputEncoding()</code>. The readGraph() implementation has to
+construct the graph <code>graph</code> from the input file
+<code>fileName</code>.</p>
+
+<p>Adding vertexes and edges to the graph is done using the
+<code>addVertex()</code> and <code>addEdge()</code> methods of the
+<code>Graph</code> class. For setting vertex/edge attributes see the
+<code>Vertex</code> and <code>Edge</code> classes.</p>
+
+<p>The optional <code>setInputEncoding()</code> method sets the input file
+encoding given by the user (intended for formats without encoding info).</p>
+
+<h3>Output providers</h3>
+
+<pre>
+#include "IO/io.h"
+
+class MyOutputProvider: public OutputProvider
+{
+public:
+    virtual Error writeGraph(Graph *graph, const char *fileName) = 0;
+    virtual const char* type() = 0;
+    virtual const char* description() = 0;
+};</pre>
+
+<p>The <code>type()</code> and <code>description()</code> methods describe the
+output provider for the user. For example for a
+<abbr title="Portable Document Format">PDF</abbr> output provider,
+<code>type()</code> would return &quot;pdf&quot; and <code>description()</code>
+&quot;Portable Document Format&quot;.</p>
+
+<p>The <code>writeGraph()</code> method implements the graph export itself. See
+the <code>Graph</code> class for how to iterate through the vertexes/edges and
+the <code>Vertex</code> and <code>Edge</code> classes for available vertex/edge
+attributes.</p>
+
+</div>
+
+</body>
+</html>
