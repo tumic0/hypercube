@@ -43,4 +43,4 @@ nmake
 * [Linux packages](https://build.opensuse.org/project/repositories/home:tumic:Hypercube)
 
 ## Homepage
-Hypercube homepage: http://tumic.wz.cz/hypercube
+Hypercube homepage: http://tumic0.github.io/hypercube/
