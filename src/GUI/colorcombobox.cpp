@@ -29,7 +29,6 @@ void ColorComboBox::addColor(const QColor &color, const QString &name)
 	painter.setPen(Qt::gray);
 	painter.setBrush(QBrush(color));
 	painter.drawRect(0, 0, iconSize, iconSize);
-	QIcon icon(pix);
 
 	insertItem(colorCount(), pix, name, color);
 }
@@ -62,7 +61,7 @@ QSize ColorComboBox::sizeHint() const
 	QStyleOptionComboBox box;
 	box.initFrom(this);
 	return style()->sizeFromContents(QStyle::CT_ComboBox, &box,
-	  QSize(fm.width("#000000") + fm.height() + 4, fm.height()), this);
+	  QSize(fm.horizontalAdvance("#000000") + fm.height() + 4, fm.height()), this);
 }
 
 void ColorComboBox::emitActivatedColor(int index)

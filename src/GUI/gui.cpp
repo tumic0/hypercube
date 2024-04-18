@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QSettings>
 #include <QCloseEvent>
+#include <QActionGroup>
 #include <cmath>
 #include "gui.h"
 #include "colorcombobox.h"
@@ -57,11 +58,11 @@ static void initComboBox(QComboBox *cb, const QSet<QString> &set)
 	QList<QString>::const_iterator it;
 
 	list = set.values();
-	qSort(list);
+	std::sort(list.begin(), list.end());
 
 	cb->blockSignals(true);
 	cb->clear();
-	for (it = list.begin(); it != list.end(); it++)
+	for (it = list.cbegin(); it != list.cend(); it++)
 		cb->addItem(*it);
 	cb->blockSignals(false);
 
@@ -610,8 +611,8 @@ void GUI::tabClosed(int current)
 void GUI::tabChanged(int current)
 {
 	if (current == -1) {
-		_fileName->setText(QString::null);
-		_zoom->setText(QString::null);
+		_fileName->setText(QString());
+		_zoom->setText(QString());
 		return;
 	}
 
@@ -710,7 +711,7 @@ void GUI::saveAs()
 	}
 
 	QString fileName = QFileDialog::getSaveFileName(this,
-	  tr("Save file"), QString::null, filter, &selectedFilter);
+	  tr("Save file"), QString(), filter, &selectedFilter);
 	if (!fileName.isEmpty()) {
 		provider = outputProviders;
 		while (*provider) {

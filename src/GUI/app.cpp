@@ -12,8 +12,8 @@ App::App(int &argc, char **argv) : QApplication(argc, argv),
 	_translator = new QTranslator();
 
 	QString locale = QLocale::system().name();
-	_translator->load(QString(":/lang/hypercube_") + locale);
-	installTranslator(_translator);
+	if (_translator->load(QString(":/lang/hypercube_") + locale))
+		installTranslator(_translator);
 #ifdef Q_OS_MAC
 	setAttribute(Qt::AA_DontShowIconsInMenus);
 #endif // Q_OS_MAC

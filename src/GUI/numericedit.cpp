@@ -10,10 +10,10 @@ FloatEdit::FloatEdit(int digits, QWidget *parent)
 	setValidator(new QDoubleValidator(0, FLT_MAX, FLT_DIG, this));
 
 	int borders = minimumSizeHint().width() - fontMetrics().maxWidth();
-	setMaximumWidth(fontMetrics().width('0') * digits + borders);
+	setMaximumWidth(fontMetrics().horizontalAdvance('0') * digits + borders);
 
-	connect(this, SIGNAL(textEdited(const QString&)),
-	  this, SLOT(emitEditedValue(const QString&)));
+	connect(this, SIGNAL(textEdited(QString)), this,
+	  SLOT(emitEditedValue(QString)));
 
 	_value = 0;
 }
@@ -38,10 +38,10 @@ IntEdit::IntEdit(int digits, QWidget *parent)
 	setValidator(new QIntValidator(0, INT_MAX, this));
 
 	int borders = minimumSizeHint().width() - fontMetrics().maxWidth();
-	setMaximumWidth(fontMetrics().width('0') * digits + borders);
+	setMaximumWidth(fontMetrics().horizontalAdvance('0') * digits + borders);
 
-	connect(this, SIGNAL(textEdited(const QString&)),
-	  this, SLOT(emitEditedValue(const QString&)));
+	connect(this, SIGNAL(textEdited(QString)), this,
+	  SLOT(emitEditedValue(QString)));
 
 	_value = 0;
 }

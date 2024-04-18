@@ -116,7 +116,7 @@ QPointF EdgeItem::textPos()
 	qreal h = _text.boundingRect().height() / 2;
 	qreal w = _text.boundingRect().width() / 2;
 	qreal hyp = qSqrt(h*h + w*w);
-	qreal dist = hyp * qSin(angle + qAsin(h / hyp));
+	qreal dist = (hyp > 0) ? hyp * qSin(angle + qAsin(h / hyp)) : 0;
 
 	QLineF l(line);
 	l.setP1(l.pointAt(0.5));

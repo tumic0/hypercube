@@ -187,13 +187,13 @@ void GraphView::setEdgeZValue(int value)
 
 void GraphView::wheelEvent(QWheelEvent *event)
 {
-	scale(pow(2.0, -event->delta() / 400.0));
+	scale(pow(2.0, -event->angleDelta().y() / 400.0));
 	emit zoomed(transform().m11());
 }
 
 void GraphView::scale(qreal scaleFactor)
 {
-	qreal factor = matrix().scale(scaleFactor, scaleFactor)
+	qreal factor = transform().scale(scaleFactor, scaleFactor)
 	  .mapRect(QRectF(0, 0, 1, 1)).width();
 
 	if (factor < 0.1 || factor > 10)
