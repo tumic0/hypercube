@@ -14,8 +14,6 @@ public:
 		const_iterator(std::map<std::wstring, Color>::const_iterator it)
 		  : _it(it) {}
 
-		const_iterator& operator=(const const_iterator& other)
-			{_it = other._it; return(*this);}
 		bool operator==(const const_iterator& other)
 			{return(_it == other._it);}
 		bool operator!=(const const_iterator& other)

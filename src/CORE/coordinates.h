@@ -10,7 +10,6 @@ class Coordinates
 public:
 	Coordinates() {_x = 0; _y = 0;}
 	Coordinates(int x, int y) {_x = x; _y = y;}
-	Coordinates(const Coordinates &c) {_x = c.x(), _y = c.y();}
 
 	int x() const {return _x;}
 	int y() const {return _y;}
@@ -68,7 +67,6 @@ class CoordinatesF
 public:
 	CoordinatesF() {_x = 0; _y = 0;}
 	CoordinatesF(float x, float y) {_x = x; _y = y;}
-	CoordinatesF(const CoordinatesF &c) {_x = c.x(), _y = c.y();}
 	CoordinatesF(const Coordinates &c) {_x = (float)c.x(); _y = (float)c.y();}
 
 	float x() const {return _x;}

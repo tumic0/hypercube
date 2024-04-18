@@ -14,8 +14,6 @@ public:
 		edge_iterator() {}
 		edge_iterator(std::vector<size_t>::iterator it) : _it(it) {}
 
-		edge_iterator& operator=(const edge_iterator& other)
-			{_it = other._it; return(*this);}
 		bool operator==(const edge_iterator& other)
 			{return(_it == other._it);}
 		bool operator!=(const edge_iterator& other)
