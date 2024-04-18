@@ -4,7 +4,7 @@
 ; The name of the installer
 Name "Hypercube"
 ; Program version
-!define VERSION "1.7.0"
+!define VERSION "1.7.1"
 
 ; The file to write
 OutFile "Hypercube-${VERSION}.exe"

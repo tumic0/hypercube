@@ -1,7 +1,7 @@
 CONFIG -= qt
 CONFIG += console
 TARGET = hypercube-cli
-VERSION = 1.7.0
+VERSION = 1.7.1
 HEADERS += src/CORE/sa_log.h \
     src/CORE/graph.h \
     src/CORE/misc.h \

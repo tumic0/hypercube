@@ -1,5 +1,5 @@
 TARGET = hypercube
-VERSION = 1.7.0
+VERSION = 1.7.1
 QT += core \
     gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
