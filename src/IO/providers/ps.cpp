@@ -257,7 +257,9 @@ IO::Error PsGraphOutput::writeGraph(Graph *graph, const char *fileName)
 		fs << "%%EOF" << endl;
 
 		fail = fs.fail();
-		fs.close();
+		try {
+			fs.close();
+		} catch (...) {}
 		fs.clear();
 
 		if (!fail)
